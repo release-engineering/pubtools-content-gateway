@@ -1,0 +1,2 @@
+- CLOUDDST-12479 Create basic repo structure     - Initial commit with basic created files     - Adding tox, setup and requirement files     - NOTE: The content of the files will be updated as we move ahead with the development
+- Initial commit
