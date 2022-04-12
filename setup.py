@@ -20,11 +20,13 @@ def get_requirements():
     with open("requirements.txt") as f:
         return f.read().splitlines()
 
+
 classifiers = [
     "Development Status :: 1 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Programming Language :: Python",
+    "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.9",
@@ -39,16 +41,20 @@ setup(
     long_description_content_type="text/markdown",
     author="Javed Alam",
     author_email="jalam@redhat.com",
-    #url="https://github.com/release-engineering/pubtools-content-gateway",
+    # url="https://github.com/release-engineering/pubtools-content-gateway",
     url="https://github.com/jalam453/pubtools-content-gateway",
     classifiers=classifiers,
     packages=find_packages(exclude=["tests"]),
     install_requires=get_requirements(),
-    entry_points={},
+    entry_points={
+        "console_scripts": [],
+        "target": []
+    },
     include_package_data=True,
-    python_requires=">=3",
+    python_requires=">=2.6",
     project_urls={
+        "Changelog": "https://github.com/jalam453/pubtools-content-gateway",
         "Documentation": "https://github.com/jalam453/pubtools-content-gateway",
-        #"Changelog": "https://github.com/jalam453/pubtools-content-gateway/blob/main/CHANGELOG.md",
+        # "Changelog": "https://github.com/jalam453/pubtools-content-gateway/blob/main/CHANGELOG.md",
     },
 )
