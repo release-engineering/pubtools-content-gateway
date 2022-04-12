@@ -54,7 +54,6 @@ setup(
     python_requires=">=2.6",
     project_urls={
         "Changelog": "https://github.com/jalam453/pubtools-content-gateway",
-        "Documentation": "https://github.com/jalam453/pubtools-content-gateway",
-        # "Changelog": "https://github.com/jalam453/pubtools-content-gateway/blob/main/CHANGELOG.md",
+        # "Documentation": "https://github.com/jalam453/pubtools-content-gateway",
     },
 )
