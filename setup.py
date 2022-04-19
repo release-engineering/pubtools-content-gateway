@@ -47,8 +47,12 @@ setup(
     packages=find_packages(exclude=["tests"]),
     install_requires=get_requirements(),
     entry_points={
-        "console_scripts": [],
-        "target": []
+        "console_scripts": [
+            "push-cg-metadata = pubtools._content_gateway.push_cg:main"
+        ],
+        "target": [
+            "push-staged = pubtools._content_gateway.push_staged:entry_point",
+        ]
     },
     include_package_data=True,
     python_requires=">=2.6",
