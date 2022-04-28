@@ -20,6 +20,8 @@ def get_requirements():
     with open("requirements.txt") as f:
         return f.read().splitlines()
 
+INSTALL_REQUIRES = ['urllib3', 'six', 'requests', 'mock', 'pytest']
+# INSTALL_REQUIRES = get_requirements()
 
 classifiers = [
     "Development Status :: 1 - Alpha",
@@ -28,7 +30,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -45,10 +47,10 @@ setup(
     url="https://github.com/jalam453/pubtools-content-gateway",
     classifiers=classifiers,
     packages=find_packages(exclude=["tests"]),
-    install_requires=get_requirements(),
+    install_requires=INSTALL_REQUIRES,
     entry_points={
         "console_scripts": [
-            "push-cg-metadata = pubtools._content_gateway.push_cg:main"
+            "push-cgw-metadata = pubtools._content_gateway.push_cgw:main"
         ],
         "target": [
             "push-staged = pubtools._content_gateway.push_staged:entry_point",
