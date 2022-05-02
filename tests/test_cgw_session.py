@@ -9,11 +9,11 @@ from pubtools._content_gateway.cgw_session import CGWSession
 @patch("requests.Session.put")
 @patch("requests.Session.delete")
 def test_cgw_session_methods(patched_delete, patched_put, patched_post, patched_get):
-    cg_session = CGWSession("fake-host")
-    cg_session.get("fake-end-point")
-    cg_session.post("fake-end-point")
-    cg_session.put("fake-end-point")
-    cg_session.delete("fake-end-point")
+    cgw_session = CGWSession("fake-host")
+    cgw_session.get("fake-end-point")
+    cgw_session.post("fake-end-point")
+    cgw_session.put("fake-end-point")
+    cgw_session.delete("fake-end-point")
 
     patched_get.assert_called_with(
         "https://fake-host/api/v1/fake-end-point", verify=True

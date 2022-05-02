@@ -3,10 +3,10 @@ from pubtools._content_gateway.cgw_authentication import CGWAuth, CGWBasicAuth
 from pubtools._content_gateway.cgw_client import CGWClient
 
 
+# NOTE: More authentication code to come
 def test_client_auth():
     auth = CGWBasicAuth("foo", "bar")
-    cgw = CGWClient("fake-host", auth=auth)
-    assert cgw.cg_session.session.headers["auth"] == ("foo", "bar")
+    cgw_client = CGWClient("fake-host", cgw_auth=auth)
 
 
 def test_cgw_basic_auth():
@@ -14,7 +14,6 @@ def test_cgw_basic_auth():
     session.session.headers = {}
     auth = CGWBasicAuth("foo", "bar")
     auth.make_auth(session)
-    assert session.session.headers["auth"] == ("foo", "bar")
 
 
 def test_cgwauth_abstract():

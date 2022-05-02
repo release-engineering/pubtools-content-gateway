@@ -1,11 +1,21 @@
+from base64 import b64encode
 
-# pylint: disable=bad-option-value,useless-object-inheritance
+
 class CGWAuth(object):
     def __init__(self):
         raise NotImplementedError
 
-    def make_auth(self, cg_session):  # pragma: no cover
+    def make_auth(self, cgw_session):
         raise NotImplementedError
+
+
+class CGWClientError(Exception):
+    """
+    Custom exception to handle Content Gateway Client errors
+    """
+
+    def __init__(self, message):
+        self.message = message
 
 
 class CGWBasicAuth(CGWAuth):
@@ -23,12 +33,19 @@ class CGWBasicAuth(CGWAuth):
         self.user = user
         self.password = password
 
-    def make_auth(self, cgw_session):
-        """Setup IIBSession with basic auth.
+    def make_auth(self, cgw_session=None):
+        """Setup CGWSession with basic auth.
 
         Args:
-            cgw_session (IIBSession)
+            cgw_session (CGWSession)
                 CGWSession instance
         """
 
-        cgw_session.session.headers["auth"] = (self.user, self.password)
+        # def get_request_headers(self):
+        if not self.user or not self.password:
+            raise CGWClientError("Error: username / password not found !!")
+
+        user_pass_string = "%s:%s" % (self.user, self.password)
+        user_pass = b64encode(user_pass_string.encode("utf-8")).decode("ascii")
+        cgw_session.session.headers["Authorization"] = "Basic %s" % user_pass
+        cgw_session.session.headers["Content-type"] = 'application/json'

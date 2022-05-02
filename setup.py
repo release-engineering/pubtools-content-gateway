@@ -20,7 +20,7 @@ def get_requirements():
     with open("requirements.txt") as f:
         return f.read().splitlines()
 
-INSTALL_REQUIRES = ['urllib3', 'six', 'requests', 'mock', 'pytest']
+INSTALL_REQUIRES = ['urllib3', 'six', 'requests', 'mock', 'pytest', 'requests_mock']
 # INSTALL_REQUIRES = get_requirements()
 
 classifiers = [

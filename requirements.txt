@@ -1,7 +1,5 @@
 cffi==1.15.0
--e git+ssh://git@github.com/jalam453/pubtools-content-gateway.git@689ee2a97a3a76d22e61ec2ef22d6fd05ff5bb4a#egg=pubtools_content_gateway
 pycparser==2.21
 six==1.16.0
 urllib3==1.26.9
-virtualenv==20.14.1
 requests
