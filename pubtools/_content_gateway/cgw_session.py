@@ -34,7 +34,7 @@ class CGWSession(object):
         self.session.mount("https://", adapter)
 
     def get(self, endpoint, **kwargs):
-        """HTTP get request against CG server API
+        """HTTP get request against CGW server API
 
         Args:
             endpoint (str)
@@ -46,7 +46,7 @@ class CGWSession(object):
         return self.session.get(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def post(self, endpoint, **kwargs):
-        """HTTP post request against ibb server API
+        """HTTP post request against CGW server API
 
         Args:
             endpoint (str)
@@ -58,7 +58,7 @@ class CGWSession(object):
         return self.session.post(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def put(self, endpoint, **kwargs):
-        """HTTP put request against CG server API
+        """HTTP put request against CGW server API
 
         Args:
             endpoint (str)
@@ -70,7 +70,7 @@ class CGWSession(object):
         return self.session.put(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def delete(self, endpoint, **kwargs):
-        """HTTP delete request against ibb server API
+        """HTTP delete request against CGW server API
 
         Args:
             endpoint (str)
