@@ -41,11 +41,9 @@ class CGWBasicAuth(CGWAuth):
                 CGWSession instance
         """
 
-        # def get_request_headers(self):
         if not self.user or not self.password:
             raise CGWClientError("Error: username / password not found !!")
 
         user_pass_string = "%s:%s" % (self.user, self.password)
         user_pass = b64encode(user_pass_string.encode("utf-8")).decode("ascii")
         cgw_session.session.headers["Authorization"] = "Basic %s" % user_pass
-        cgw_session.session.headers["Content-type"] = 'application/json'

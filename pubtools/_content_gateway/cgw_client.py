@@ -64,10 +64,9 @@ class CGWClient:
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
-    def update_product(self, pid, data=None):
-        # Not working
-        endpoint = "/products/%s" % pid
-        resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
+    def update_product(self, data=None):
+        endpoint = "/products"
+        resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
     def delete_product(self, pid, params=None):
@@ -88,6 +87,11 @@ class CGWClient:
     def create_version(self, pid, data=None):
         endpoint = "/products/%s/versions/" % (pid)
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
+        return resp_data
+
+    def update_version(self, pid, data=None):
+        endpoint = "/products/%s/versions" % (pid)
+        resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
     def delete_version(self, pid, vid, params=None):
@@ -115,6 +119,11 @@ class CGWClient:
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
+    def update_file(self, pid, vid, data=None):
+        endpoint = "/products/%s/versions/%s/files" % (pid, vid)
+        resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
+        return resp_data
+
     def delete_file(self, pid, vid, fid, data=None):
         endpoint = "/products/%s/versions/%s/files/%s" % (pid, vid, fid)
         resp_data = self.call_cgw_api("DELETE", endpoint, data=data)
@@ -135,6 +144,11 @@ class CGWClient:
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
+    def update_url(self, pid, vid, data=None):
+        endpoint = "/products/%s/versions/%s/urls/" % (pid, vid)
+        resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
+        return resp_data
+
     def delete_url(self, pid, vid, uid, data=None):
         endpoint = "/products/%s/versions/%s/urls/%s" % (pid, vid, uid)
         resp_data = self.call_cgw_api("DELETE", endpoint, data=data)
@@ -153,6 +167,11 @@ class CGWClient:
     def create_internal(self, pid, vid, data=None):
         endpoint = "/products/%s/versions/%s/internal/" % (pid, vid)
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
+        return resp_data
+
+    def update_internal(self, pid, vid, data=None):
+        endpoint = "/products/%s/versions/%s/internal/" % (pid, vid)
+        resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
     def delete_internal(self, pid, vid, uid, data=None):
