@@ -1,6 +1,7 @@
 import json
 from .cgw_session import CGWSession
 
+
 class CGWClientError(Exception):
     """
     Custom exception to handle Content Gateway Client errors
@@ -12,18 +13,19 @@ class CGWClientError(Exception):
 
 class CGWClient:
     def __init__(self, hostname, cgw_auth=None, verify=True):
+        self.hostname = hostname
+        # Check if CGW hostname is present
+        if not self.hostname:
+            raise CGWClientError("No content gateway hostname found")
         self.hostname = hostname.rstrip("/")
         self.cgw_session = CGWSession(self.hostname, verify=verify)
         if cgw_auth:
             cgw_auth.make_auth(self.cgw_session)
 
     def call_cgw_api(self, method, endpoint, params=None, data=None):
-        # Check if CGW hostname is present
-        if not self.hostname:
-            raise CGWClientError("No content gateway hostname found")
 
         # Check if correct method id passed
-        if method not in ["GET", "POST", "PATCH", "PUT", "DELETE"]:
+        if method not in ["GET", "POST", "PUT", "DELETE"]:
             raise CGWClientError("Wrong request method passed")
 
         response = None
@@ -59,12 +61,12 @@ class CGWClient:
         resp_data = self.call_cgw_api("GET", endpoint, params=params)
         return resp_data
 
-    def create_product(self, data=None):
+    def create_product(self, data):
         endpoint = "/products/"
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
-    def update_product(self, data=None):
+    def update_product(self, data):
         endpoint = "/products"
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
@@ -84,13 +86,13 @@ class CGWClient:
         resp_data = self.call_cgw_api("GET", endpoint, params=params)
         return resp_data
 
-    def create_version(self, pid, data=None):
-        endpoint = "/products/%s/versions/" % (pid)
+    def create_version(self, pid, data):
+        endpoint = "/products/%s/versions/" % pid
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
-    def update_version(self, pid, data=None):
-        endpoint = "/products/%s/versions" % (pid)
+    def update_version(self, pid, data):
+        endpoint = "/products/%s/versions" % pid
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
@@ -114,12 +116,12 @@ class CGWClient:
         resp_data = self.call_cgw_api("GET", endpoint, params=params)
         return resp_data
 
-    def create_file(self, pid, vid, data=None):
+    def create_file(self, pid, vid, data):
         endpoint = "/products/%s/versions/%s/files" % (pid, vid)
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
-    def update_file(self, pid, vid, data=None):
+    def update_file(self, pid, vid, data):
         endpoint = "/products/%s/versions/%s/files" % (pid, vid)
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
@@ -139,12 +141,12 @@ class CGWClient:
         resp_data = self.call_cgw_api("GET", endpoint, data=data)
         return resp_data
 
-    def create_url(self, pid, vid, data=None):
+    def create_url(self, pid, vid, data):
         endpoint = "/products/%s/versions/%s/urls/" % (pid, vid)
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
-    def update_url(self, pid, vid, data=None):
+    def update_url(self, pid, vid, data):
         endpoint = "/products/%s/versions/%s/urls/" % (pid, vid)
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
@@ -164,12 +166,12 @@ class CGWClient:
         resp_data = self.call_cgw_api("GET", endpoint, data=data)
         return resp_data
 
-    def create_internal(self, pid, vid, data=None):
+    def create_internal(self, pid, vid, data):
         endpoint = "/products/%s/versions/%s/internal/" % (pid, vid)
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
-    def update_internal(self, pid, vid, data=None):
+    def update_internal(self, pid, vid, data):
         endpoint = "/products/%s/versions/%s/internal/" % (pid, vid)
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
