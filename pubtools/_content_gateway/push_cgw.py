@@ -54,7 +54,8 @@ class PushCGW:
         try:
             product_name = item.get('metadata').get('name')
             product_code = item.get('metadata').get('productCode')
-            LOG.debug(f"Fetching for product_id of product name- {product_name} and product code- {product_code}")
+            LOG.debug(
+                "Fetching for product_id of product name:- %s and product code:- %s" % (product_name, product_code))
             product_id = self.__get_product_id(product_name, product_code)
 
             if item.get('state') == 'present':
@@ -65,14 +66,14 @@ class PushCGW:
                     # A new product is created so updating product mapping
                     cgw_data = self.cgw_client.get_products()
                     self.product_mapping = {(data['name'], data['productCode']): data['id'] for data in cgw_data}
-                    LOG.debug(f"Created a new product with product_id:- {product_id}")
+                    LOG.debug("Created a new product with product_id:- %s" % product_id)
                     return
-                LOG.info(f"Product record found with product_id:- {product_id}")
+                LOG.info("Product record found with product_id:- %s" % product_id)
                 item.get('metadata')['id'] = product_id
                 LOG.info("Updating product metadata")
                 self.cgw_client.update_product(item.get('metadata'))
             elif item.get('state') == 'absent' and product_id:
-                LOG.info(f"Deleting existing product records for product_id:- {product_id}")
+                LOG.info("Deleting existing product records for product_id:- %s" % product_id)
                 self.cgw_client.delete_product(product_id)
                 LOG.info("Product record deleted!")
             else:
@@ -86,8 +87,8 @@ class PushCGW:
             product_code = item.get('metadata')['productCode']
             version_name = item.get('metadata')['versionName']
             product_id = self.__get_product_id(product_name, product_code)
-            LOG.debug(f"Fetching the product and version id of "
-                      f"product name- {product_name} and version name- {version_name}")
+            LOG.debug("Fetching the product and version id of "
+                      "product name:- %s and version name:- %s" % (product_id, version_name))
             version_id = self.__get_version_id(product_name, product_code, version_name)
 
             if item.get('state') == 'present':
@@ -98,25 +99,25 @@ class PushCGW:
                     LOG.info("Creating version entry for the given version metadata")
                     version_id = self.cgw_client.create_version(product_id, item.get('metadata'))
                     self.__create_product_version_mapping(product_name, product_code)
-                    LOG.info(f"New version created with version_id:- {version_id}")
+                    LOG.info("New version created with version_id:- %s" % version_id)
                     return
                 item.get('metadata')['id'] = version_id
-                LOG.info(f"Found version record with version_id:- {version_id}")
+                LOG.info("Found version record with version_id:- %s" % version_id)
                 LOG.info("Updating the version metadata")
                 self.cgw_client.update_version(product_id, item.get('metadata'))
             elif item.get('state') == 'absent' and version_id:
-                LOG.info(f"Deleting existing version records for version_id:- {version_id}")
+                LOG.info("Deleting existing version records for version_id:- %s" % version_id)
                 self.cgw_client.delete_version(product_id, version_id)
                 LOG.info("Version record deleted!")
             else:
-                LOG.warning("Invalid state or metadata!")
+                LOG.error("Invalid state or metadata!")
         except Exception as error:
             LOG.exception(error)
 
     def process_file(self, file_item):
         try:
             product_id, version_id, file_id = self.__get_file_id(file_item)
-            LOG.debug(f"Fetching file id for the file metadata")
+            LOG.debug("Fetching file id for the file metadata")
             if not (product_id and version_id):
                 product_name = file_item.get('metadata').get('productName')
                 product_code = file_item.get('metadata').get('productCode')
@@ -134,14 +135,14 @@ class PushCGW:
                     LOG.info("No previous entries found for the given file metadata")
                     LOG.info("Creating version entry for the given file metadata")
                     file_id = self.cgw_client.create_file(product_id, version_id, file_item.get('metadata'))
-                    LOG.info(f"New file created with file_id:- {file_id}")
+                    LOG.info("New file created with file_id:- %s" % file_id)
                     return
-                LOG.info(f"Found file record with file_id:- {file_id}")
+                LOG.info("Found file record with file_id:- %s" % file_id)
                 LOG.info("Updating the file metadata")
                 file_item.get('metadata')['id'] = file_id
                 self.cgw_client.update_file(product_id, version_id, file_item.get('metadata'))
             elif file_item.get('state') == 'absent' and file_id:
-                LOG.info(f"Deleting existing file records for file_id:- {file_id}")
+                LOG.info("Deleting existing file records for file_id:- %s" % file_id)
                 self.cgw_client.delete_file(product_id, version_id, file_id)
                 LOG.info("File record deleted!")
             else:
@@ -156,20 +157,15 @@ class PushCGW:
         cgw_products = self.cgw_client.get_products()
         self.product_mapping = {(data['name'], data['productCode']): data['id'] for data in cgw_products}
         for item in cgw_items:
-            if item['type'] == 'product':
-                if not validate_schema(item):
-                    continue
+            is_validated = validate_schema(item)
+            if item['type'] == 'product' and is_validated:
                 self.process_product(item)
-            if item['type'] == 'product_version':
-                if not validate_schema(item):
-                    continue
+            if item['type'] == 'product_version' and is_validated:
                 if not self.pv_mapping:
                     self.__create_product_version_mapping(item.get('metadata')['productName'],
                                                           item.get('metadata')['productCode'])
                 self.process_version(item)
-            if item['type'] == 'file':
-                if not validate_schema(item):
-                    continue
+            if item['type'] == 'file' and is_validated:
                 self.process_file(item)
 
 
