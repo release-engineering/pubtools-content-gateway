@@ -16,7 +16,8 @@ PRODUCT_SCHEMA = {
             "type": "string"
         },
         "state": {
-            "type": "string"
+            "type": "string",
+            "enum": ["present", "absent"]
         },
         "metadata": {
             "type": "object",
@@ -72,7 +73,8 @@ VERSION_SCHEMA = {
             "type": "string"
         },
         "state": {
-            "type": "string"
+            "type": "string",
+            "enum": ["present", "absent"]
         },
         "metadata": {
             "type": "object",
@@ -133,7 +135,8 @@ FILE_SCHEMA = {
             "type": "string"
         },
         "state": {
-            "type": "string"
+            "type": "string",
+            "enum": ["present", "absent"]
         },
         "metadata": {
             "type": "object",

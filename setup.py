@@ -53,7 +53,7 @@ setup(
             "push-cgw-metadata = pubtools._content_gateway.push_cgw:main"
         ],
         "target": [
-            "push-staged = pubtools._content_gateway.push_staged:entry_point",
+            "push-staged-cgw = pubtools._content_gateway.push_staged_cgw:entry_point",
         ]
     },
     include_package_data=True,

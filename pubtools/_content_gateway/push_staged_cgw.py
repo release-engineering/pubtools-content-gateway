@@ -1,4 +1,4 @@
-import argparse
+from pushsource import Source, CGWPushItem
 from .cgw_client import *
 from .cgw_authentication import CGWBasicAuth
 from .utils import yaml_parser, validate_schema
@@ -9,13 +9,17 @@ LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
-class PushCGW:
-    def __init__(self, cgw_hostname, cgw_username, cgw_password, cgw_filepath):
-        self.auth = CGWBasicAuth(cgw_username, cgw_password)
-        self.cgw_client = CGWClient(cgw_hostname, self.auth)
-        self.cgw_filepath = cgw_filepath
+class PushStagedCGW:
+    def __init__(self, push_items, hub, task_id, target_name, target_settings):
+        self.auth = CGWBasicAuth(target_settings['username'], target_settings['password'])
+        self.cgw_client = CGWClient(target_settings['server_name'], self.auth)
         self.product_mapping = None
         self.pv_mapping = None
+
+        self.push_items = push_items
+        self.hub = hub
+        self.task_id = task_id
+        self.target_name = target_name
 
     def _create_product_version_mapping(self, product_name, product_code):
         product_id = self._get_product_id(product_name, product_code)
@@ -64,6 +68,7 @@ class PushCGW:
                 product_id = self.cgw_client.create_product(item.get('metadata'))
                 # A new product is created so updating the existing product mapping
                 self.product_mapping[(product_name, product_code)] = product_id
+
                 LOG.debug("Created a new product with product_id:- %s" % product_id)
                 return
             LOG.info("Product record found with product_id:- %s" % product_id)
@@ -81,7 +86,7 @@ class PushCGW:
         version_name = item.get('metadata')['versionName']
         product_id = self._get_product_id(product_name, product_code)
         LOG.debug("Fetching the product and version id of "
-                  "product name:- %s and version name:- %s" % (product_id, version_name))
+                  "product name:- %s and version name:- %s" % (product_name, version_name))
         version_id = self._get_version_id(product_name, product_code, version_name)
 
         if item.get('state') == 'present':
@@ -91,6 +96,7 @@ class PushCGW:
                 LOG.info("No previous entries found for the given product's version")
                 LOG.info("Creating version entry for the given version metadata")
                 version_id = self.cgw_client.create_version(product_id, item.get('metadata'))
+                # adding new version record to the version mapping
                 self.pv_mapping[(product_name, product_code, version_name)] = (product_id, version_id)
                 LOG.info("New version created with version_id:- %s" % version_id)
                 return
@@ -119,6 +125,14 @@ class PushCGW:
                 file_item.get('metadata')['productVersionName']
             file_item.get('metadata')['productVersionId'] = version_id
 
+            # TODO: Extra code needed to be added for pubtools-pulp
+            for item in self.push_items:
+                if item.metadata['file_path'] == file_item['metadata']['pushItemPath']:
+                    file_item['metadata']['size'] = item.metadata['file_size']
+                    file_item['metadata']['md5'] = item.metadata['md5sum']
+                    file_item['metadata']['sha256'] = item.metadata['sha256sum']
+                    file_item['metadata']['downloadURL'] = item.metadata['dest']
+
             if not file_id:
                 LOG.info("No previous entries found for the given file metadata")
                 LOG.info("Creating version entry for the given file metadata")
@@ -134,44 +148,26 @@ class PushCGW:
             self.cgw_client.delete_file(product_id, version_id, file_id)
             LOG.info("File record deleted!")
 
-    def cgw_operations(self):
-        # Parsing yaml file
-        cgw_items = yaml_parser(self.cgw_filepath)
-        # Creating product mapping to get the product_id with name and productCode
+    def push_staged_operations(self):
         cgw_products = self.cgw_client.get_products()
-        # All the mappings will get removed when we will update/delete the products/versions and files by ids
-        self.product_mapping = {(data['name'], data['productCode']): data['id'] for data in cgw_products}
-        for item in cgw_items:
-            is_validated = validate_schema(item)
-            if item['type'] == 'product' and is_validated:
-                self.process_product(item)
-            elif item['type'] == 'product_version' and is_validated:
-                if not self.pv_mapping:
-                    self._create_product_version_mapping(item.get('metadata')['productName'],
-                                                          item.get('metadata')['productCode'])
-                self.process_version(item)
-            elif item['type'] == 'file' and is_validated:
-                self.process_file(item)
+        for item in self.push_items:
+            if isinstance(item, CGWPushItem):
+                parsed_items = yaml_parser(item.src)
+                self.product_mapping = {(data.get('name'), data.get('productCode')): data.get('id') for data in
+                                        cgw_products}
+                for pitem in parsed_items:
+                    is_validated = validate_schema(pitem)
+                    if pitem['type'] == 'product' and is_validated:
+                        self.process_product(pitem)
+                    if pitem.get('type') == 'product_version' and is_validated:
+                        if not self.pv_mapping:
+                            self._create_product_version_mapping(pitem.get('metadata')['productName'],
+                                                                  pitem.get('metadata')['productCode'])
+                        self.process_version(pitem)
+                    if pitem['type'] == 'file' and is_validated:
+                        self.process_file(pitem)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-host", "--CGW_hostname",
-                        required=True,
-                        metavar="CGW-hostname",
-                        help="Hostname of the server")
-    parser.add_argument("-u", "--CGW_username",
-                        required=True,
-                        metavar="CGW-username",
-                        help="Username of Content Gateway")
-    # TODO: Reading password form the environment variable if it's set
-    parser.add_argument("-p", "--CGW_password",
-                        metavar="CGW-password",
-                        help="Password for Content Gateway")
-    parser.add_argument("-f", "--CGW_filepath",
-                        required=True,
-                        metavar="CGW-filepath",
-                        help="File path to read metadata")
-    args = parser.parse_args()
-    push_cgw = PushCGW(args.CGW_hostname, args.CGW_username, args.CGW_password, args.CGW_filepath)
-    push_cgw.cgw_operations()
+def entry_point(push_items, hub, task_id, target_name, target_settings, extra_data):
+    push_staged = PushStagedCGW(push_items, hub, task_id, target_name, target_settings)
+    push_staged.push_staged_operations()
