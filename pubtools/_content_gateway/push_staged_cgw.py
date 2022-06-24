@@ -1,8 +1,15 @@
-from pushsource import Source, CGWPushItem
+from pushsource import CGWPushItem
 from .cgw_client import *
 from .cgw_authentication import CGWBasicAuth
 from .utils import yaml_parser, validate_schema
 import logging
+from attrs import asdict
+import pluggy
+import json
+
+pm = pluggy.PluginManager("pubtools")
+hookspec = pluggy.HookspecMarker("pubtools")
+hookimpl = pluggy.HookimplMarker("pubtools")
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
@@ -10,22 +17,20 @@ logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class PushStagedCGW:
-    def __init__(self, push_items, hub, task_id, target_name, target_settings):
+    def __init__(self, target_name, target_settings):
         self.auth = CGWBasicAuth(target_settings['username'], target_settings['password'])
         self.cgw_client = CGWClient(target_settings['server_name'], self.auth)
-        self.product_mapping = None
-        self.pv_mapping = None
-
-        self.push_items = push_items
-        self.hub = hub
-        self.task_id = task_id
+        self.product_mapping = {}
+        self.pv_mapping = {}
+        self.push_items = []
         self.target_name = target_name
+        self.pulp_push_items = {}
 
     def _create_product_version_mapping(self, product_name, product_code):
         product_id = self._get_product_id(product_name, product_code)
         all_versions = self.cgw_client.get_versions(product_id)
-        self.pv_mapping = {(product_name, product_code, data.get('versionName')): (product_id, data.get('id')) for data
-                           in all_versions}
+        for data in all_versions:
+            self.pv_mapping[(product_name, product_code, data.get('versionName'))] = (product_id, data.get('id'))
 
     def _get_product_id(self, product_name, product_code):
         product_id = self.product_mapping.get((product_name, product_code))
@@ -47,8 +52,10 @@ class PushStagedCGW:
             self._create_product_version_mapping(product_name, product_code)
         version_id = self._get_version_id(product_name, product_code, version_name)
         all_files = self.cgw_client.get_files(product_id, version_id)
-        file_mapping = {(product_name, product_code, version_name, data.get('downloadURL')): (
-            product_id, version_id, data.get('id')) for data in all_files}
+        file_mapping = {}
+        for data in all_files:
+            file_mapping[(product_name, product_code, version_name, data.get('downloadURL'))] = (
+                product_id, version_id, data.get('id'))
         pvf_id = file_mapping.get(
             (product_name, product_code, version_name,
              file_item.get('metadata').get('downloadURL'))) if file_mapping else (None, None, None)
@@ -153,8 +160,8 @@ class PushStagedCGW:
         for item in self.push_items:
             if isinstance(item, CGWPushItem):
                 parsed_items = yaml_parser(item.src)
-                self.product_mapping = {(data.get('name'), data.get('productCode')): data.get('id') for data in
-                                        cgw_products}
+                for data in cgw_products:
+                    self.product_mapping[(data['name'], data['productCode'])] = data['id']
                 for pitem in parsed_items:
                     is_validated = validate_schema(pitem)
                     if pitem['type'] == 'product' and is_validated:
@@ -162,12 +169,16 @@ class PushStagedCGW:
                     if pitem.get('type') == 'product_version' and is_validated:
                         if not self.pv_mapping:
                             self._create_product_version_mapping(pitem.get('metadata')['productName'],
-                                                                  pitem.get('metadata')['productCode'])
+                                                                 pitem.get('metadata')['productCode'])
                         self.process_version(pitem)
                     if pitem['type'] == 'file' and is_validated:
                         self.process_file(pitem)
 
+    @hookimpl
+    def gather_source_items(self, pulp_push_item, push_item):
+        self.pulp_push_items[json.dumps(asdict(push_item), sort_keys=True)] = pulp_push_item
 
-def entry_point(push_items, hub, task_id, target_name, target_settings, extra_data):
-    push_staged = PushStagedCGW(push_items, hub, task_id, target_name, target_settings)
-    push_staged.push_staged_operations()
+
+def entry_point(target_name, target_settings):
+    push_staged = PushStagedCGW(target_name, target_settings)
+    return push_staged

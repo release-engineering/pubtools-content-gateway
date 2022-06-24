@@ -14,14 +14,14 @@ class PushCGW:
         self.auth = CGWBasicAuth(cgw_username, cgw_password)
         self.cgw_client = CGWClient(cgw_hostname, self.auth)
         self.cgw_filepath = cgw_filepath
-        self.product_mapping = None
-        self.pv_mapping = None
+        self.product_mapping = {}
+        self.pv_mapping = {}
 
     def _create_product_version_mapping(self, product_name, product_code):
         product_id = self._get_product_id(product_name, product_code)
         all_versions = self.cgw_client.get_versions(product_id)
-        self.pv_mapping = {(product_name, product_code, data.get('versionName')): (product_id, data.get('id')) for data
-                           in all_versions}
+        for data in all_versions:
+            self.pv_mapping[(product_name, product_code, data.get('versionName'))] = (product_id, data.get('id'))
 
     def _get_product_id(self, product_name, product_code):
         product_id = self.product_mapping.get((product_name, product_code))
@@ -43,8 +43,10 @@ class PushCGW:
             self._create_product_version_mapping(product_name, product_code)
         version_id = self._get_version_id(product_name, product_code, version_name)
         all_files = self.cgw_client.get_files(product_id, version_id)
-        file_mapping = {(product_name, product_code, version_name, data.get('downloadURL')): (
-            product_id, version_id, data.get('id')) for data in all_files}
+        file_mapping = {}
+        for data in all_files:
+            file_mapping[(product_name, product_code, version_name, data.get('downloadURL'))] = (
+                product_id, version_id, data.get('id'))
         pvf_id = file_mapping.get(
             (product_name, product_code, version_name,
              file_item.get('metadata').get('downloadURL'))) if file_mapping else (None, None, None)
@@ -139,8 +141,8 @@ class PushCGW:
         cgw_items = yaml_parser(self.cgw_filepath)
         # Creating product mapping to get the product_id with name and productCode
         cgw_products = self.cgw_client.get_products()
-        # All the mappings will get removed when we will update/delete the products/versions and files by ids
-        self.product_mapping = {(data['name'], data['productCode']): data['id'] for data in cgw_products}
+        for data in cgw_products:
+            self.product_mapping[(data['name'], data['productCode'])] = data['id']
         for item in cgw_items:
             is_validated = validate_schema(item)
             if item['type'] == 'product' and is_validated:
@@ -148,7 +150,7 @@ class PushCGW:
             elif item['type'] == 'product_version' and is_validated:
                 if not self.pv_mapping:
                     self._create_product_version_mapping(item.get('metadata')['productName'],
-                                                          item.get('metadata')['productCode'])
+                                                         item.get('metadata')['productCode'])
                 self.process_version(item)
             elif item['type'] == 'file' and is_validated:
                 self.process_file(item)
