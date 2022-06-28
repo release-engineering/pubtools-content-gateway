@@ -138,7 +138,7 @@ class PushStagedCGW:
                     file_item['metadata']['md5'] = item.metadata['md5sum']
                     file_item['metadata']['sha256'] = item.metadata['sha256sum']
                     file_item['metadata']['downloadURL'] = self.pulp_push_items[
-                        json.dumps(asdict(self.push_items), sort_keys=True)].cdn_path
+                        json.dumps(asdict(self.push_item), sort_keys=True)].cdn_path
 
             if not file_id:
                 LOG.info("No previous entries found for the given file metadata")
@@ -176,7 +176,8 @@ class PushStagedCGW:
 
     @hookimpl
     def gather_source_items(self, pulp_push_item, push_item):
-        self.pulp_push_items[json.dumps(asdict(push_item), sort_keys=True)] = pulp_push_item
+        self.push_item = push_item
+        self.pulp_push_items[json.dumps(asdict(self.push_item), sort_keys=True)] = pulp_push_item
 
 
 def entry_point(target_name, target_settings):
