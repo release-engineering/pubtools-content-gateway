@@ -132,13 +132,13 @@ class PushStagedCGW:
                 file_item.get('metadata')['productVersionName']
             file_item.get('metadata')['productVersionId'] = version_id
 
-            # TODO: Extra code needed to be added for pubtools-pulp
             for item in self.push_items:
                 if item.metadata['file_path'] == file_item['metadata']['pushItemPath']:
                     file_item['metadata']['size'] = item.metadata['file_size']
                     file_item['metadata']['md5'] = item.metadata['md5sum']
                     file_item['metadata']['sha256'] = item.metadata['sha256sum']
-                    file_item['metadata']['downloadURL'] = item.metadata['dest']
+                    file_item['metadata']['downloadURL'] = self.pulp_push_items[
+                        json.dumps(asdict(self.push_items), sort_keys=True)].cdn_path
 
             if not file_id:
                 LOG.info("No previous entries found for the given file metadata")
