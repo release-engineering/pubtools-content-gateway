@@ -210,24 +210,50 @@ FILE_SCHEMA = {
 }
 
 
-def validate_schema(json_data):
-    try:
-        if json_data.get('type') == 'product':
-            validate(instance=json_data, schema=PRODUCT_SCHEMA)
-        elif json_data.get('type') == 'product_version':
-            validate(instance=json_data, schema=VERSION_SCHEMA)
-        elif json_data.get('type') == 'file':
-            validate(instance=json_data, schema=FILE_SCHEMA)
-    except jsonschema.exceptions.ValidationError as error:
-        LOG.exception(error)
-        return False
+def validate_data(json_data):
+    item_type = json_data.get('type')
+    if item_type == 'product':
+        validate(instance=json_data, schema=PRODUCT_SCHEMA)
+    elif item_type == 'product_version':
+        validate(instance=json_data, schema=VERSION_SCHEMA)
+    elif item_type == 'file':
+        validate(instance=json_data, schema=FILE_SCHEMA)
+    LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get('metadata').get('productCode')))
     return True
 
 
 def yaml_parser(file_path):
-    try:
-        with open(file_path) as f:
-            data = list(yaml.load_all(f, Loader=SafeLoader))
-        return data[0]
-    except Exception as error:
-        LOG.exception(error)
+    with open(file_path) as f:
+        data = list(yaml.load_all(f, Loader=SafeLoader))
+    sorted_data = sort_item(data[0])
+    return sorted_data
+
+
+def sort_item(items):
+    product_present = []
+    version_present = []
+    file_present = []
+    file_absent = []
+    version_absent = []
+    product_absent = []
+    sorted_items = []
+
+    for data in items:
+        validate_data(data)
+        if data['type'] == 'product':
+            product_present.append(data) if data['state'] == 'present' else product_absent.append(data)
+
+        if data['type'] == 'product_version':
+            version_present.append(data) if data['state'] == 'present' else version_absent.append(data)
+
+        if data['type'] == 'file':
+            file_present.append(data) if data['state'] == 'present' else file_absent.append(data)
+
+    sorted_items.extend(product_present)
+    sorted_items.extend(version_present)
+    sorted_items.extend(file_present)
+    sorted_items.extend(file_absent)
+    sorted_items.extend(version_absent)
+    sorted_items.extend(product_absent)
+
+    return sorted_items
