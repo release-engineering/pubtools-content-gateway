@@ -1,11 +1,6 @@
 import argparse
 from .push_base import PushBase
 from .utils import yaml_parser
-import logging
-
-LOG = logging.getLogger("pubtools.cgw")
-LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class PushCGW(PushBase):

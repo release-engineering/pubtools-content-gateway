@@ -24,19 +24,17 @@ class PushBase:
             product_id = self._get_product_id(product_name, product_code)
             all_versions = self.cgw_client.get_versions(product_id)
             for data in all_versions:
-                self.pv_mapping[(product_name, product_code, data.get('versionName'))] = (product_id, data.get('id'))
+                self.pv_mapping[(product_name, product_code, data.get('versionName'))] = data.get('id')
 
     def _get_product_id(self, product_name, product_code):
         product_id = self.product_mapping.get((product_name, product_code))
         return product_id
 
     def _get_version_id(self, product_name, product_code, version_name):
-        ids = self.pv_mapping[(product_name, product_code, version_name)] if self.pv_mapping else (None, None)
-        ProductVersionID = namedtuple('ProductVersionID', ['product_id', 'version_id'])
-        pv_ids = ProductVersionID(product_id=ids[0], version_id=ids[1])
-        return pv_ids.version_id
+        pv_id = self.pv_mapping.get((product_name, product_code, version_name)) if self.pv_mapping else None
+        return pv_id
 
-    def _create_file_mapping(self, product_name, product_code, version_name, download_url):
+    def _create_file_mapping(self, product_name, product_code, version_name):
         if not self.file_mapping:
             product_id = self._get_product_id(product_name, product_code)
             version_id = self._get_version_id(product_name, product_code, version_name)
@@ -53,10 +51,13 @@ class PushBase:
         download_url = file_item.get('metadata').get('downloadURL')
 
         self._create_product_version_mapping(product_name, product_code)
-        self._create_file_mapping(product_name, product_code, version_name, download_url)
-
         ids = self.file_mapping.get((product_name, product_code, version_name, download_url)
                                     ) if self.file_mapping else (None, None, None)
+        if not ids:
+            self._create_file_mapping(product_name, product_code, version_name)
+            ids = self.file_mapping.get((product_name, product_code, version_name, download_url)
+                                        ) if self.file_mapping else (None, None, None)
+
         ProductVersionFileID = namedtuple('ProductVersionFileID', ['product_id', 'version_id', 'file_id'])
         pvf_id = ProductVersionFileID(product_id=ids[0], version_id=ids[1], file_id=ids[2])
 
@@ -66,7 +67,7 @@ class PushBase:
         product_name = item.get('metadata').get('name')
         product_code = item.get('metadata').get('productCode')
         LOG.debug(
-            "Fetching for product_id of product name:- %s and product code:- %s" % (product_name, product_code))
+            "Fetching for product_id of product_name:- %s and product_code:- %s" % (product_name, product_code))
         product_id = self._get_product_id(product_name, product_code)
 
         if item.get('state') == 'present':
@@ -87,6 +88,10 @@ class PushBase:
             LOG.info("Deleting existing product records for product_id:- %s" % product_id)
             self.cgw_client.delete_product(product_id)
             LOG.info("Product record deleted!")
+        else:
+            raise Exception("Cannot delete the product. "
+                            "The product record is not present for "
+                            "name: %s and code: %s " % (product_name, product_code))
 
     def process_version(self, item):
         product_name = item.get('metadata')['productName']
@@ -94,8 +99,8 @@ class PushBase:
         version_name = item.get('metadata')['versionName']
 
         product_id = self._get_product_id(product_name, product_code)
-        LOG.debug("Fetching the product and version id of "
-                  "product name:- %s and version name:- %s" % (product_id, version_name))
+        LOG.debug("Fetching the product and version_id of "
+                  "product_name:- %s and version_name:- %s" % (product_name, version_name))
         version_id = self._get_version_id(product_name, product_code, version_name)
 
         if item.get('state') == 'present':
@@ -103,7 +108,7 @@ class PushBase:
             del item.get('metadata')['productName'], item.get('metadata')['productCode']
             if not version_id:
                 LOG.info("No previous entries found for the given product's version")
-                LOG.info("Creating version entry for the given version metadata")
+                LOG.info("Creating version entry for the given version_name: %s ", version_name)
                 version_id = self.cgw_client.create_version(product_id, item.get('metadata'))
                 # adding new version record to the version mapping
                 self.pv_mapping[(product_name, product_code, version_name)] = (product_id, version_id)
@@ -118,6 +123,10 @@ class PushBase:
             LOG.info("Deleting existing version records for version_id:- %s" % version_id)
             self.cgw_client.delete_version(product_id, version_id)
             LOG.info("Version record deleted!")
+        else:
+            raise Exception("Cannot delete the version. "
+                            "The version record is not present for"
+                            " version_name: %s and product_code: %s " % (version_name, product_code))
 
     def process_file(self, file_item, is_push_staged=False):
         product_id, version_id, file_id = self._get_file_id(file_item)
@@ -149,7 +158,7 @@ class PushBase:
 
             if not file_id:
                 LOG.info("No previous entries found for the given file metadata")
-                LOG.info("Creating version entry for the given file metadata")
+                LOG.info("Creating file entry for the given downloadURL: %s ", download_url)
                 file_id = self.cgw_client.create_file(product_id, version_id, file_item.get('metadata'))
                 self.file_mapping[
                     (product_name, product_code, version_name, download_url)] = (product_id, version_id, file_id)
@@ -164,3 +173,7 @@ class PushBase:
             LOG.info("Deleting existing file records for file_id:- %s" % file_id)
             self.cgw_client.delete_file(product_id, version_id, file_id)
             LOG.info("File record deleted!")
+        else:
+            raise Exception("Cannot delete the file. "
+                            "The file record is not present for"
+                            " version_name: %s and product_code: %s " % (version_name, product_code))

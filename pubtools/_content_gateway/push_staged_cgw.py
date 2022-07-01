@@ -1,7 +1,6 @@
 from pushsource import CGWPushItem
 from .push_base import PushBase
 from .utils import yaml_parser
-import logging
 from attrs import asdict
 import pluggy
 import json
@@ -9,10 +8,6 @@ import json
 pm = pluggy.PluginManager("pubtools")
 hookspec = pluggy.HookspecMarker("pubtools")
 hookimpl = pluggy.HookimplMarker("pubtools")
-
-LOG = logging.getLogger("pubtools.cgw")
-LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class PushStagedCGW(PushBase):
