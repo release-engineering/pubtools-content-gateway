@@ -1,6 +1,5 @@
 import yaml
 from yaml.loader import SafeLoader
-import jsonschema
 from jsonschema import validate
 import logging
 
@@ -209,15 +208,87 @@ FILE_SCHEMA = {
     ]
 }
 
+FILE_STAGED_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string"
+        },
+        "state": {
+            "type": "string",
+            "enum": ["present", "absent"]
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "productName": {
+                    "type": "string"
+                },
+                "productCode": {
+                    "type": ["string", "null"]
+                },
+                "productVersionName": {
+                    "type": ["string", "number", "null"]
+                },
+                "description": {
+                    "type": ["string", "null"]
+                },
+                "label": {
+                    "type": ["string", "null"]
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "hidden": {
+                    "type": "boolean"
+                },
+                "invisible": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "differentProductThankYouPage": {
+                    "type": ["number", "null"]
+                },
+                "shortURL": {
+                    "type": "string"
+                },
+                "item_path": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "productName",
+                "productCode",
+                "productVersionName",
+                "description",
+                "label",
+                "order",
+                "hidden",
+                "invisible",
+                "type",
+                "differentProductThankYouPage",
+                "shortURL",
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "state",
+        "metadata"
+    ]
+}
 
-def validate_data(json_data):
+
+def validate_data(json_data, staged=False):
     item_type = json_data.get('type')
     if item_type == 'product':
         validate(instance=json_data, schema=PRODUCT_SCHEMA)
     elif item_type == 'product_version':
         validate(instance=json_data, schema=VERSION_SCHEMA)
     elif item_type == 'file':
-        validate(instance=json_data, schema=FILE_SCHEMA)
+        validate(instance=json_data, schema=FILE_STAGED_SCHEMA if staged else FILE_SCHEMA)
     LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get('metadata').get('productCode')))
     return True
 
@@ -225,11 +296,10 @@ def validate_data(json_data):
 def yaml_parser(file_path):
     with open(file_path) as f:
         data = list(yaml.load_all(f, Loader=SafeLoader))
-    sorted_data = sort_item(data[0])
-    return sorted_data
+    return data
 
 
-def sort_item(items):
+def sort_items(items):
     product_present = []
     version_present = []
     file_present = []
@@ -239,7 +309,6 @@ def sort_item(items):
     sorted_items = []
 
     for data in items:
-        validate_data(data)
         if data['type'] == 'product':
             product_present.append(data) if data['state'] == 'present' else product_absent.append(data)
 
