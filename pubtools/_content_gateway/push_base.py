@@ -1,7 +1,6 @@
-from .cgw_client import *
+from .cgw_client import CGWClient
 from .cgw_authentication import CGWBasicAuth
 import logging
-from attrs import asdict
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
@@ -39,7 +38,7 @@ class FetcherDict:
 
     def __delitem__(self, key):
         self.key_checker(key)
-        self.data.__delitem__[key]
+        self.data.__delitem__(key)
 
 
 class PushBase:
@@ -71,17 +70,17 @@ class PushBase:
             yield (product['name'], product['productCode']), product['id']
 
     def _fetch_product_version(self, product_name, product_code, version_name):
-        product_id = self.product_mapping[(product_name, product_code)]
+        product_id = self.product_mapping.get((product_name, product_code))
         all_versions = self.cgw_client.get_versions(product_id)
         for version in all_versions:
-            yield (product_name, product_code, version['name']), version['versionName']
+            yield (product_name, product_code, version['versionName']), version['id']
 
     def _fetch_file(self, product_name, product_code, version_name, download_url):
-        product_id = self.product_mapping[(product_name, product_code)]
-        version_id = self.product_mapping[(product_name, product_code, version_name)]
+        product_id = self.product_mapping.get((product_name, product_code))
+        version_id = self.pv_mapping.get((product_name, product_code, version_name))
         all_files = self.cgw_client.get_files(product_id, version_id)
         for data in all_files:
-            yield (product_name, product_code, version_name, data['metadata']['downloadURL']), data.get('id')
+            yield (product_name, product_code, version_name, data['downloadURL']), data.get('id')
 
     def __init__(self, cgw_hostname, cgw_username, cgw_password):
         self.auth = CGWBasicAuth(cgw_username, cgw_password)
@@ -109,7 +108,7 @@ class PushBase:
                 # A new product is created so updating the existing product mapping
                 self.product_mapping[(product_name, product_code)] = product_id
                 LOG.info("Created a new product with product_id:- %s" % product_id)
-                return
+                return product_id
 
             LOG.info("Product record found with product_id:- %s" % product_id)
             item.get('metadata')['id'] = product_id
@@ -122,13 +121,14 @@ class PushBase:
             LOG.info("Product record deleted!")
         else:
             raise CGWError("Cannot delete the product %s %s, id is not set" % (product_name, product_code))
+        return product_id
 
     def process_version(self, item):
         product_name = item.get('metadata')['productName']
         product_code = item.get('metadata')['productCode']
         version_name = item.get('metadata')['versionName']
 
-        product_id = self.product_mapping[(product_name, product_code)]
+        product_id = self.product_mapping.get((product_name, product_code))
         if not product_id:
             raise CGWError("Product name: %s product code: %s not found" % (product_name, product_code))
 
@@ -160,37 +160,31 @@ class PushBase:
         else:
             raise CGWError("Cannot delete the version name: '%s' product code: '%s' product: '%s', id is not set" %
                            (version_name, product_code, product_name))
+        return version_id
 
-    def process_file(self, file_item, is_push_staged=False):
+    def process_file(self, file_item):
         LOG.debug("Fetching file id for the file metadata")
         product_name = file_item.get('metadata').get('productName')
         product_code = file_item.get('metadata').get('productCode')
         version_name = file_item.get('metadata').get('productVersionName')
         download_url = file_item.get('metadata').get('downloadURL')
         product_id = self.product_mapping.get((product_name, product_code))
-        version_id = self.pv_mapping.get((product_name, product_code, version_name))
-        file_id = self.file_mapping.get((product_name, product_code, version_name, download_url))
 
         if not product_id:
             raise CGWError("Product name: %s product code: %s not found" % (product_name, product_code))
+
+        version_id = self.pv_mapping.get((product_name, product_code, version_name))
         if not version_id:
             raise CGWError("Product name: %s product code: %s version name: %s not found" % (
                 product_name, product_code, version_name))
+
+        file_id = self.file_mapping.get((product_name, product_code, version_name, download_url))
 
         if file_item.get('state') == 'present':
             del file_item.get('metadata')['productName'], \
                 file_item.get('metadata')['productCode'], \
                 file_item.get('metadata')['productVersionName']
             file_item.get('metadata')['productVersionId'] = version_id
-
-            if is_push_staged:
-                for item in self.push_items:
-                    if item.metadata['src'] == file_item['metadata']['pushItemPath']:
-                        file_item['metadata']['size'] = item.metadata['file_size']
-                        file_item['metadata']['md5'] = item.metadata['md5sum']
-                        file_item['metadata']['sha256'] = item.metadata['sha256sum']
-                        file_item['metadata']['downloadURL'] = self.pulp_push_items[
-                            json.dumps(asdict(item), sort_keys=True)].cdn_path
 
             if not file_id:
                 LOG.info("No previous entries found for the given file metadata")
@@ -213,3 +207,4 @@ class PushBase:
         else:
             raise CGWError("Cannot delete file: product version: '%s' product code: '%s' product: '%s', id is not set" %
                            (version_name, product_code, product_name))
+        return file_id

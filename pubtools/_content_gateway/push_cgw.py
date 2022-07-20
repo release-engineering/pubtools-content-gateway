@@ -22,11 +22,8 @@ class PushCGW(PushBase):
             elif item['type'] == 'product_version':
                 self.process_version(item)
             elif item['type'] == 'file':
-                self.process_file(item, False)
+                self.process_file(item)
 
-    def roll_back(self):
-        # TODO: Need discussion with DK for the rollback workflow
-        pass
 
 def main():
     parser = argparse.ArgumentParser()

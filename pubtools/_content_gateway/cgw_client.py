@@ -147,7 +147,7 @@ class CGWClient:
         return resp_data
 
     def update_url(self, pid, vid, data):
-        endpoint = "/products/%s/versions/%s/urls/" % (pid, vid)
+        endpoint = "/products/%s/versions/%s/urls" % (pid, vid)
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
@@ -167,16 +167,16 @@ class CGWClient:
         return resp_data
 
     def create_internal(self, pid, vid, data):
-        endpoint = "/products/%s/versions/%s/internal/" % (pid, vid)
+        endpoint = "/products/%s/versions/%s/internals/" % (pid, vid)
         resp_data = self.call_cgw_api("PUT", endpoint, data=json.dumps(data))
         return resp_data
 
     def update_internal(self, pid, vid, data):
-        endpoint = "/products/%s/versions/%s/internal/" % (pid, vid)
+        endpoint = "/products/%s/versions/%s/internals/" % (pid, vid)
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
-    def delete_internal(self, pid, vid, uid, data=None):
-        endpoint = "/products/%s/versions/%s/internal/%s" % (pid, vid, uid)
+    def delete_internal(self, pid, vid, iid, data=None):
+        endpoint = "/products/%s/versions/%s/internals/%s" % (pid, vid, iid)
         resp_data = self.call_cgw_api("DELETE", endpoint, data=data)
         return resp_data

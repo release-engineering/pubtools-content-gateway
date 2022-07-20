@@ -6,7 +6,7 @@ class CGWAuth(object):
         raise NotImplementedError
 
     def make_auth(self, cgw_session):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class CGWClientError(Exception):

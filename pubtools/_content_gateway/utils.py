@@ -7,7 +7,6 @@ LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
-
 PRODUCT_SCHEMA = {
     "type": "object",
     "properties": {
@@ -296,7 +295,7 @@ def validate_data(json_data, staged=False):
 def yaml_parser(file_path):
     with open(file_path) as f:
         data = list(yaml.load_all(f, Loader=SafeLoader))
-    return data
+    return data[0]
 
 
 def sort_items(items):
