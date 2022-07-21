@@ -61,7 +61,6 @@ def test_cgw_operations_success(mocked_cgw_client, target_setting):
     push_cgw.push_items = [file_item, cgw_item]
     for item in push_cgw.push_items:
         push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
-    # breakpoint()
     push_cgw.push_staged_operations()
 
     assert len(push_cgw.cgw_client.create_product.calls) >= 1
@@ -84,9 +83,10 @@ def test_invalid_push_items(target_setting):
     for item in push_cgw.push_items:
         push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError) as exception:
         push_cgw.push_staged_operations()
 
+    assert "Unable to find push item with path" in str(exception.value)
 
 def test_invalid_file_path(target_setting):
     cgw_item = CGWPushItem(name='cgw_push.yaml',
@@ -102,8 +102,9 @@ def test_invalid_file_path(target_setting):
     for item in push_cgw.push_items:
         push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
 
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(FileNotFoundError) as exception:
         push_cgw.push_staged_operations()
+    assert "No such file or directory" in str(exception.value)
 
 
 @mock.patch('pubtools._content_gateway.push_staged_cgw.PushStagedCGW', return_value="test")

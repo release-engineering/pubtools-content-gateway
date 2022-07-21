@@ -10,7 +10,6 @@ class PushCGW(PushBase):
         self.cgw_items = []
 
     def cgw_operations(self):
-        # parsing, validating and sorting yaml file data
         self.cgw_items = yaml_parser(self.cgw_filepath)
         # Creating product mapping to get the product_id with name and productCode
         for item in self.cgw_items:

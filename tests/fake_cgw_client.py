@@ -4,7 +4,6 @@ import inspect
 
 
 def tracker(f):
-    print(f)
     calls = []
 
     def new_func(*args, **kwargs):
@@ -15,7 +14,7 @@ def tracker(f):
     return new_func
 
 
-class Meta1(type):
+class TestClientMeta(type):
     def __new__(cls, clsname, bases, attrs):
         new_attrs = {}
         missing = set(bases[0].__dict__.keys()) - set(list(attrs.keys()) + ['call_cgw_api'])
@@ -33,7 +32,7 @@ class Meta1(type):
         return type.__new__(cls, clsname, bases, new_attrs)
 
 
-@six.add_metaclass(Meta1)
+@six.add_metaclass(TestClientMeta)
 class TestClient(object):
     def __init__(self, *args, **kwargs):
         self.products = {}
@@ -90,7 +89,7 @@ class TestClient(object):
             raise CGWClientError("content gateway API returned error: "
                                  "\nstatus_code: 404, reason: %s"
                                  % ('product not found'))
-        if vid not in self.products[pid]:
+        if vid not in self.product_versions[pid]:
             raise CGWClientError("content gateway API returned error: "
                                  "\nstatus_code: 404, reason: %s"
                                  % ('version not found'))
@@ -112,6 +111,10 @@ class TestClient(object):
             raise CGWClientError("content gateway API returned error: "
                                  "\nstatus_code: 404, reason: %s"
                                  % ('product not found'))
+        if data['id'] not in self.product_versions:
+            raise CGWClientError("content gateway API returned error: "
+                                 "\nstatus_code: 404, reason: %s"
+                                 % ('version not found'))
         self.product_versions[pid][data['id']] = data
 
     def delete_version(self, pid, vid, params=None):

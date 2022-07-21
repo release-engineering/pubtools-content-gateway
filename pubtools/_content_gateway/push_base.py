@@ -89,8 +89,6 @@ class PushBase:
         self.pv_mapping = FetcherDict({}, fetcher=self._fetch_product_version,
                                       key_checker=self._product_version_mapping_key_check)
         self.file_mapping = FetcherDict({}, fetcher=self._fetch_file, key_checker=self._file_key_check)
-        self.push_items = []
-        self.pulp_push_items = {}
 
     def process_product(self, item):
         product_name = item.get('metadata').get('name')

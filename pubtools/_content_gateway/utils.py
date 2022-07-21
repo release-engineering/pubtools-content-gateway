@@ -253,7 +253,7 @@ FILE_STAGED_SCHEMA = {
                 "shortURL": {
                     "type": "string"
                 },
-                "item_path": {
+                "pushItemPath": {
                     "type": "string"
                 }
             },
@@ -269,6 +269,7 @@ FILE_STAGED_SCHEMA = {
                 "type",
                 "differentProductThankYouPage",
                 "shortURL",
+                "pushItemPath",
             ]
         }
     },
@@ -281,6 +282,24 @@ FILE_STAGED_SCHEMA = {
 
 
 def validate_data(json_data, staged=False):
+    """
+    Validate that json_data contains all the necessary data
+    with defined with json schemas
+
+    Args:
+        json_data (dict)
+            JSON dictionary with content gateway data
+        staged (bool)
+            optional. Indicates if resulting json_data needs to
+            validate against FILE_STAGED_SCHEMA
+
+    Raises:
+        ValidationError
+            The json_data type doesn't match with schema
+    Returns:
+        True: if validation succeed
+    """
+
     item_type = json_data.get('type')
     if item_type == 'product':
         validate(instance=json_data, schema=PRODUCT_SCHEMA)
@@ -293,12 +312,48 @@ def validate_data(json_data, staged=False):
 
 
 def yaml_parser(file_path):
+    """
+    Parse the yaml data into json data
+
+    Args:
+        file_path (str)
+            JSON dictionary with content gateway data
+    Raises:
+        FileNotFoundError
+            If the file_path cannot be found
+    Returns:
+        list(dict): parsed json data from yaml file
+    """
+
     with open(file_path) as f:
         data = list(yaml.load_all(f, Loader=SafeLoader))
     return data[0]
 
 
 def sort_items(items):
+    """
+    Sort the items in the following order
+        1) all products with state present
+        2) all versions with state present
+        3) all files with state present
+        4) all files with state absent
+        5) all versions with state absent
+        6) all products with state absent
+    This is needed to process all the present state of products,
+    versions and files first then absent state of files, versions and products
+
+    This sorting is needed for the following reasons:
+        1) A file cannot be created if it's parent version and product are not present.
+            All parent data need to be present before creating child object.
+        2)A product cannot get deleted if it has versions and file.
+            All nested data need to be cleared before deleting parent object
+
+    Args:
+        items (list(dict))
+            list of JSON dictionary
+    Returns:
+        list(dict): list of JSON dictionary
+    """
     product_present = []
     version_present = []
     file_present = []
