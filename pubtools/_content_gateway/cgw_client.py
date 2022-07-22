@@ -164,7 +164,6 @@ class CGWClient:
 
         endpoint = "/products/%s" % pid
         resp_data = self.call_cgw_api("DELETE", endpoint, params=params)
-        breakpoint()
         return resp_data
 
     def get_versions(self, pid, params=None):

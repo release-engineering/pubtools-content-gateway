@@ -92,6 +92,3 @@ def entry_point(target_name, target_settings):
     """Entrypoint for CGW push stage."""
     push_staged = PushStagedCGW(target_name, target_settings)
     return push_staged
-
-
-pm.add_hookspecs(sys.modules[__name__])
