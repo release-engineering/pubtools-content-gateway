@@ -4,12 +4,33 @@ from .utils import yaml_parser, validate_data, sort_items
 
 
 class PushCGW(PushBase):
+    """Handle push CGW workflow."""
+
     def __init__(self, cgw_hostname, cgw_username, cgw_password, cgw_filepath):
+        """
+        Initialize.
+
+        Args:
+            cgw_hostname (str):
+                CGW registry URL
+            cgw_username (str):
+                username for CGW HTTP API
+            cgw_password (str):
+                password for CGW HTTP API
+            cgw_filepath (str):
+                filepath of the yaml file
+        """
+
         PushBase.__init__(self, cgw_hostname, cgw_username, cgw_password)
         self.cgw_filepath = cgw_filepath
         self.cgw_items = []
 
     def cgw_operations(self):
+        """
+        Initiate the CGW operations such as create, update or delete
+        on products, versions and files.
+        """
+
         self.cgw_items = yaml_parser(self.cgw_filepath)
         # Creating product mapping to get the product_id with name and productCode
         for item in self.cgw_items:
@@ -25,6 +46,8 @@ class PushCGW(PushBase):
 
 
 def main():
+    """Entrypoint for CGW Push."""
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-host", "--CGW_hostname",
                         required=True,
