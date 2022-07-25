@@ -37,7 +37,7 @@ class CGWClient:
         if cgw_auth:
             cgw_auth.make_auth(self.cgw_session)
 
-    def call_cgw_api(self, method, endpoint, params=None, data=None):
+    def call_cgw_api(self, method, endpoint, data=None):
 
         """
         Perform an HTTP API request on content gateway registry.
@@ -47,10 +47,8 @@ class CGWClient:
                 REST API method of the request (GET, POST, PUT, DELETE).
             endpoint (str):
                 Endpoint of the request.
-            params (dict):
-                Optional arguments for the GET method Request object.
             data (dict):
-                Optional arguments for the PUT and POST method Request object.
+                Optional arguments for the method Request object.
 
         Returns (list|dict|int):
             Returns either list or dict response for GET method
@@ -69,7 +67,7 @@ class CGWClient:
         output = {}
         try:
             if method == "GET":
-                response = self.cgw_session.get(endpoint, params=params)
+                response = self.cgw_session.get(endpoint, data=data)
             elif method == "POST":
                 response = self.cgw_session.post(endpoint, data=data)
             elif method == "PUT":
@@ -100,7 +98,7 @@ class CGWClient:
         resp_data = self.call_cgw_api("GET", '/products')
         return resp_data
 
-    def get_product(self, pid, params=None):
+    def get_product(self, pid):
         """
         Get one product record specified by its identifier.
 
@@ -113,7 +111,7 @@ class CGWClient:
         """
 
         endpoint = "/products/%s" % pid
-        resp_data = self.call_cgw_api("GET", endpoint, params=params)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
     def create_product(self, data):
@@ -148,7 +146,7 @@ class CGWClient:
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
-    def delete_product(self, pid, params=None):
+    def delete_product(self, pid):
         """
         Attempts to delete an existing product record.
         It is not possible to delete products,
@@ -163,10 +161,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s" % pid
-        resp_data = self.call_cgw_api("DELETE", endpoint, params=params)
+        resp_data = self.call_cgw_api("DELETE", endpoint)
         return resp_data
 
-    def get_versions(self, pid, params=None):
+    def get_versions(self, pid):
         """
         Get list of versions belonging to the specific product.
 
@@ -179,10 +177,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions" % pid
-        resp_data = self.call_cgw_api("GET", endpoint, params=params)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
-    def get_version(self, pid, vid, params=None):
+    def get_version(self, pid, vid):
         """
         Get one product version record specified by its identifier.
 
@@ -197,7 +195,7 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s" % (pid, vid)
-        resp_data = self.call_cgw_api("GET", endpoint, params=params)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
     def create_version(self, pid, data):
@@ -235,7 +233,7 @@ class CGWClient:
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
-    def delete_version(self, pid, vid, params=None):
+    def delete_version(self, pid, vid):
         """
         Attempts to delete an existing version record.
         It is not possible to delete a version,
@@ -252,10 +250,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s" % (pid, vid)
-        resp_data = self.call_cgw_api("DELETE", endpoint, params=params)
+        resp_data = self.call_cgw_api("DELETE", endpoint)
         return resp_data
 
-    def get_all_files(self, pid, vid, params=None):
+    def get_all_files(self, pid, vid):
         """
         Get list of all files, links and internal links of the specific version.
 
@@ -270,10 +268,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/all" % (pid, vid)
-        resp_data = self.call_cgw_api("GET", endpoint, params=params)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
-    def get_files(self, pid, vid, params=None):
+    def get_files(self, pid, vid):
         """
         Get list of files belonging to the specific product version.
 
@@ -288,10 +286,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/files" % (pid, vid)
-        resp_data = self.call_cgw_api("GET", endpoint, params=params)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
-    def get_file(self, pid, vid, fid, params=None):
+    def get_file(self, pid, vid, fid):
         """
         Get a single file specified by its identifier.
 
@@ -308,7 +306,7 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/files/%s" % (pid, vid, fid)
-        resp_data = self.call_cgw_api("GET", endpoint, params=params)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
     def create_file(self, pid, vid, data):
@@ -351,7 +349,7 @@ class CGWClient:
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
-    def delete_file(self, pid, vid, fid, data=None):
+    def delete_file(self, pid, vid, fid):
         """
         Attempts to delete an existing file record.
 
@@ -368,10 +366,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/files/%s" % (pid, vid, fid)
-        resp_data = self.call_cgw_api("DELETE", endpoint, data=data)
+        resp_data = self.call_cgw_api("DELETE", endpoint)
         return resp_data
 
-    def get_urls(self, pid, vid, data=None):
+    def get_urls(self, pid, vid):
         """
         Get list of urls belonging to the specific product version.
 
@@ -386,10 +384,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/urls" % (pid, vid)
-        resp_data = self.call_cgw_api("GET", endpoint, data=data)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
-    def get_url(self, pid, vid, uid, data=None):
+    def get_url(self, pid, vid, uid):
         """
         Get a single url specified by its identifier.
 
@@ -406,7 +404,7 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/urls/%s" % (pid, vid, uid)
-        resp_data = self.call_cgw_api("GET", endpoint, data=data)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
     def create_url(self, pid, vid, data):
@@ -449,7 +447,7 @@ class CGWClient:
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
-    def delete_url(self, pid, vid, uid, data=None):
+    def delete_url(self, pid, vid, uid):
         """
         Attempts to delete an existing url record.
 
@@ -466,10 +464,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/urls/%s" % (pid, vid, uid)
-        resp_data = self.call_cgw_api("DELETE", endpoint, data=data)
+        resp_data = self.call_cgw_api("DELETE", endpoint)
         return resp_data
 
-    def get_internals(self, pid, vid, data=None):
+    def get_internals(self, pid, vid):
         """
         Get list of internals belonging to the specific product version.
 
@@ -484,10 +482,10 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/internals" % (pid, vid)
-        resp_data = self.call_cgw_api("GET", endpoint, data=data)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
-    def get_internal(self, pid, vid, iid, data=None):
+    def get_internal(self, pid, vid, iid):
         """
         Get a single internal specified by its identifier.
 
@@ -504,7 +502,7 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/internals/%s" % (pid, vid, iid)
-        resp_data = self.call_cgw_api("GET", endpoint, data=data)
+        resp_data = self.call_cgw_api("GET", endpoint)
         return resp_data
 
     def create_internal(self, pid, vid, data):
@@ -547,7 +545,7 @@ class CGWClient:
         resp_data = self.call_cgw_api("POST", endpoint, data=json.dumps(data))
         return resp_data
 
-    def delete_internal(self, pid, vid, iid, data=None):
+    def delete_internal(self, pid, vid, iid):
         """
         Attempts to delete an existing internal record.
 
@@ -564,5 +562,5 @@ class CGWClient:
         """
 
         endpoint = "/products/%s/versions/%s/internals/%s" % (pid, vid, iid)
-        resp_data = self.call_cgw_api("DELETE", endpoint, data=data)
+        resp_data = self.call_cgw_api("DELETE", endpoint)
         return resp_data

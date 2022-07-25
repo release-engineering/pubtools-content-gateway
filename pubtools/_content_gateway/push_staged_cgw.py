@@ -1,11 +1,10 @@
+import os
+import json
+import pluggy
+from attrs import asdict
 from pushsource import CGWPushItem
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items
-from attrs import asdict
-import pluggy
-import json
-import os
-import sys
 
 pm = pluggy.PluginManager("pubtools")
 hookspec = pluggy.HookspecMarker("pubtools")

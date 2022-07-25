@@ -623,7 +623,7 @@ def test_invalid_http_method_call(cgw_client):
             json={"error": "An error has occurred!"},
         )
         with pytest.raises(CGWClientError, match="Wrong request method passed"):
-            cgw_client.call_cgw_api("INVALID_METHOD", "/products", params=None)
+            cgw_client.call_cgw_api("INVALID_METHOD", "/products")
         assert m.call_count == 0
 
 

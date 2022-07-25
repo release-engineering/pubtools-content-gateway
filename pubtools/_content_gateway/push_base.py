@@ -22,18 +22,48 @@ class FetcherDict:
     """
 
     def __init__(self, val=None, fetcher=None, key_checker=None):
-        """Initializing the FetcherDict"""
+        """
+        Initializing the FetcherDict
+        The fetcher takes a fetch method as an argument and returns response.
+        The key checker takes a mapping method as an argument and validate its keys.
+
+        Args:
+            fetcher (method):
+                A fetch method instance
+            key_checker (method):
+                A mapping method instance
+        """
+
         self.fetcher = fetcher
         self.key_checker = key_checker
         self.data = val or {}
 
     def __setitem__(self, key, val):
-        """Set the data value of the specified index"""
+        """
+        Set the data value of the specified key
+
+        Args:
+            key (tuple):
+                Tuple key to set specified value
+            val (value):
+                Value to be set
+        """
         self.key_checker(key)
         self.data[key] = val
 
     def __getitem__(self, key):
-        """Returns the data value of the specified index"""
+        """
+        Returns the data value of the specified key
+
+        Args:
+            key (tuple):
+                Tuple key to return value
+
+        Returns:
+            key (value):
+                Returns the value of specified key.
+        """
+
         self.key_checker(key)
         if key not in self.data and self.fetcher:
             for new_key, vid in self.fetcher(*key):
@@ -41,7 +71,17 @@ class FetcherDict:
         return self.data[key]
 
     def get(self, key, default=None):
-        """Returns the data value of the specified index"""
+        """
+        Returns the data value of the specified key
+
+        Args:
+            key (tuple):
+                Tuple key to return value
+
+        Returns:
+            key (value):
+                Returns the value of specified key.
+        """
         self.key_checker(key)
         if key not in self.data and self.fetcher:
             for new_key, vid in self.fetcher(*key):
@@ -49,7 +89,13 @@ class FetcherDict:
         return self.data.get(key, default)
 
     def __delitem__(self, key):
-        """Delete the data value of the specified index"""
+        """
+        Delete the data value of the specified index
+
+        Args:
+            key (tuple):
+                Tuple key to delete specified record
+        """
         self.key_checker(key)
         self.data.__delitem__(key)
 
@@ -61,6 +107,26 @@ class PushBase:
     Adds arguments and environment variables common to all operations.
     """
 
+    def __init__(self, cgw_hostname, cgw_username, cgw_password):
+        """
+        Initialize.
+
+        Args:
+            cgw_hostname (str):
+                CGW registry URL
+            cgw_username (str):
+                username for CGW HTTP API
+            cgw_password (str):
+                password for CGW HTTP API
+        """
+
+        self.auth = CGWBasicAuth(cgw_username, cgw_password)
+        self.cgw_client = CGWClient(cgw_hostname, self.auth)
+        self.product_mapping = FetcherDict({}, fetcher=self._fetch_product, key_checker=self._product_mapping_key_check)
+        self.pv_mapping = FetcherDict({}, fetcher=self._fetch_product_version,
+                                      key_checker=self._product_version_mapping_key_check)
+        self.file_mapping = FetcherDict({}, fetcher=self._fetch_file, key_checker=self._file_key_check)
+
     @staticmethod
     def _product_mapping_key_check(key):
         """
@@ -70,7 +136,7 @@ class PushBase:
             2) Two keys must be present in the key tuple
 
         Args:
-            key (tuple(int, int)):
+            key (tuple(str, str)):
                 The keys should contain product, product_code
 
         Raises:
@@ -93,7 +159,7 @@ class PushBase:
             2) Three keys must be present in the key tuple
 
         Args:
-            key (tuple(int, int, int)):
+            key (tuple(str, str, str|int)):
                 The keys should contain product, product_code and product_version
 
         Raises:
@@ -116,7 +182,7 @@ class PushBase:
             2) Four keys must be present in the key tuple
 
         Args:
-            key (tuple(int, int, int)):
+            key (tuple(str, str, str|int, str)):
                 The keys should contain product, product_code,
                  product_version and downloadURL
 
@@ -143,9 +209,9 @@ class PushBase:
                 product code of the product
 
         Returns:
-            Yields (dict):
+            Yields (tuple):
                 Returns the product record. The returned structure
-                is an iterator to reduce memory requirements.
+                is an iterator.
 
                 Intended to be called as the first operation in
                 the content gateway workflow.
@@ -165,13 +231,13 @@ class PushBase:
                 product name of the product
             product_code (str):
                 product code of the product
-            version_name (str):
+            version_name (str|int):
                 version name of the product
 
         Returns:
-            Yields (dict):
+            Yields (tuple):
                 Returns the version records associate with the product.
-                The returned structure is an iterator to reduce memory requirements.
+                The returned structure is an iterator.
         """
 
         product_id = self.product_mapping.get((product_name, product_code))
@@ -189,7 +255,7 @@ class PushBase:
                 product name of the file
             product_code (str):
                 product code of the file
-            version_name (str):
+            version_name (str|int):
                 version name of the file
             download_url (str):
                 download url of the file
@@ -197,7 +263,7 @@ class PushBase:
         Returns:
             Yields (dict):
                 Returns the file records.
-                The returned structure is an iterator to reduce memory requirements.
+                The returned structure is an iterator.
         """
 
         product_id = self.product_mapping.get((product_name, product_code))
@@ -205,26 +271,6 @@ class PushBase:
         all_files = self.cgw_client.get_files(product_id, version_id)
         for data in all_files:
             yield (product_name, product_code, version_name, data['downloadURL']), data.get('id')
-
-    def __init__(self, cgw_hostname, cgw_username, cgw_password):
-        """
-        Initialize.
-
-        Args:
-            cgw_hostname (str):
-                CGW registry URL
-            cgw_username (str):
-                username for CGW HTTP API
-            cgw_password (str):
-                password for CGW HTTP API
-        """
-
-        self.auth = CGWBasicAuth(cgw_username, cgw_password)
-        self.cgw_client = CGWClient(cgw_hostname, self.auth)
-        self.product_mapping = FetcherDict({}, fetcher=self._fetch_product, key_checker=self._product_mapping_key_check)
-        self.pv_mapping = FetcherDict({}, fetcher=self._fetch_product_version,
-                                      key_checker=self._product_version_mapping_key_check)
-        self.file_mapping = FetcherDict({}, fetcher=self._fetch_file, key_checker=self._file_key_check)
 
     def process_product(self, item):
         """
@@ -253,8 +299,8 @@ class PushBase:
                 - Raises CGWError error
 
         Args:
-            item (list(dict)):
-                List of product record
+            item (dict):
+                Metadata of product record
 
         Raises:
             CGWError:
@@ -324,12 +370,13 @@ class PushBase:
                 - Raises CGWError error
 
         Args:
-            item (list(dict)):
-                List of version record
+            item (dict):
+                Metadata of version record
 
         Raises:
             CGWError:
-                When version record is not present and tries to delete the same
+                - When product record is not present
+                - When version record is not present and tries to delete the same
 
         Returns:
             version_id (int|None):
@@ -404,12 +451,14 @@ class PushBase:
                 - Raises CGWError error
 
         Args:
-            file_item (list(dict)):
-                List of file record
+            file_item (dict):
+                Metadata of file record
 
         Raises:
             CGWError:
-                When file record is not present and tries to delete the same
+                - When product record is not present
+                - When version record is not present
+                - When file record is not present and tries to delete the same
 
         Returns:
             file_id (int|None):
