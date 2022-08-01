@@ -1,0 +1,139 @@
+- type: product
+  state: present
+  metadata:
+    name: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    homepage: "https://test.com/"
+    downloadpage: "https://test.com/"
+    thankYouPage: "https://test.com/"
+    eloquaCode: "NOT_SET"
+    featuredArtifactType: "Server"
+    thankYouTimeout: 5
+
+- type: product
+  state: present
+  metadata:
+    name: "Cloud: Ansible NEW Test 2"
+    productCode: "AnsibleNewTest 2"
+    homepage: "https://test.com/"
+    downloadpage: "https://test.com/"
+    thankYouPage: "https://test.com/"
+    eloquaCode: "NOT_SET"
+    featuredArtifactType: "Server"
+    thankYouTimeout: 5
+
+- type: product_version
+  state: present
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    versionName: "AnsibleNewTestVersion 1"
+    ga: true
+    masterProductVersion: null
+    termsAndConditions: "Anonymous Download"
+    trackingDisabled: false
+    hidden: false
+    invisible: false
+    releaseDate: "2022-25-05"
+
+- type: product_version
+  state: present
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    versionName: "AnsibleNewTestVersion 2"
+    ga: true
+    masterProductVersion: null
+    termsAndConditions: "Anonymous Download"
+    trackingDisabled: false
+    hidden: false
+    invisible: false
+    releaseDate: "2022-25-05"
+
+- type: file
+  state: present
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    productVersionName: "AnsibleNewTestVersion 1"
+    description: "Red Hat OpenShift Local Sandbox Test"
+    label: "Checksum File Sandbox Test"
+    order: 0
+    hidden: false
+    invisible: false
+    type: "FILE"
+    differentProductThankYouPage: null
+    downloadURL: "/content/origin/test"
+    shortURL: "/pub-1/openshift-v4/test"
+    md5: null
+    size: null
+
+- type: file
+  state: absent
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    productVersionName: "AnsibleNewTestVersion 1"
+    description: "Red Hat OpenShift Local Sandbox Test"
+    label: "Checksum File Sandbox Test"
+    order: 0
+    hidden: false
+    invisible: false
+    type: "FILE"
+    differentProductThankYouPage: null
+    downloadURL: "/content/origin/test"
+    shortURL: "/pub-1/openshift-v4/test"
+    md5: null
+    size: null
+
+- type: product
+  state: absent
+  metadata:
+    name: "Cloud: Ansible NEW Test 2"
+    productCode: "AnsibleNewTest 2"
+    homepage: "https://test.com/"
+    downloadpage: "https://test.com/"
+    thankYouPage: "https://test.com/"
+    eloquaCode: "NOT_SET"
+    featuredArtifactType: "Server"
+    thankYouTimeout: 5
+
+- type: product
+  state: present
+  metadata:
+    name: "Cloud: Ansible NEW Test 2"
+    productCode: "AnsibleNewTest 2"
+    homepage: "https://test/homepage/update.com/"
+    downloadpage: "https://test/downloadpage/update.com/"
+    thankYouPage: "https://test/thankYouPage/update.com/"
+    eloquaCode: "NOT_SET"
+    featuredArtifactType: "Server"
+    thankYouTimeout: 5
+
+- type: product_version
+  state: absent
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    versionName: "AnsibleNewTestVersion 2"
+    ga: true
+    masterProductVersion: null
+    termsAndConditions: "Anonymous Download"
+    trackingDisabled: false
+    hidden: false
+    invisible: false
+    releaseDate: "2022-25-05"
+
+- type: product_version
+  state: present
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    versionName: "AnsibleNewTestVersion 2"
+    ga: true
+    masterProductVersion: null
+    termsAndConditions: "updating termsAndConditions Anonymous Download"
+    trackingDisabled: false
+    hidden: True
+    invisible: false
+    releaseDate: "2022-25-05"

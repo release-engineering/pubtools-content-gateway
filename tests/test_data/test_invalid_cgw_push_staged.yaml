@@ -1,0 +1,17 @@
+- type: file
+  state: present
+  metadata:
+    productName: "Cloud: Ansible New Test"
+    productCode: "AnsibleNewTest"
+    productVersionName: "AnsibleNewTestVersion"
+    description: "Red Hat OpenShift Local Sandbox Test"
+    label: "Checksum File Sandbox Test"
+    order: 0
+    hidden: false
+    invisible: false
+    type: "FILE"
+    differentProductThankYouPage: null
+    pushItemPath: '<some/repo>/FILES/<filename>'
+    shortURL: "/pub-1/openshift-v4/test"
+    md5: null
+    size: null

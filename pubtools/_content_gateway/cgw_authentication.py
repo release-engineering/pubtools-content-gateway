@@ -2,11 +2,14 @@ from base64 import b64encode
 
 
 class CGWAuth(object):
+    """
+    Custom exception to handle authentication errors
+    """
     def __init__(self):
         raise NotImplementedError
 
     def make_auth(self, cgw_session):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class CGWClientError(Exception):
@@ -26,7 +29,7 @@ class CGWBasicAuth(CGWAuth):
         """
         Args:
             user (str)
-                Basic auth user name
+                Basic auth user_name
             password (str)
                 Basic auth password
         """
