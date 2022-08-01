@@ -126,6 +126,10 @@ class PushBase:
         self.pv_mapping = FetcherDict({}, fetcher=self._fetch_product_version,
                                       key_checker=self._product_version_mapping_key_check)
         self.file_mapping = FetcherDict({}, fetcher=self._fetch_file, key_checker=self._file_key_check)
+        self.product_records = {}
+        self.version_records = {}
+        self.file_records = {}
+        self.completed_operations = []
 
     @staticmethod
     def _product_mapping_key_check(key):
@@ -219,6 +223,7 @@ class PushBase:
 
         all_products = self.cgw_client.get_products()
         for product in all_products:
+            self.product_records[product['id']] = product
             yield (product['name'], product['productCode']), product['id']
 
     def _fetch_product_version(self, product_name, product_code, version_name):
@@ -243,6 +248,7 @@ class PushBase:
         product_id = self.product_mapping.get((product_name, product_code))
         all_versions = self.cgw_client.get_versions(product_id)
         for version in all_versions:
+            self.version_records[version['id']] = version
             yield (product_name, product_code, version['versionName']), version['id']
 
     def _fetch_file(self, product_name, product_code, version_name, download_url):
@@ -270,6 +276,7 @@ class PushBase:
         version_id = self.pv_mapping.get((product_name, product_code, version_name))
         all_files = self.cgw_client.get_files(product_id, version_id)
         for data in all_files:
+            self.file_records[data['id']] = data
             yield (product_name, product_code, version_name, data['downloadURL']), data.get('id')
 
     def process_product(self, item):
@@ -326,12 +333,24 @@ class PushBase:
                 # A new product is created so updating the existing product mapping
                 self.product_mapping[(product_name, product_code)] = product_id
                 LOG.info("Created a new product with product_id:- %s" % product_id)
+
+                # adding operational tags and product_id for rollback operation
+                item['operation'] = 'created'
+                item['product_id'] = product_id
+                # keeping a copy of data that has been used to create the cgw data
+                self.completed_operations.append(item)
                 return product_id
 
             LOG.info("Product record found with product_id:- %s" % product_id)
             item.get('metadata')['id'] = product_id
             LOG.info("Updating product metadata")
             self.cgw_client.update_product(item.get('metadata'))
+
+            # adding operational tags for rollback operation
+            item['operation'] = 'updated'
+            # keeping a copy of data that has been used to update the cgw data
+            self.completed_operations.append(item)
+
         elif item.get('state') == 'absent' and product_id:
             LOG.info("Deleting existing product records for product_id:- %s" % product_id)
             self.cgw_client.delete_product(product_id)
@@ -405,12 +424,24 @@ class PushBase:
                 # adding new version record to the version mapping
                 self.pv_mapping[(product_name, product_code, version_name)] = version_id
                 LOG.info("New version created with version_id:- %s" % version_id)
+
+                # adding operational tags and version_id for rollback operation
+                item['operation'] = 'created'
+                item['version_id'] = version_id
+                # keeping a copy of data that has been used to create the cgw data
+                self.completed_operations.append(item)
                 return
 
             item.get('metadata')['id'] = version_id
             LOG.info("Found version record with version_id:- %s" % version_id)
             LOG.info("Updating the version metadata")
             self.cgw_client.update_version(product_id, item.get('metadata'))
+
+            # adding operational tags for rollback operation
+            item['operation'] = 'updated'
+            # keeping a copy of data that has been used to update the cgw data
+            self.completed_operations.append(item)
+
         elif item.get('state') == 'absent' and version_id:
             LOG.info("Deleting existing version records for version_id:- %s" % version_id)
             self.cgw_client.delete_version(product_id, version_id)
@@ -495,13 +526,27 @@ class PushBase:
                 self.file_mapping[
                     (product_name, product_code, version_name, download_url)] = file_id
                 LOG.info("New file created with file_id:- %s" % file_id)
+
+                # adding operational tags, product_id and file_id for rollback operation
+                file_item['operation'] = 'created'
+                file_item['product_id'] = product_id
+                file_item['file_id'] = file_id
+                # keeping a copy of data that has been used to create the cgw data
+                self.completed_operations.append(file_item)
                 return
 
             LOG.info("Found file record with file_id:- %s" % file_id)
             LOG.info("Updating the file metadata")
             file_item.get('metadata')['id'] = file_id
             self.cgw_client.update_file(product_id, version_id, file_item.get('metadata'))
-        elif file_item.get('state') == 'absent' and file_id:
+
+            # adding operational tags and product_id for rollback operation
+            file_item['operation'] = 'updated'
+            file_item['product_id'] = product_id
+            # keeping a copy of data that has been used to update the cgw data
+            self.completed_operations.append(file_item)
+
+        elif file_item.get("state") == "absent" and file_id:
             LOG.info("Deleting existing file records for file_id:- %s" % file_id)
             self.cgw_client.delete_file(product_id, version_id, file_id)
             LOG.info("File record deleted!")
@@ -510,3 +555,74 @@ class PushBase:
             raise CGWError("Cannot delete file: product version: '%s' product code: '%s' product: '%s', id is not set" %
                            (version_name, product_code, product_name))
         return file_id
+
+    def make_visible(self):
+        """
+        - Update the invisible attribute to false
+          once all the CGW operation completed successfully.
+
+        - This is needed to make the version and file records visible.
+        - The records get created with the flag invisible=True and
+          later on successful completion of CGW operations they get enabled.
+        
+        """
+
+        self.completed_operations.reverse()
+        for item in self.completed_operations:
+            if item.get('type') == 'product_version':
+                if item.get("operation") == "created":
+                    item["metadata"]["id"] = item["version_id"]
+                    item["metadata"]['invisible'] = False
+                    self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
+
+            elif item.get('type') == 'file':
+                if item.get("operation") == "created":
+                    item["metadata"]["id"] = item["file_id"]
+                    item["metadata"]['invisible'] = True
+                    self.cgw_client.update_file(
+                        item["product_id"],
+                        item["metadata"]["productVersionId"],
+                        item["metadata"]
+                    )
+
+    def rollback_cgw_operation(self):
+        """
+        Undo the partial completed CGW operation.
+            - For the create operations it will delete the created data from CGW
+            - For the update operation it will revert the changes with old data.
+
+        """
+
+        self.completed_operations.reverse()
+        for item in self.completed_operations:
+            if item.get('type') == 'product':
+                if item.get("operation") == "created":
+                    self.cgw_client.delete_product(item["product_id"])
+
+                elif item.get("operation") == "updated":
+                    item["metadata"] = self.product_records.get(item["metadata"]["id"])
+                    self.cgw_client.update_product(item["metadata"])
+
+            elif item.get('type') == 'product_version':
+                if item.get("operation") == "created":
+                    self.cgw_client.delete_version(item["metadata"]["productId"], item["version_id"])
+
+                elif item.get("operation") == "updated":
+                    item["metadata"] = self.version_records.get(item["metadata"]["id"])
+                    self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
+
+            elif item.get('type') == 'file':
+                if item.get("operation") == "created":
+                    self.cgw_client.delete_file(
+                        item["product_id"],
+                        item["metadata"]["productVersionId"],
+                        item["file_id"]
+                    )
+
+                elif item.get("operation") == "updated":
+                    item["metadata"] = self.file_records.get(item["metadata"]["id"])
+                    self.cgw_client.update_file(
+                        item["product_id"],
+                        item["metadata"]["productVersionId"],
+                        item["metadata"]
+                    )

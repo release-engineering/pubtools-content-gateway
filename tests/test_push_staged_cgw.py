@@ -83,10 +83,16 @@ def test_invalid_push_items(target_setting):
     for item in push_cgw.push_items:
         push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
 
+    push_cgw.rollback_cgw_operation = mock.MagicMock()
+
+    # push_cgw.push_staged_operations()
+    # assert push_cgw.rollback_cgw_operation.called is True
+
     with pytest.raises(ValueError) as exception:
         push_cgw.push_staged_operations()
 
-    assert "Unable to find push item with path" in str(exception.value)
+    assert "Unable to find push item path" in str(exception.value)
+
 
 def test_invalid_file_path(target_setting):
     cgw_item = CGWPushItem(name='cgw_push.yaml',
@@ -127,3 +133,18 @@ def test_gather_source_items_success(target_setting):
     push_cgw.gather_source_items(pulp_push_item, cgw_item)
     assert push_cgw.push_items == [cgw_item]
     assert json.dumps(asdict(cgw_item), sort_keys=True) in push_cgw.pulp_push_items
+
+
+def test_cgw_operations_exception(target_setting):
+    cgw_item = CGWPushItem(name='cgw_push.yaml',
+                           src=yaml_file_path,
+                           origin=test_dir)
+
+    pulp_push_item = get_pulp_push_item()
+    push_cgw = PushStagedCGW("fake_target_name", target_setting)
+    push_cgw.gather_source_items(pulp_push_item, cgw_item)
+    push_cgw.process_product = []
+    push_cgw.rollback_cgw_operation = mock.MagicMock()
+    push_cgw.push_staged_operations()
+
+    assert push_cgw.rollback_cgw_operation.called is True

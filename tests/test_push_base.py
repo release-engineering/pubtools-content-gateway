@@ -1,5 +1,6 @@
-from pubtools._content_gateway.push_base import PushBase, CGWError, FetcherDict
+import requests_mock
 import pytest
+from pubtools._content_gateway.push_base import PushBase, CGWError, FetcherDict
 from tests.fake_cgw_client import TestClient
 
 try:
@@ -185,3 +186,236 @@ class TestFetcherDict:
         fetcher[key] = 'test'
         del fetcher[key]
         assert key not in fetcher.data
+
+
+class TestRollbackOperations:
+
+    @pytest.fixture()
+    def push_base_object(self):
+        push_base = PushBase("mock://test.com/", "foo", "bar")
+        return push_base
+
+    def test_rollback_created_product(self, push_base_object):
+        data = {
+            'type': 'product',
+            'state': 'present',
+            'operation': 'created',
+            'product_id': 1234,
+            'metadata': {
+                # some data
+            }
+        }
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "DELETE",
+                "mock://test.com/products/1234",
+                status_code=200,
+            )
+            push_base_object.rollback_cgw_operation()
+            assert m.call_count == 1
+
+    def test_rollback_updated_product(self, push_base_object):
+        data = {
+            'type': 'product',
+            'state': 'present',
+            'operation': 'updated',
+            'metadata':
+                {
+                    'id': 1111,
+                    'name': 'nameTest',
+                    'productCode': 'productCodeTest',
+                    'homepage': 'https://test.com/',
+                    'downloadpage': 'https://testing.com/',
+                    'thankYouPage': 'https://testing.com/',
+                    'eloquaCode': 'NOT_SET',
+                    'featuredArtifactType': 'Server',
+                    'thankYouTimeout': 3,
+                },
+        }
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "POST",
+                "mock://test.com/products",
+                status_code=200,
+            )
+            push_base_object.rollback_cgw_operation()
+            assert m.call_count == 1
+
+    def test_rollback_created_version(self, push_base_object):
+        data = {
+            'type': 'product_version',
+            'state': 'present',
+            'operation': 'created',
+            'version_id': 2222,
+            'metadata':
+                {
+                    'productId': 1111,
+                    'versionName': 'TestName',
+                    # some other data
+                },
+        }
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "DELETE",
+                "mock://test.com/products/1111/versions/2222",
+                status_code=200,
+            )
+            push_base_object.rollback_cgw_operation()
+            assert m.call_count == 1
+
+    def test_rollback_update_versions(self, push_base_object):
+        data = {
+            'type': 'product_version',
+            'state': 'present',
+            'operation': 'updated',
+            'metadata':
+                {
+                    'id': 2222,
+                    'productId': 1111,
+                    'versionName': 'AnsibleNewTestVersion 1',
+                    'ga': True,
+                    'masterProductVersion': None,
+                    'termsAndConditions': 'Anonymous Download',
+                    'trackingDisabled': True,
+                    'hidden': True,
+                    'invisible': False,
+                    'releaseDate': '2022-25-05',
+                },
+        }
+        push_base_object.version_records[data["metadata"]["id"]] = data["metadata"]
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "POST",
+                "mock://test.com/products/1111/versions",
+                status_code=200,
+            )
+            push_base_object.rollback_cgw_operation()
+            assert m.call_count == 1
+
+    def test_rollback_created_file(self, push_base_object):
+        data = {
+            'type': 'file',
+            'state': 'present',
+            'operation': 'created',
+            'product_id': 1111,
+            'file_id': 333,
+            'metadata':
+                {
+                    'productVersionId': 2222,
+                    'downloadURL': '/content/origin/test',
+                    'description': 'Red Hat OpenShift Local Sandbox Test',
+                    'label': 'Checksum File Sandbox Test label',
+                    # some other data
+                },
+        }
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "DELETE",
+                "mock://test.com/products/1111/versions/2222/files/333",
+                status_code=200,
+            )
+            push_base_object.rollback_cgw_operation()
+            assert m.call_count == 1
+
+    def test_rollback_update_files(self, push_base_object):
+        data = {
+            'type': 'file',
+            'state': 'present',
+            'operation': 'updated',
+            'product_id': 1111,
+            'metadata':
+                {
+                    'description': 'Red Hat OpenShift Local Sandbox Test',
+                    'label': 'Checksum File Sandbox Test label',
+                    'order': 0,
+                    'hidden': False,
+                    'invisible': False,
+                    'type': 'FILE',
+                    'differentProductThankYouPage': None,
+                    'downloadURL': '/content/origin/test',
+                    'shortURL': '/pub-1/openshift-v4/testing',
+                    'md5': None,
+                    'size': None,
+                    'productVersionId': 2222,
+                    'id': 3333
+                },
+        }
+        push_base_object.file_records[data["metadata"]["id"]] = data["metadata"]
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "POST",
+                "mock://test.com/products/1111/versions/2222/files",
+                status_code=200,
+            )
+            push_base_object.rollback_cgw_operation()
+            assert m.call_count == 1
+
+
+class TestMakeVisible:
+
+    @pytest.fixture()
+    def push_base_object(self):
+        push_base = PushBase("mock://test.com/", "foo", "bar")
+        return push_base
+
+    def test_make_visible_created_version(self, push_base_object):
+        data = {
+            'type': 'product_version',
+            'state': 'present',
+            'operation': 'created',
+            'version_id': 2222,
+            'metadata':
+                {
+                    'productId': 1111,
+                    'versionName': 'AnsibleNewTestVersion 1',
+                    'ga': True,
+                    'masterProductVersion': None,
+                    'termsAndConditions': 'Anonymous Download',
+                    'trackingDisabled': True,
+                    'hidden': True,
+                    'invisible': False,
+                    'releaseDate': '2022-25-05',
+                },
+        }
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "POST",
+                "mock://test.com/products/1111/versions",
+                status_code=200,
+            )
+            push_base_object.make_visible()
+            assert m.call_count == 1
+
+    def test_make_visible_created_file(self, push_base_object):
+        data = {
+            'type': 'file',
+            'state': 'present',
+            'operation': 'created',
+            'product_id': 1111,
+            'file_id': 333,
+            'metadata':
+                {
+                    'hidden': False,
+                    'invisible': False,
+                    'type': 'FILE',
+                    'downloadURL': '/content/origin/test',
+                    'shortURL': '/pub-1/openshift-v4/testing',
+                    'productVersionId': 2222,
+                },
+        }
+        push_base_object.completed_operations = [data]
+        with requests_mock.Mocker() as m:
+            m.register_uri(
+                "POST",
+                "mock://test.com/products/1111/versions/2222/files",
+                status_code=200,
+            )
+            push_base_object.make_visible()
+            assert m.call_count == 1
