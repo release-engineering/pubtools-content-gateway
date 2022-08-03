@@ -47,6 +47,7 @@ def test_cgw_operations_exception():
     push_cgw = PushCGW("http://fake_host_name/test", "foo", "bar", yaml_file_path)
     push_cgw.process_product = []
     push_cgw.rollback_cgw_operation = mock.MagicMock()
-    push_cgw.cgw_operations()
+    with pytest.raises(TypeError):
+        push_cgw.cgw_operations()
 
     assert push_cgw.rollback_cgw_operation.called is True

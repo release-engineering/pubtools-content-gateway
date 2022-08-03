@@ -1,5 +1,5 @@
 - type: product
-  state: present
+  state: create
   metadata:
     name: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -11,7 +11,7 @@
     thankYouTimeout: 5
 
 - type: product
-  state: present
+  state: create
   metadata:
     name: "Cloud: Ansible NEW Test 2"
     productCode: "AnsibleNewTest 2"
@@ -23,7 +23,7 @@
     thankYouTimeout: 5
 
 - type: product_version
-  state: present
+  state: create
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -37,7 +37,7 @@
     releaseDate: "2022-25-05"
 
 - type: product_version
-  state: present
+  state: create
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -51,7 +51,7 @@
     releaseDate: "2022-25-05"
 
 - type: file
-  state: present
+  state: create
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -69,7 +69,25 @@
     size: null
 
 - type: file
-  state: absent
+  state: update
+  metadata:
+    productName: "Cloud: Ansible NEW Test 1"
+    productCode: "AnsibleNewTest"
+    productVersionName: "AnsibleNewTestVersion 1"
+    description: "Red Hat OpenShift Local Sandbox"
+    label: "Checksum File Sandbox Test"
+    order: 0
+    hidden: false
+    invisible: false
+    type: "FILE"
+    differentProductThankYouPage: null
+    downloadURL: "/content/origin/test"
+    shortURL: "/pub-1/openshift-v4/test"
+    md5: null
+    size: null
+
+- type: file
+  state: delete
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -87,7 +105,7 @@
     size: null
 
 - type: product
-  state: absent
+  state: delete
   metadata:
     name: "Cloud: Ansible NEW Test 2"
     productCode: "AnsibleNewTest 2"
@@ -99,7 +117,7 @@
     thankYouTimeout: 5
 
 - type: product
-  state: present
+  state: update
   metadata:
     name: "Cloud: Ansible NEW Test 2"
     productCode: "AnsibleNewTest 2"
@@ -111,7 +129,7 @@
     thankYouTimeout: 5
 
 - type: product_version
-  state: absent
+  state: delete
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -125,7 +143,7 @@
     releaseDate: "2022-25-05"
 
 - type: product_version
-  state: present
+  state: update
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"

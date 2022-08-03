@@ -85,13 +85,10 @@ def test_invalid_push_items(target_setting):
 
     push_cgw.rollback_cgw_operation = mock.MagicMock()
 
-    # push_cgw.push_staged_operations()
-    # assert push_cgw.rollback_cgw_operation.called is True
-
     with pytest.raises(ValueError) as exception:
         push_cgw.push_staged_operations()
 
-    assert "Unable to find push item path" in str(exception.value)
+    assert "Unable to find push item with" in str(exception.value)
 
 
 def test_invalid_file_path(target_setting):
@@ -145,6 +142,7 @@ def test_cgw_operations_exception(target_setting):
     push_cgw.gather_source_items(pulp_push_item, cgw_item)
     push_cgw.process_product = []
     push_cgw.rollback_cgw_operation = mock.MagicMock()
-    push_cgw.push_staged_operations()
 
+    with pytest.raises(TypeError):
+        push_cgw.push_staged_operations()
     assert push_cgw.rollback_cgw_operation.called is True

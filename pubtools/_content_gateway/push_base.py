@@ -286,22 +286,22 @@ class PushBase:
 
         The product operation follows the following workflow:
             - Search for the product record from the product mapping
-            - If `product state` == `present` and record not found in mapping
+            - If `product state` == `create`
 
                 - Creates a new product record on content gateway with given data
                 - Add the new record into the product mapping records
 
-            - If `product state` == `present` and record found in mapping
+            - If `product state` == `update` and record found in mapping or id is provided in metadata
 
                 - Update the product record on content gateway with given data
                 - Update the record into the product mapping records
 
-            - If `product state` == `absent` and record found in mapping
+            - If `product state` == `delete` and record found in mapping or id is provided in metadata
 
                 - Delete the product record on the content gateway
                 - Remove the record from the product mapping records
 
-            - If `product state` == `absent` and record not found in mapping
+            - If `product state` == `delete` or `update` and record not found in mapping
 
                 - Raises CGWError error
 
@@ -311,7 +311,7 @@ class PushBase:
 
         Raises:
             CGWError:
-                When product record is not present and tries to delete the same
+                When product record is not present and tries to update/delete the same
 
         Returns:
             product_id (int):
@@ -321,43 +321,53 @@ class PushBase:
         product_name = item.get('metadata').get('name')
         product_code = item.get('metadata').get('productCode')
         LOG.debug(
-            "Fetching for product_id of product_name:- %s and product_code:- %s" % (product_name, product_code))
+            "Fetching for product_id of product_name:- %s and product_code:- %s \n" % (product_name, product_code)
+        )
 
+        #  Trying to fetch product_id from CGW mapping.
         product_id = self.product_mapping.get((product_name, product_code))
 
-        if item.get('state') == 'present':
-            if not product_id:
-                LOG.info("No previous entries found for the given product name and product code")
-                LOG.info("Creating product entry for the given product metadata")
-                product_id = self.cgw_client.create_product(item.get('metadata'))
-                # A new product is created so updating the existing product mapping
-                self.product_mapping[(product_name, product_code)] = product_id
-                LOG.info("Created a new product with product_id:- %s" % product_id)
+        #  If CGW mapping doesn't have the record it will try to get product_id from metadata if provided
+        #  For the create operation it will not get any product_id either from the CGW
+        #  or from metadata. The product_id would be None
+        #  To update the product name and productCode the product_id must be provided in the metadata
+        product_id = product_id if product_id else item.get('metadata').get('id')
 
-                # adding operational tags and product_id for rollback operation
-                item['operation'] = 'created'
-                item['product_id'] = product_id
-                # keeping a copy of data that has been used to create the cgw data
-                self.completed_operations.append(item)
-                return product_id
+        if item.get('state') == 'create':
+            LOG.info("Creating product entry for the given product metadata")
+            product_id = self.cgw_client.create_product(item.get('metadata'))
+            # A new product is created so updating the existing product mapping
+            self.product_mapping[(product_name, product_code)] = product_id
+            LOG.info("Created a new product with product_id:- %s\n" % product_id)
 
-            LOG.info("Product record found with product_id:- %s" % product_id)
+            # adding operational product_id for rollback operation
+            item['product_id'] = product_id
+            # keeping a copy of data that has been used to create the cgw data
+            self.completed_operations.append(item)
+            return product_id
+
+        elif item.get('state') == 'update' and product_id:
             item.get('metadata')['id'] = product_id
-            LOG.info("Updating product metadata")
+            LOG.info("Updating product record of id:- %s \n", product_id)
             self.cgw_client.update_product(item.get('metadata'))
 
-            # adding operational tags for rollback operation
-            item['operation'] = 'updated'
             # keeping a copy of data that has been used to update the cgw data
             self.completed_operations.append(item)
 
-        elif item.get('state') == 'absent' and product_id:
+        elif item.get('state') == 'delete' and product_id:
             LOG.info("Deleting existing product records for product_id:- %s" % product_id)
             self.cgw_client.delete_product(product_id)
             del self.product_mapping[(product_name, product_code)]
-            LOG.info("Product record deleted!")
+
+            #  removing the deleted file record from the completed operations
+            #  this is to avoid the conflicts during the rollback and make_visible operations
+            for record in self.completed_operations:
+                if record['type'] == 'product' and record['product_id'] == product_id:
+                    self.completed_operations.remove(record)
+
+            LOG.info("Product record deleted! \n")
         else:
-            raise CGWError("Cannot delete the product %s %s, id is not set" % (product_name, product_code))
+            raise CGWError("Cannot update/delete the product %s %s, id is not set" % (product_name, product_code))
         return product_id
 
     def process_version(self, item):
@@ -369,22 +379,23 @@ class PushBase:
         The product version operation follows the following workflow:
             - Search for the product record from the product mapping
             - Search for the product version record from the product_version(pv_mapping) mapping
-            - If `version state` == `present` and record not found in mapping
+            - If `version state` == `create`
 
                 - Creates a new version record associated with product on CGW with given data
                 - Add the new record into the mapping records
 
-            - If `version state` == `present` and record found in mapping
+            - If `version state` == `update` and record found in mapping or id is provided in metadata
 
                 - Update the version record on content gateway with given data
                 - Update the record into the version mapping records
 
-            - If `version state` == `absent` and record found in mapping
+            - If `version state` == `delete` and record found in mapping or id is provided in metadata
 
                 - Delete the version record on the content gateway
                 - Remove the record from the version mapping records
 
-            - If `version state` == `absent` and record not found in mapping
+            - If `version state` == `delete` or `update` and record not found in mapping
+               or id is not provided in metadata
 
                 - Raises CGWError error
 
@@ -395,7 +406,7 @@ class PushBase:
         Raises:
             CGWError:
                 - When product record is not present
-                - When version record is not present and tries to delete the same
+                - When version record is not present and tries to update/delete the same
 
         Returns:
             version_id (int|None):
@@ -411,45 +422,56 @@ class PushBase:
             raise CGWError("Product name: %s product code: %s not found" % (product_name, product_code))
 
         LOG.debug("Fetching the product and version_id of "
-                  "product_name:- %s and version_name:- %s" % (product_name, version_name))
+                  "product_name:- %s and version_name:- %s \n" % (product_name, version_name))
 
+        #  Trying to fetch version_id from CGW mapping.
         version_id = self.pv_mapping.get((product_name, product_code, version_name))
-        if item.get('state') == 'present':
-            item.get('metadata')['productId'] = product_id
-            del item.get('metadata')['productName'], item.get('metadata')['productCode']
-            if not version_id:
-                LOG.info("No previous entries found for the given product's version")
-                LOG.info("Creating version entry for the given version_name: %s ", version_name)
-                version_id = self.cgw_client.create_version(product_id, item.get('metadata'))
-                # adding new version record to the version mapping
-                self.pv_mapping[(product_name, product_code, version_name)] = version_id
-                LOG.info("New version created with version_id:- %s" % version_id)
 
-                # adding operational tags and version_id for rollback operation
-                item['operation'] = 'created'
-                item['version_id'] = version_id
-                # keeping a copy of data that has been used to create the cgw data
-                self.completed_operations.append(item)
-                return
+        #  If CGW mapping doesn't have the record it will try to get version_id from metadata if provided
+        #  For the create operation it will not get any version_id either from the CGW
+        #  or from metadata. The version_id would be None
+        #  To update the versionName the version_id must be provided in the metadata
+        version_id = version_id if version_id else item.get('metadata').get('id')
 
+        item.get('metadata')['productId'] = product_id
+        del item.get('metadata')['productName'], item.get('metadata')['productCode']
+
+        if item.get('state') == 'create':
+            LOG.info("Creating version entry for the given version_name: %s ", version_name)
+            version_id = self.cgw_client.create_version(product_id, item.get('metadata'))
+            # adding new version record to the version mapping
+            self.pv_mapping[(product_name, product_code, version_name)] = version_id
+            LOG.info("New version created with version_id:- %s \n" % version_id)
+
+            # adding operational version_id for rollback operation
+            item['version_id'] = version_id
+            # keeping a copy of data that has been used to create the cgw data
+            self.completed_operations.append(item)
+            return
+
+        if item.get('state') == 'update' and version_id:
             item.get('metadata')['id'] = version_id
-            LOG.info("Found version record with version_id:- %s" % version_id)
-            LOG.info("Updating the version metadata")
+            LOG.info("Updating the version metadata \n")
             self.cgw_client.update_version(product_id, item.get('metadata'))
-
-            # adding operational tags for rollback operation
-            item['operation'] = 'updated'
             # keeping a copy of data that has been used to update the cgw data
             self.completed_operations.append(item)
 
-        elif item.get('state') == 'absent' and version_id:
+        elif item.get('state') == 'delete' and version_id:
             LOG.info("Deleting existing version records for version_id:- %s" % version_id)
             self.cgw_client.delete_version(product_id, version_id)
             del self.pv_mapping[(product_name, product_code, version_name)]
-            LOG.info("Version record deleted!")
+
+            #  removing the deleted file record from the completed operations
+            #  this is to avoid the conflicts during the rollback and make_visible operations
+            for record in self.completed_operations:
+                if record['type'] == 'product_version' and record['version_id'] == version_id:
+                    self.completed_operations.remove(record)
+
+            LOG.info("Version record deleted! \n")
         else:
-            raise CGWError("Cannot delete the version name: '%s' product code: '%s' product: '%s', id is not set" %
-                           (version_name, product_code, product_name))
+            raise CGWError(
+                "Cannot update/delete the version name: '%s' product code: '%s' product: '%s', id is not set" %
+                (version_name, product_code, product_name))
         return version_id
 
     def process_file(self, file_item):
@@ -462,22 +484,23 @@ class PushBase:
             - Search for the product record from the product mapping
             - Search for the product version record from the product_version (pv_mapping) mapping
             - Search for the file record from the file mapping (file_mapping) mapping
-            - If `file state` == `present` and record not found in mapping
+            - If `file state` == `create`
 
                 - Creates a new file record associated with product on CGW with given data
                 - Add the new record into the file mapping records
 
-            - If `file state` == `present` and record found in mapping
+            - If `file state` == `update` and record found in mapping or id is provided in metadata
 
                 - Update the file record on content gateway with given data
                 - Update the record into the file mapping records
 
-            - If `file state` == `absent` and record found in mapping
+            - If `file state` == `delete` and record found in mapping or id is provided in metadata
 
                 - Delete the file record on the content gateway
                 - Remove the record from the file mapping records
 
-            - If `file state` == `absent` and record not found in mapping
+            - If `file state` == `delete` or `update` and record not found in mapping
+              or id is not provided in metadata
 
                 - Raises CGWError error
 
@@ -489,14 +512,14 @@ class PushBase:
             CGWError:
                 - When product record is not present
                 - When version record is not present
-                - When file record is not present and tries to delete the same
+                - When file record is not present and tries to update/delete the same
 
         Returns:
             file_id (int|None):
                 Returns the file ID
         """
 
-        LOG.debug("Fetching file id for the file metadata")
+        LOG.debug("Fetching file id for the file metadata \n")
         product_name = file_item.get('metadata').get('productName')
         product_code = file_item.get('metadata').get('productCode')
         version_name = file_item.get('metadata').get('productVersionName')
@@ -511,74 +534,90 @@ class PushBase:
             raise CGWError("Product name: %s product code: %s version name: %s not found" % (
                 product_name, product_code, version_name))
 
+        #  Trying to fetch file_id from CGW mapping.
         file_id = self.file_mapping.get((product_name, product_code, version_name, download_url))
 
-        if file_item.get('state') == 'present':
-            del file_item.get('metadata')['productName'], \
-                file_item.get('metadata')['productCode'], \
-                file_item.get('metadata')['productVersionName']
-            file_item.get('metadata')['productVersionId'] = version_id
+        #  If CGW mapping doesn't have the record it will try to get file_id from metadata if provided
+        #  For the create operation it will not get any file_id neither from the CGW
+        #  nor from metadata. The file_id would be None
+        #  To update the downloadURL the file_id must be provided in the metadata
+        file_id = file_id if file_id else file_item.get('metadata').get('id')
 
-            if not file_id:
-                LOG.info("No previous entries found for the given file metadata")
-                LOG.info("Creating file entry for the given downloadURL: %s ", download_url)
-                file_id = self.cgw_client.create_file(product_id, version_id, file_item.get('metadata'))
-                self.file_mapping[
-                    (product_name, product_code, version_name, download_url)] = file_id
-                LOG.info("New file created with file_id:- %s" % file_id)
+        del file_item.get('metadata')['productName'], \
+            file_item.get('metadata')['productCode'], \
+            file_item.get('metadata')['productVersionName']
+        file_item.get('metadata')['productVersionId'] = version_id
 
-                # adding operational tags, product_id and file_id for rollback operation
-                file_item['operation'] = 'created'
-                file_item['product_id'] = product_id
-                file_item['file_id'] = file_id
-                # keeping a copy of data that has been used to create the cgw data
-                self.completed_operations.append(file_item)
-                return
+        if file_item.get('state') == 'create':
+            LOG.info("Creating file entry for the given downloadURL: %s ", download_url)
+            file_id = self.cgw_client.create_file(product_id, version_id, file_item.get('metadata'))
+            self.file_mapping[(product_name, product_code, version_name, download_url)] = file_id
+            LOG.info("New file created with file_id:- %s \n" % file_id)
 
-            LOG.info("Found file record with file_id:- %s" % file_id)
-            LOG.info("Updating the file metadata")
+            # adding operational product_id and file_id for rollback operation
+            file_item['product_id'] = product_id
+            file_item['file_id'] = file_id
+            # keeping a copy of data that has been used to create the cgw data
+            self.completed_operations.append(file_item)
+            return
+
+        if file_item.get('state') == 'update' and file_id:
+            LOG.info("Updating the file record \n")
             file_item.get('metadata')['id'] = file_id
             self.cgw_client.update_file(product_id, version_id, file_item.get('metadata'))
 
-            # adding operational tags and product_id for rollback operation
-            file_item['operation'] = 'updated'
+            # adding operational product_id for rollback operation
             file_item['product_id'] = product_id
             # keeping a copy of data that has been used to update the cgw data
             self.completed_operations.append(file_item)
 
-        elif file_item.get("state") == "absent" and file_id:
+        elif file_item.get("state") == "delete" and file_id:
             LOG.info("Deleting existing file records for file_id:- %s" % file_id)
             self.cgw_client.delete_file(product_id, version_id, file_id)
-            LOG.info("File record deleted!")
+
+            #  removing the deleted file record from the completed operations
+            #  this is to avoid the conflicts during the rollback and make_visible operations
+            for record in self.completed_operations:
+                if record['type'] == 'file' and record['file_id'] == file_id:
+                    self.completed_operations.remove(record)
+
+            LOG.info("File record deleted! \n")
             del self.file_mapping[(product_name, product_code, version_name, download_url)]
         else:
-            raise CGWError("Cannot delete file: product version: '%s' product code: '%s' product: '%s', id is not set" %
-                           (version_name, product_code, product_name))
+            raise CGWError(
+                "Cannot update/delete file: product version: '%s' product code: '%s' product: '%s', id is not set" %
+                (version_name, product_code, product_name))
         return file_id
 
     def make_visible(self):
         """
-        - Update the invisible attribute to false
+        - Update the invisible attribute to False
           once all the CGW operation completed successfully.
 
         - This is needed to make the version and file records visible.
-        - The records get created with the flag invisible=True and
-          later on successful completion of CGW operations they get enabled.
-        
+        - The `invisible` attribute changes on the following conditions:
+
+            - `invisible=True` :- sets if user externally specify the `invisible=True`
+            - `invisible=False` :- sets either if user externally specify the `invisible=False`
+              or user doesn't specify any value for this `invisible` attribute.
+
         """
+
+        LOG.debug("Updating the invisible attribute of the created records")
+        LOG.debug("Enabling the created records if required \n")
 
         self.completed_operations.reverse()
         for item in self.completed_operations:
             if item.get('type') == 'product_version':
-                if item.get("operation") == "created":
+                if item.get("state") == "create":
                     item["metadata"]["id"] = item["version_id"]
-                    item["metadata"]['invisible'] = False
+                    item["metadata"]['invisible'] = False if not item["metadata"].get('invisible') else True
                     self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
 
             elif item.get('type') == 'file':
-                if item.get("operation") == "created":
+                if item.get("state") == "create":
                     item["metadata"]["id"] = item["file_id"]
-                    item["metadata"]['invisible'] = True
+                    item["metadata"]['invisible'] = False if not item["metadata"].get('invisible') else True
                     self.cgw_client.update_file(
                         item["product_id"],
                         item["metadata"]["productVersionId"],
@@ -596,33 +635,39 @@ class PushBase:
         self.completed_operations.reverse()
         for item in self.completed_operations:
             if item.get('type') == 'product':
-                if item.get("operation") == "created":
+                if item.get("state") == "create":
                     self.cgw_client.delete_product(item["product_id"])
+                    continue
 
-                elif item.get("operation") == "updated":
+                elif item.get("state") == "update":
                     item["metadata"] = self.product_records.get(item["metadata"]["id"])
                     self.cgw_client.update_product(item["metadata"])
+                    continue
 
             elif item.get('type') == 'product_version':
-                if item.get("operation") == "created":
+                if item.get("state") == "create":
                     self.cgw_client.delete_version(item["metadata"]["productId"], item["version_id"])
+                    continue
 
-                elif item.get("operation") == "updated":
+                elif item.get("state") == "update":
                     item["metadata"] = self.version_records.get(item["metadata"]["id"])
                     self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
+                    continue
 
             elif item.get('type') == 'file':
-                if item.get("operation") == "created":
+                if item.get("state") == "create":
                     self.cgw_client.delete_file(
                         item["product_id"],
                         item["metadata"]["productVersionId"],
                         item["file_id"]
                     )
+                    continue
 
-                elif item.get("operation") == "updated":
+                elif item.get("state") == "update":
                     item["metadata"] = self.file_records.get(item["metadata"]["id"])
                     self.cgw_client.update_file(
                         item["product_id"],
                         item["metadata"]["productVersionId"],
                         item["metadata"]
                     )
+                    continue

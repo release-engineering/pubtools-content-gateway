@@ -39,7 +39,7 @@ class TestPushBase:
     def test_delete_invalid_product(self, delete_product_data, push_base_object):
         with pytest.raises(CGWError) as exception:
             push_base_object.process_product(delete_product_data)
-        assert str(exception.value) == "Cannot delete the product %s %s, id is not set" % (
+        assert str(exception.value) == "Cannot update/delete the product %s %s, id is not set" % (
             delete_product_data['metadata']['name'],
             delete_product_data['metadata']['productCode'])
 
@@ -53,10 +53,10 @@ class TestPushBase:
         assert ((mock.ANY, mock.ANY, create_version2_data['metadata']),
                 {}) in push_base_object.cgw_client.create_version.calls
 
-    def test_update_version(self, create_version_data, push_base_object):
-        push_base_object.process_version(create_version_data)
+    def test_update_version(self, update_version_data, push_base_object):
+        push_base_object.process_version(update_version_data)
         assert push_base_object.cgw_client.update_version.calls == [(
-            (mock.ANY, mock.ANY, create_version_data['metadata']), {})]
+            (mock.ANY, mock.ANY, update_version_data['metadata']), {})]
 
     def test_delete_version(self, delete_version, push_base_object):
         deleted_id = push_base_object.process_version(delete_version)
@@ -66,13 +66,7 @@ class TestPushBase:
     def test_delete_invalid_version(self, delete_version, push_base_object):
         with pytest.raises(CGWError) as exception:
             push_base_object.process_version(delete_version)
-        assert str(
-            exception.value) == "Cannot delete the version name: '%s'" \
-                                " product code: '%s' product: '%s'," \
-                                " id is not set" % (
-                   delete_version.get('metadata')['versionName'],
-                   delete_version.get('metadata')['productCode'],
-                   delete_version.get('metadata')['productName'])
+        assert "Cannot update/delete the version name:" in str(exception.value)
 
     def test_create_version_without_product(self, create_version_without_product, push_base_object):
         with pytest.raises(CGWError) as exception:
@@ -105,13 +99,7 @@ class TestPushBase:
     def test_delete_invalid_file(self, delete_file_data, push_base_object):
         with pytest.raises(CGWError) as exception:
             push_base_object.process_file(delete_file_data)
-        assert str(exception.value) == "Cannot delete file: product version: '%s'" \
-                                       " product code: '%s' product: '%s'," \
-                                       " id is not set" % (
-                   delete_file_data.get('metadata')['productVersionName'],
-                   delete_file_data.get('metadata')['productCode'],
-                   delete_file_data.get('metadata')['productName']
-               )
+        assert "Cannot update/delete file: product version:" in str(exception.value)
 
     def test_create_file_without_product(self, create_file_without_product, push_base_object):
         with pytest.raises(CGWError) as exception:
@@ -198,8 +186,7 @@ class TestRollbackOperations:
     def test_rollback_created_product(self, push_base_object):
         data = {
             'type': 'product',
-            'state': 'present',
-            'operation': 'created',
+            'state': 'create',
             'product_id': 1234,
             'metadata': {
                 # some data
@@ -218,8 +205,7 @@ class TestRollbackOperations:
     def test_rollback_updated_product(self, push_base_object):
         data = {
             'type': 'product',
-            'state': 'present',
-            'operation': 'updated',
+            'state': 'update',
             'metadata':
                 {
                     'id': 1111,
@@ -246,8 +232,7 @@ class TestRollbackOperations:
     def test_rollback_created_version(self, push_base_object):
         data = {
             'type': 'product_version',
-            'state': 'present',
-            'operation': 'created',
+            'state': 'create',
             'version_id': 2222,
             'metadata':
                 {
@@ -269,8 +254,7 @@ class TestRollbackOperations:
     def test_rollback_update_versions(self, push_base_object):
         data = {
             'type': 'product_version',
-            'state': 'present',
-            'operation': 'updated',
+            'state': 'update',
             'metadata':
                 {
                     'id': 2222,
@@ -299,8 +283,7 @@ class TestRollbackOperations:
     def test_rollback_created_file(self, push_base_object):
         data = {
             'type': 'file',
-            'state': 'present',
-            'operation': 'created',
+            'state': 'create',
             'product_id': 1111,
             'file_id': 333,
             'metadata':
@@ -325,8 +308,7 @@ class TestRollbackOperations:
     def test_rollback_update_files(self, push_base_object):
         data = {
             'type': 'file',
-            'state': 'present',
-            'operation': 'updated',
+            'state': 'update',
             'product_id': 1111,
             'metadata':
                 {
@@ -367,8 +349,7 @@ class TestMakeVisible:
     def test_make_visible_created_version(self, push_base_object):
         data = {
             'type': 'product_version',
-            'state': 'present',
-            'operation': 'created',
+            'state': 'create',
             'version_id': 2222,
             'metadata':
                 {
@@ -396,8 +377,7 @@ class TestMakeVisible:
     def test_make_visible_created_file(self, push_base_object):
         data = {
             'type': 'file',
-            'state': 'present',
-            'operation': 'created',
+            'state': 'create',
             'product_id': 1111,
             'file_id': 333,
             'metadata':

@@ -93,14 +93,15 @@ class PushStagedCGW(PushBase):
                             self.process_file(pitem)
 
                     self.make_visible()
-                except (ValueError, Exception) as error:
+                    LOG.info("\n All CGW operations are successfully completed...!")
+                except Exception as error:
                     LOG.exception("Exception occurred during the CGW operation %s" % error)
                     LOG.info("Rolling back the partial operation")
                     self.rollback_cgw_operation()
 
-                    if type(error) is ValueError and "Unable to find push item with path:" in error.args[0]:
-                        raise ValueError(
-                            "Unable to find push item path")
+                    #  raising the occurred Exception as all the exception will get caught in this except block
+                    #  we want to return full Traceback
+                    raise error
 
 
 def entry_point(target_name, target_settings):

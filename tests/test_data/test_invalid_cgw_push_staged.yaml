@@ -1,5 +1,5 @@
 - type: file
-  state: present
+  state: create
   metadata:
     productName: "Cloud: Ansible New Test"
     productCode: "AnsibleNewTest"

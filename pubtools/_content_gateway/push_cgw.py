@@ -51,10 +51,15 @@ class PushCGW(PushBase):
                     self.process_file(item)
 
             self.make_visible()
+            LOG.info("\n All CGW operations are successfully completed...!")
         except Exception as error:
             LOG.exception("Exception occurred during the CGW operation %s" % error)
             LOG.info("Rolling back the partial operation")
             self.rollback_cgw_operation()
+
+            #  raising the occurred Exception as all the exception will get caught in this except block
+            #  we want to return full Traceback
+            raise error
 
 
 def main():
