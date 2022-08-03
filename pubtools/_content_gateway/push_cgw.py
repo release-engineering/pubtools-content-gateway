@@ -1,6 +1,11 @@
 import argparse
+import logging
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items
+
+LOG = logging.getLogger("pubtools.cgw")
+LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class PushCGW(PushBase):
@@ -36,13 +41,25 @@ class PushCGW(PushBase):
         for item in self.cgw_items:
             validate_data(item)
         self.cgw_items = sort_items(self.cgw_items)
-        for item in self.cgw_items:
-            if item['type'] == 'product':
-                self.process_product(item)
-            elif item['type'] == 'product_version':
-                self.process_version(item)
-            elif item['type'] == 'file':
-                self.process_file(item)
+        try:
+            for item in self.cgw_items:
+                if item['type'] == 'product':
+                    self.process_product(item)
+                elif item['type'] == 'product_version':
+                    self.process_version(item)
+                elif item['type'] == 'file':
+                    self.process_file(item)
+
+            self.make_visible()
+            LOG.info("\n All CGW operations are successfully completed...!")
+        except Exception as error:
+            LOG.exception("Exception occurred during the CGW operation %s" % error)
+            LOG.info("Rolling back the partial operation")
+            self.rollback_cgw_operation()
+
+            #  raising the occurred Exception as all the exception will get caught in this except block
+            #  we want to return full Traceback
+            raise error
 
 
 def main():

@@ -1,17 +1,12 @@
 import pytest
 
-try:
-    import mock
-except ImportError:
-    from unittest import mock
-
 
 @pytest.fixture
 def fixture_unsorted_files_json():
     json = [
         {
             'type': 'product',
-            'state': 'present',
+            'state': 'create',
             'metadata': {
                 'name': 'Cloud: Ansible NEW Test',
                 'productCode': 'AnsibleNewTest',
@@ -25,7 +20,7 @@ def fixture_unsorted_files_json():
         },
         {
             'type': 'product_version',
-            'state': 'present',
+            'state': 'create',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW Test',
                 'productCode': 'AnsibleNewTest',
@@ -41,7 +36,7 @@ def fixture_unsorted_files_json():
         },
         {
             'type': 'product',
-            'state': 'absent',
+            'state': 'delete',
             'metadata': {
                 'name': 'Cloud: Ansible NEW Test 2',
                 'productCode': 'AnsibleNewTest',
@@ -55,7 +50,7 @@ def fixture_unsorted_files_json():
         },
         {
             'type': 'product_version',
-            'state': 'absent',
+            'state': 'delete',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW Test 2',
                 'productCode': 'AnsibleNewTest',
@@ -70,7 +65,7 @@ def fixture_unsorted_files_json():
         },
         {
             'type': 'file',
-            'state': 'present',
+            'state': 'create',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW TEST',
                 'productCode': 'AnsibleNewTest',
@@ -90,7 +85,7 @@ def fixture_unsorted_files_json():
         },
         {
             'type': 'file',
-            'state': 'absent',
+            'state': 'delete',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW TESTTEST',
                 'productCode': 'AnsibleNewTest',
@@ -116,7 +111,7 @@ def fixture_sorted_files_json():
     json = [
         {
             'type': 'product',
-            'state': 'present',
+            'state': 'create',
             'metadata': {
                 'name': 'Cloud: Ansible NEW Test',
                 'productCode': 'AnsibleNewTest',
@@ -130,7 +125,7 @@ def fixture_sorted_files_json():
         },
         {
             'type': 'product_version',
-            'state': 'present',
+            'state': 'create',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW Test',
                 'productCode': 'AnsibleNewTest',
@@ -146,7 +141,7 @@ def fixture_sorted_files_json():
         },
         {
             'type': 'file',
-            'state': 'present',
+            'state': 'create',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW TEST',
                 'productCode': 'AnsibleNewTest',
@@ -166,7 +161,7 @@ def fixture_sorted_files_json():
         },
         {
             'type': 'file',
-            'state': 'absent',
+            'state': 'delete',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW TESTTEST',
                 'productCode': 'AnsibleNewTest',
@@ -185,7 +180,7 @@ def fixture_sorted_files_json():
         },
         {
             'type': 'product_version',
-            'state': 'absent',
+            'state': 'delete',
             'metadata': {
                 'productName': 'Cloud: Ansible NEW Test 2',
                 'productCode': 'AnsibleNewTest',
@@ -200,7 +195,7 @@ def fixture_sorted_files_json():
         },
         {
             'type': 'product',
-            'state': 'absent',
+            'state': 'delete',
             'metadata': {
                 'name': 'Cloud: Ansible NEW Test 2',
                 'productCode': 'AnsibleNewTest',
@@ -220,7 +215,7 @@ def fixture_sorted_files_json():
 def create_product_data():
     return {
         'type': 'product',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'name': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -238,7 +233,7 @@ def create_product_data():
 def create_product2_data():
     return {
         'type': 'product',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'name': 'Cloud: Ansible NEW Test 1',
             'productCode': 'AnsibleNewTest 1',
@@ -256,7 +251,7 @@ def create_product2_data():
 def update_product_data():
     return {
         'type': 'product',
-        'state': 'present',
+        'state': 'update',
         'metadata': {
             'name': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -274,7 +269,7 @@ def update_product_data():
 def delete_product_data():
     return {
         'type': 'product',
-        'state': 'absent',
+        'state': 'delete',
         'metadata': {
             'name': 'Cloud: Ansible NEW Test 1',
             'productCode': 'AnsibleNewTest 1',
@@ -292,7 +287,27 @@ def delete_product_data():
 def create_version_data():
     return {
         'type': 'product_version',
-        'state': 'present',
+        'state': 'create',
+        'metadata': {
+            'productName': 'Cloud: Ansible NEW Test',
+            'productCode': 'AnsibleNewTest',
+            'versionName': 'AnsibleNewTestVersion',
+            'ga': True,
+            'masterProductVersion': None,
+            'termsAndConditions': 'Anonymous Download',
+            'trackingDisabled': False,
+            'hidden': False,
+            'invisible': False,
+            'releaseDate': '2022-25-05'
+        }
+    }
+
+
+@pytest.fixture
+def update_version_data():
+    return {
+        'type': 'product_version',
+        'state': 'update',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -312,7 +327,7 @@ def create_version_data():
 def create_version2_data():
     return {
         'type': 'product_version',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -332,7 +347,7 @@ def create_version2_data():
 def create_version_without_product():
     return {
         'type': 'product_version',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'productName': 'InvalidProduct',
             'productCode': 'InvalidProduct',
@@ -352,7 +367,7 @@ def create_version_without_product():
 def delete_version():
     return {
         'type': 'product_version',
-        'state': 'absent',
+        'state': 'delete',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -372,7 +387,7 @@ def delete_version():
 def create_file_data():
     return {
         'type': 'file',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -396,7 +411,7 @@ def create_file_data():
 def create_file_without_product():
     return {
         'type': 'file',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'productName': 'Invalid product name',
             'productCode': 'InvalidCode',
@@ -420,7 +435,7 @@ def create_file_without_product():
 def create_file_without_version():
     return {
         'type': 'file',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -444,7 +459,7 @@ def create_file_without_version():
 def create_file2_data():
     return {
         'type': 'file',
-        'state': 'present',
+        'state': 'create',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -468,7 +483,7 @@ def create_file2_data():
 def update_file_data():
     return {
         'type': 'file',
-        'state': 'present',
+        'state': 'update',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',
@@ -492,7 +507,7 @@ def update_file_data():
 def delete_file_data():
     return {
         'type': 'file',
-        'state': 'absent',
+        'state': 'delete',
         'metadata': {
             'productName': 'Cloud: Ansible NEW Test',
             'productCode': 'AnsibleNewTest',

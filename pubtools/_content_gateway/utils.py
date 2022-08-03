@@ -15,7 +15,7 @@ PRODUCT_SCHEMA = {
         },
         "state": {
             "type": "string",
-            "enum": ["present", "absent"]
+            "enum": ["create", "update", "delete"]
         },
         "metadata": {
             "type": "object",
@@ -72,7 +72,7 @@ VERSION_SCHEMA = {
         },
         "state": {
             "type": "string",
-            "enum": ["present", "absent"]
+            "enum": ["create", "update", "delete"]
         },
         "metadata": {
             "type": "object",
@@ -114,7 +114,6 @@ VERSION_SCHEMA = {
                 "termsAndConditions",
                 "trackingDisabled",
                 "hidden",
-                "invisible",
                 "releaseDate"
             ]
         }
@@ -134,7 +133,7 @@ FILE_SCHEMA = {
         },
         "state": {
             "type": "string",
-            "enum": ["present", "absent"]
+            "enum": ["create", "update", "delete"]
         },
         "metadata": {
             "type": "object",
@@ -190,7 +189,6 @@ FILE_SCHEMA = {
                 "label",
                 "order",
                 "hidden",
-                "invisible",
                 "type",
                 "differentProductThankYouPage",
                 "downloadURL",
@@ -215,7 +213,7 @@ FILE_STAGED_SCHEMA = {
         },
         "state": {
             "type": "string",
-            "enum": ["present", "absent"]
+            "enum": ["create", "update", "delete"]
         },
         "metadata": {
             "type": "object",
@@ -265,7 +263,6 @@ FILE_STAGED_SCHEMA = {
                 "label",
                 "order",
                 "hidden",
-                "invisible",
                 "type",
                 "differentProductThankYouPage",
                 "shortURL",
@@ -354,29 +351,29 @@ def sort_items(items):
     Returns:
         list(dict): list of JSON dictionary
     """
-    product_present = []
-    version_present = []
-    file_present = []
-    file_absent = []
-    version_absent = []
-    product_absent = []
+    product_create_update = []
+    version_create_update = []
+    file_create_update = []
+    file_delete = []
+    version_delete = []
+    product_delete = []
     sorted_items = []
 
     for data in items:
         if data['type'] == 'product':
-            product_present.append(data) if data['state'] == 'present' else product_absent.append(data)
+            product_create_update.append(data) if data['state'] in ['create', 'update'] else product_delete.append(data)
 
         if data['type'] == 'product_version':
-            version_present.append(data) if data['state'] == 'present' else version_absent.append(data)
+            version_create_update.append(data) if data['state'] in ['create', 'update'] else version_delete.append(data)
 
         if data['type'] == 'file':
-            file_present.append(data) if data['state'] == 'present' else file_absent.append(data)
+            file_create_update.append(data) if data['state'] in ['create', 'update'] else file_delete.append(data)
 
-    sorted_items.extend(product_present)
-    sorted_items.extend(version_present)
-    sorted_items.extend(file_present)
-    sorted_items.extend(file_absent)
-    sorted_items.extend(version_absent)
-    sorted_items.extend(product_absent)
+    sorted_items.extend(product_create_update)
+    sorted_items.extend(version_create_update)
+    sorted_items.extend(file_create_update)
+    sorted_items.extend(file_delete)
+    sorted_items.extend(version_delete)
+    sorted_items.extend(product_delete)
 
     return sorted_items
