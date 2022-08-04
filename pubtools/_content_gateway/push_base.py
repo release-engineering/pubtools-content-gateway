@@ -334,7 +334,12 @@ class PushBase:
         product_id = product_id if product_id else item.get('metadata').get('id')
 
         if item.get('state') == 'create':
-            LOG.info("Creating product entry for the given product metadata")
+            if product_id:
+                LOG.error(
+                    "Record already present for the product name:- %s and code:- %s and product_id is %s " % (
+                        product_name, product_code, product_id))
+                raise CGWError("Cannot create new product. Record already present.")
+
             product_id = self.cgw_client.create_product(item.get('metadata'))
             # A new product is created so updating the existing product mapping
             self.product_mapping[(product_name, product_code)] = product_id
@@ -437,6 +442,11 @@ class PushBase:
         del item.get('metadata')['productName'], item.get('metadata')['productCode']
 
         if item.get('state') == 'create':
+            if version_id:
+                LOG.error(
+                    "Record already present for the version name:- %s and code:- %s and version_id is %s " % (
+                        version_name, product_code, version_id))
+                raise CGWError("Cannot create new version. Record already present.")
             LOG.info("Creating version entry for the given version_name: %s ", version_name)
             version_id = self.cgw_client.create_version(product_id, item.get('metadata'))
             # adding new version record to the version mapping
@@ -549,6 +559,11 @@ class PushBase:
         file_item.get('metadata')['productVersionId'] = version_id
 
         if file_item.get('state') == 'create':
+            if file_id:
+                LOG.error(
+                    "Record already present for the file download_url :- %s and file_id is %s " % (
+                        download_url, file_id))
+                raise CGWError("Cannot create new file. Record already present.")
             LOG.info("Creating file entry for the given downloadURL: %s ", download_url)
             file_id = self.cgw_client.create_file(product_id, version_id, file_item.get('metadata'))
             self.file_mapping[(product_name, product_code, version_name, download_url)] = file_id
@@ -637,22 +652,22 @@ class PushBase:
             if item.get('type') == 'product':
                 if item.get("state") == "create":
                     self.cgw_client.delete_product(item["product_id"])
-                    continue
+                    LOG.info("Rollback done for created product:- %s", item["product_id"])
 
                 elif item.get("state") == "update":
                     item["metadata"] = self.product_records.get(item["metadata"]["id"])
                     self.cgw_client.update_product(item["metadata"])
-                    continue
+                    LOG.info("Rollback done for updated product:- %s", item["metadata"]["id"])
 
             elif item.get('type') == 'product_version':
                 if item.get("state") == "create":
                     self.cgw_client.delete_version(item["metadata"]["productId"], item["version_id"])
-                    continue
+                    LOG.info("Rollback done for created product_version:- %s", item["version_id"])
 
                 elif item.get("state") == "update":
                     item["metadata"] = self.version_records.get(item["metadata"]["id"])
                     self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
-                    continue
+                    LOG.info("Rollback done for updated product_version:- %s", item["metadata"]["id"])
 
             elif item.get('type') == 'file':
                 if item.get("state") == "create":
@@ -661,7 +676,7 @@ class PushBase:
                         item["metadata"]["productVersionId"],
                         item["file_id"]
                     )
-                    continue
+                    LOG.info("Rollback done for created file:- %s", item["file_id"])
 
                 elif item.get("state") == "update":
                     item["metadata"] = self.file_records.get(item["metadata"]["id"])
@@ -670,4 +685,5 @@ class PushBase:
                         item["metadata"]["productVersionId"],
                         item["metadata"]
                     )
-                    continue
+                    LOG.info("Rollback done for updated file:- %s", item["metadata"]["id"])
+        LOG.info("Rollback operations completed...!")

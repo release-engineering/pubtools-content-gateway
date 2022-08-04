@@ -23,9 +23,14 @@ class TestPushBase:
         assert push_base_object.cgw_client.create_product.calls == [
             ((mock.ANY, create_product_data['metadata']), {})]
 
-    def test_create_product_2(self, create_product2_data, create_product_data, push_base_object):
+    def test_create_product_2(self, create_product2_data, push_base_object):
         push_base_object.process_product(create_product2_data)
         assert ((mock.ANY, create_product2_data['metadata']), {}) in push_base_object.cgw_client.create_product.calls
+
+    def test_create_duplicate_product(self, create_product_data, push_base_object):
+        with pytest.raises(CGWError) as exception:
+            push_base_object.process_product(create_product_data)
+        assert str(exception.value) == "Cannot create new product. Record already present."
 
     def test_update_product(self, update_product_data, push_base_object):
         push_base_object.process_product(update_product_data)
@@ -52,6 +57,11 @@ class TestPushBase:
         push_base_object.process_version(create_version2_data)
         assert ((mock.ANY, mock.ANY, create_version2_data['metadata']),
                 {}) in push_base_object.cgw_client.create_version.calls
+
+    def test_create_duplicate_version(self, create_version_data, push_base_object):
+        with pytest.raises(CGWError) as exception:
+            push_base_object.process_version(create_version_data)
+        assert str(exception.value) == "Cannot create new version. Record already present."
 
     def test_update_version(self, update_version_data, push_base_object):
         push_base_object.process_version(update_version_data)
@@ -85,6 +95,11 @@ class TestPushBase:
         push_base_object.process_file(create_file2_data)
         assert ((mock.ANY, mock.ANY, mock.ANY, create_file2_data['metadata']),
                 {}) in push_base_object.cgw_client.create_file.calls
+
+    def test_create_duplicate_file(self, create_file_data, push_base_object):
+        with pytest.raises(CGWError) as exception:
+            push_base_object.process_file(create_file_data)
+        assert str(exception.value) == "Cannot create new file. Record already present."
 
     def test_update_file(self, update_file_data, push_base_object):
         push_base_object.process_file(update_file_data)
@@ -220,6 +235,7 @@ class TestRollbackOperations:
                 },
         }
         push_base_object.completed_operations = [data]
+        push_base_object.product_records[1111] = {'id': 1111}
         with requests_mock.Mocker() as m:
             m.register_uri(
                 "POST",
