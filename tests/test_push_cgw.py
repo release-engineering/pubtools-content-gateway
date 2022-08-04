@@ -1,7 +1,8 @@
-from pubtools._content_gateway.push_cgw import PushCGW, main
-from tests.fake_cgw_client import TestClient
 import os
 import argparse
+import pytest
+from pubtools._content_gateway.push_cgw import PushCGW, main
+from tests.fake_cgw_client import TestClient
 
 try:
     import mock
@@ -40,3 +41,13 @@ def test_main(mock_args, mock_cgw, mock_yaml_parser, create_product_data):
     expected_product_id = 1
     assert expected_product_id in mock_cgw.return_value.products
     assert mock_args.called is True
+
+
+def test_cgw_operations_exception():
+    push_cgw = PushCGW("http://fake_host_name/test", "foo", "bar", yaml_file_path)
+    push_cgw.process_product = []
+    push_cgw.rollback_cgw_operation = mock.MagicMock()
+    with pytest.raises(TypeError):
+        push_cgw.cgw_operations()
+
+    assert push_cgw.rollback_cgw_operation.called is True

@@ -2,9 +2,15 @@ import os
 import json
 import pluggy
 from attrs import asdict
+import logging
 from pushsource import CGWPushItem
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items
+
+
+LOG = logging.getLogger("pubtools.cgw")
+LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 pm = pluggy.PluginManager("pubtools")
 hookspec = pluggy.HookspecMarker("pubtools")
@@ -66,25 +72,36 @@ class PushStagedCGW(PushBase):
                     validate_data(pitem, staged=True)
 
                 parsed_items = sort_items(parsed_items)
-                for pitem in parsed_items:
-                    if pitem['type'] == 'product':
-                        self.process_product(pitem)
-                    if pitem.get('type') == 'product_version':
-                        self.process_version(pitem)
-                    if pitem['type'] == 'file':
-                        for push_item in self.push_items:
-                            if push_item.src == pitem['metadata']['pushItemPath']:
-                                break
-                        else:
-                            raise ValueError(
-                                "Unable to find push item with path:%s" % pitem['metadata']['pushItemPath'])
-                        pulp_push_item = self.pulp_push_items[json.dumps(asdict(item), sort_keys=True)]
-                        pitem['metadata']['downloadURL'] = pulp_push_item.cdn_path
-                        pitem['metadata']['md5'] = item.md5sum
-                        pitem['metadata']['sha256'] = pulp_push_item.sha256sum
-                        pitem['metadata']['size'] = pulp_push_item.size
+                try:
+                    for pitem in parsed_items:
+                        if pitem['type'] == 'product':
+                            self.process_product(pitem)
+                        if pitem.get('type') == 'product_version':
+                            self.process_version(pitem)
+                        if pitem['type'] == 'file':
+                            for push_item in self.push_items:
+                                if push_item.src == pitem['metadata']['pushItemPath']:
+                                    break
+                            else:
+                                raise ValueError(
+                                    "Unable to find push item with path:%s" % pitem['metadata']['pushItemPath'])
+                            pulp_push_item = self.pulp_push_items[json.dumps(asdict(item), sort_keys=True)]
+                            pitem['metadata']['downloadURL'] = pulp_push_item.cdn_path
+                            pitem['metadata']['md5'] = item.md5sum
+                            pitem['metadata']['sha256'] = pulp_push_item.sha256sum
+                            pitem['metadata']['size'] = pulp_push_item.size
+                            self.process_file(pitem)
 
-                        self.process_file(pitem)
+                    self.make_visible()
+                    LOG.info("\n All CGW operations are successfully completed...!")
+                except Exception as error:
+                    LOG.exception("Exception occurred during the CGW operation %s" % error)
+                    LOG.info("Rolling back the partial operation")
+                    self.rollback_cgw_operation()
+
+                    #  raising the occurred Exception as all the exception will get caught in this except block
+                    #  we want to return full Traceback
+                    raise error
 
 
 def entry_point(target_name, target_settings):
