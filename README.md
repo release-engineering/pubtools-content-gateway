@@ -1,1 +1,2 @@
-# pubtools-content-gateway
+# pubtools-content-gateway (CGW)
+# 
