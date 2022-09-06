@@ -4,10 +4,11 @@ from requests.packages.urllib3.util.retry import Retry
 
 
 class CGWSession(object):
-    """Helper class to support cgw requests and authentication"""
+    """Helper class to support cgw requests and authentication."""
 
     def __init__(self, hostname, retries=3, verify=True, backoff_factor=2):
-        """
+        """Initializing.
+
         Args:
             hostname (str)
                 hostname of CG service
@@ -32,8 +33,8 @@ class CGWSession(object):
         adapter = HTTPAdapter(max_retries=retry)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
-        self.session.headers["Content-type"] = 'application/json'
-        self.session.headers["Accept"] = 'application/json'
+        self.session.headers["Content-type"] = "application/json"
+        self.session.headers["Accept"] = "application/json"
 
     def get(self, endpoint, **kwargs):
         """HTTP get request against CGW server API
@@ -48,7 +49,7 @@ class CGWSession(object):
         return self.session.get(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def post(self, endpoint, **kwargs):
-        """HTTP post request against CGW server API
+        """HTTP post request against CGW server API.
 
         Args:
             endpoint (str)
@@ -60,7 +61,7 @@ class CGWSession(object):
         return self.session.post(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def put(self, endpoint, **kwargs):
-        """HTTP put request against CGW server API
+        """HTTP put request against CGW server API.
 
         Args:
             endpoint (str)
@@ -72,7 +73,7 @@ class CGWSession(object):
         return self.session.put(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def delete(self, endpoint, **kwargs):
-        """HTTP delete request against CGW server API
+        """HTTP delete request against CGW server API.
 
         Args:
             endpoint (str)
@@ -84,7 +85,7 @@ class CGWSession(object):
         return self.session.delete(self._api_url(endpoint), verify=self.verify, **kwargs)
 
     def _api_url(self, endpoint):
-        """Basic authentication support for CGClient
+        """Basic authentication support for CGClient.
 
         Args:
             endpoint (str)

@@ -1,4 +1,47 @@
+# -*- coding: utf-8 -*-
+"""setup.py"""
+
+import os
+import sys
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
+
+
+class Tox(TestCommand):
+    user_options = [("tox-args=", "a", "Arguments to pass to tox")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.tox_args = None
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import tox
+        import shlex
+
+        if self.tox_args:
+            errno = tox.cmdline(args=shlex.split(self.tox_args))
+        else:
+            errno = tox.cmdline(self.test_args)
+        sys.exit(errno)
+
+
+def read_content(filepath):
+    with open(filepath) as fobj:
+        return fobj.read()
+
+
+long_description = read_content("docs/source/README.rst") + read_content(
+    os.path.join("docs/source", "CHANGELOG.rst")
+)
+
+extras_require = {"reST": ["Sphinx"]}
+if os.environ.get("READTHEDOCS", None):
+    extras_require["reST"].append("recommonmark")
 
 
 def get_description():
@@ -6,7 +49,7 @@ def get_description():
 
 
 def get_long_description():
-    with open("README.md") as f:
+    with open("docs/source/README.rst") as f:
         text = f.read()
 
     # Long description is everything after README's initial heading
@@ -20,8 +63,9 @@ def get_requirements():
     with open("requirements.txt") as f:
         return f.read().splitlines()
 
-INSTALL_REQUIRES = ['urllib3', 'six', 'requests', 'mock', 'pytest', 'requests_mock']
-# INSTALL_REQUIRES = get_requirements()
+
+# INSTALL_REQUIRES = ['urllib3', 'six', 'requests-mock', 'requests', 'mock', 'pytest', 'setuptools']
+INSTALL_REQUIRES = get_requirements()
 
 classifiers = [
     "Development Status :: 1 - Alpha",
@@ -48,6 +92,9 @@ setup(
     classifiers=classifiers,
     packages=find_packages(exclude=["tests"]),
     install_requires=INSTALL_REQUIRES,
+    tests_require=["tox", "mock", "requests_mock", "pushcollector", "requests", "tox", "pytest", "covdefaults",
+                   "pytest-cov"],
+    data_files=[],
     entry_points={
         "console_scripts": [
             "push-cgw-metadata = pubtools._content_gateway.push_cgw:main"
@@ -62,4 +109,5 @@ setup(
         "Changelog": "https://github.com/jalam453/pubtools-content-gateway",
         # "Documentation": "https://github.com/jalam453/pubtools-content-gateway",
     },
+    cmdclass={"test": Tox},
 )

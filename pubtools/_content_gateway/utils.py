@@ -10,40 +10,19 @@ logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 PRODUCT_SCHEMA = {
     "type": "object",
     "properties": {
-        "type": {
-            "type": "string"
-        },
-        "state": {
-            "type": "string",
-            "enum": ["create", "update", "delete"]
-        },
+        "type": {"type": "string"},
+        "state": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "productCode": {
-                    "type": ["string", "null"]
-                },
-                "homepage": {
-                    "type": "string"
-                },
-                "downloadpage": {
-                    "type": "string"
-                },
-                "thankYouPage": {
-                    "type": "string"
-                },
-                "eloquaCode": {
-                    "type": ["string", "number"]
-                },
-                "featuredArtifactType": {
-                    "type": "string"
-                },
-                "thankYouTimeout": {
-                    "type": "integer"
-                }
+                "name": {"type": "string"},
+                "productCode": {"type": ["string", "null"]},
+                "homepage": {"type": "string"},
+                "downloadpage": {"type": "string"},
+                "thankYouPage": {"type": "string"},
+                "eloquaCode": {"type": ["string", "number"]},
+                "featuredArtifactType": {"type": "string"},
+                "thankYouTimeout": {"type": "integer"},
             },
             "required": [
                 "name",
@@ -53,58 +32,30 @@ PRODUCT_SCHEMA = {
                 "thankYouPage",
                 "eloquaCode",
                 "featuredArtifactType",
-                "thankYouTimeout"
-            ]
-        }
+                "thankYouTimeout",
+            ],
+        },
     },
-    "required": [
-        "type",
-        "state",
-        "metadata"
-    ]
+    "required": ["type", "state", "metadata"],
 }
 
 VERSION_SCHEMA = {
     "type": "object",
     "properties": {
-        "type": {
-            "type": "string"
-        },
-        "state": {
-            "type": "string",
-            "enum": ["create", "update", "delete"]
-        },
+        "type": {"type": "string"},
+        "state": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
-                "productName": {
-                    "type": "string"
-                },
-                "productCode": {
-                    "type": ["string", "null", "number"]
-                },
-                "versionName": {
-                    "type": ["string", "number"]
-                },
-                "ga": {
-                    "type": "boolean"
-                },
-
-                "termsAndConditions": {
-                    "type": "string"
-                },
-                "trackingDisabled": {
-                    "type": "boolean"
-                },
-                "hidden": {
-                    "type": "boolean"
-                },
-                "invisible": {
-                    "type": "boolean"
-                },
-                "releaseDate": {
-                    "type": "string"
-                }
+                "productName": {"type": "string"},
+                "productCode": {"type": ["string", "null", "number"]},
+                "versionName": {"type": ["string", "number"]},
+                "ga": {"type": "boolean"},
+                "termsAndConditions": {"type": "string"},
+                "trackingDisabled": {"type": "boolean"},
+                "hidden": {"type": "boolean"},
+                "invisible": {"type": "boolean"},
+                "releaseDate": {"type": "string"},
             },
             "required": [
                 "productName",
@@ -114,72 +65,35 @@ VERSION_SCHEMA = {
                 "termsAndConditions",
                 "trackingDisabled",
                 "hidden",
-                "releaseDate"
-            ]
-        }
+                "releaseDate",
+            ],
+        },
     },
-    "required": [
-        "type",
-        "state",
-        "metadata"
-    ]
+    "required": ["type", "state", "metadata"],
 }
 
 FILE_SCHEMA = {
     "type": "object",
     "properties": {
-        "type": {
-            "type": "string"
-        },
-        "state": {
-            "type": "string",
-            "enum": ["create", "update", "delete"]
-        },
+        "type": {"type": "string"},
+        "state": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
-                "productName": {
-                    "type": "string"
-                },
-                "productCode": {
-                    "type": ["string", "null"]
-                },
-                "productVersionName": {
-                    "type": ["string", "number", "null"]
-                },
-                "description": {
-                    "type": ["string", "null"]
-                },
-                "label": {
-                    "type": ["string", "null"]
-                },
-                "order": {
-                    "type": "integer"
-                },
-                "hidden": {
-                    "type": "boolean"
-                },
-                "invisible": {
-                    "type": "boolean"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "differentProductThankYouPage": {
-                    "type": ["number", "null"]
-                },
-                "downloadURL": {
-                    "type": "string"
-                },
-                "shortURL": {
-                    "type": "string"
-                },
-                "size": {
-                    "type": ["number", "null"]
-                },
-                "md5": {
-                    "type": ["string", "number", "null"]
-                }
+                "productName": {"type": "string"},
+                "productCode": {"type": ["string", "null"]},
+                "productVersionName": {"type": ["string", "number", "null"]},
+                "description": {"type": ["string", "null"]},
+                "label": {"type": ["string", "null"]},
+                "order": {"type": "integer"},
+                "hidden": {"type": "boolean"},
+                "invisible": {"type": "boolean"},
+                "type": {"type": "string"},
+                "differentProductThankYouPage": {"type": ["number", "null"]},
+                "downloadURL": {"type": "string"},
+                "shortURL": {"type": "string"},
+                "size": {"type": ["number", "null"]},
+                "md5": {"type": ["string", "number", "null"]},
             },
             "required": [
                 "productName",
@@ -194,66 +108,33 @@ FILE_SCHEMA = {
                 "downloadURL",
                 "shortURL",
                 "size",
-                "md5"
-            ]
-        }
+                "md5",
+            ],
+        },
     },
-    "required": [
-        "type",
-        "state",
-        "metadata"
-    ]
+    "required": ["type", "state", "metadata"],
 }
 
 FILE_STAGED_SCHEMA = {
     "type": "object",
     "properties": {
-        "type": {
-            "type": "string"
-        },
-        "state": {
-            "type": "string",
-            "enum": ["create", "update", "delete"]
-        },
+        "type": {"type": "string"},
+        "state": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
-                "productName": {
-                    "type": "string"
-                },
-                "productCode": {
-                    "type": ["string", "null"]
-                },
-                "productVersionName": {
-                    "type": ["string", "number", "null"]
-                },
-                "description": {
-                    "type": ["string", "null"]
-                },
-                "label": {
-                    "type": ["string", "null"]
-                },
-                "order": {
-                    "type": "integer"
-                },
-                "hidden": {
-                    "type": "boolean"
-                },
-                "invisible": {
-                    "type": "boolean"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "differentProductThankYouPage": {
-                    "type": ["number", "null"]
-                },
-                "shortURL": {
-                    "type": "string"
-                },
-                "pushItemPath": {
-                    "type": "string"
-                }
+                "productName": {"type": "string"},
+                "productCode": {"type": ["string", "null"]},
+                "productVersionName": {"type": ["string", "number", "null"]},
+                "description": {"type": ["string", "null"]},
+                "label": {"type": ["string", "null"]},
+                "order": {"type": "integer"},
+                "hidden": {"type": "boolean"},
+                "invisible": {"type": "boolean"},
+                "type": {"type": "string"},
+                "differentProductThankYouPage": {"type": ["number", "null"]},
+                "shortURL": {"type": "string"},
+                "pushItemPath": {"type": "string"},
             },
             "required": [
                 "productName",
@@ -267,14 +148,10 @@ FILE_STAGED_SCHEMA = {
                 "differentProductThankYouPage",
                 "shortURL",
                 "pushItemPath",
-            ]
-        }
+            ],
+        },
     },
-    "required": [
-        "type",
-        "state",
-        "metadata"
-    ]
+    "required": ["type", "state", "metadata"],
 }
 
 
@@ -297,14 +174,14 @@ def validate_data(json_data, staged=False):
         True: if validation succeed
     """
 
-    item_type = json_data.get('type')
-    if item_type == 'product':
+    item_type = json_data.get("type")
+    if item_type == "product":
         validate(instance=json_data, schema=PRODUCT_SCHEMA)
-    elif item_type == 'product_version':
+    elif item_type == "product_version":
         validate(instance=json_data, schema=VERSION_SCHEMA)
-    elif item_type == 'file':
+    elif item_type == "file":
         validate(instance=json_data, schema=FILE_STAGED_SCHEMA if staged else FILE_SCHEMA)
-    LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get('metadata').get('productCode')))
+    LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get("metadata").get("productCode")))
     return True
 
 
@@ -360,14 +237,23 @@ def sort_items(items):
     sorted_items = []
 
     for data in items:
-        if data['type'] == 'product':
-            product_create_update.append(data) if data['state'] in ['create', 'update'] else product_delete.append(data)
+        if data["type"] == "product":
+            product_create_update.append(data) if data["state"] in [
+                "create",
+                "update",
+            ] else product_delete.append(data)
 
-        if data['type'] == 'product_version':
-            version_create_update.append(data) if data['state'] in ['create', 'update'] else version_delete.append(data)
+        if data["type"] == "product_version":
+            version_create_update.append(data) if data["state"] in [
+                "create",
+                "update",
+            ] else version_delete.append(data)
 
-        if data['type'] == 'file':
-            file_create_update.append(data) if data['state'] in ['create', 'update'] else file_delete.append(data)
+        if data["type"] == "file":
+            file_create_update.append(data) if data["state"] in [
+                "create",
+                "update",
+            ] else file_delete.append(data)
 
     sorted_items.extend(product_create_update)
     sorted_items.extend(version_create_update)

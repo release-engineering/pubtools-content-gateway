@@ -1,0 +1,6 @@
+# These constraints are applied during testing with python2.
+# Old versions of libraries can be added here if you want to
+# ensure pubtools-content-gateway works with those.
+jsonschema==2.3.0
+attrs==19.3.0
+

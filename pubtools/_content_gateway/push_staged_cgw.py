@@ -30,10 +30,12 @@ class PushStagedCGW(PushBase):
             target_settings (dict):
                 Target settings.
         """
-        PushBase.__init__(self,
-                          target_settings['server_name'],
-                          target_settings['username'],
-                          target_settings['password'])
+        PushBase.__init__(
+            self,
+            target_settings["server_name"],
+            target_settings["username"],
+            target_settings["password"],
+        )
         self.push_items = []
         self.pulp_push_items = {}
 
@@ -74,22 +76,23 @@ class PushStagedCGW(PushBase):
                 parsed_items = sort_items(parsed_items)
                 try:
                     for pitem in parsed_items:
-                        if pitem['type'] == 'product':
+                        if pitem["type"] == "product":
                             self.process_product(pitem)
-                        if pitem.get('type') == 'product_version':
+                        if pitem.get("type") == "product_version":
                             self.process_version(pitem)
-                        if pitem['type'] == 'file':
+                        if pitem["type"] == "file":
                             for push_item in self.push_items:
-                                if push_item.src == pitem['metadata']['pushItemPath']:
+                                if push_item.src == pitem["metadata"]["pushItemPath"]:
                                     break
                             else:
                                 raise ValueError(
-                                    "Unable to find push item with path:%s" % pitem['metadata']['pushItemPath'])
+                                    "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
+                                )
                             pulp_push_item = self.pulp_push_items[json.dumps(asdict(item), sort_keys=True)]
-                            pitem['metadata']['downloadURL'] = pulp_push_item.cdn_path
-                            pitem['metadata']['md5'] = item.md5sum
-                            pitem['metadata']['sha256'] = pulp_push_item.sha256sum
-                            pitem['metadata']['size'] = pulp_push_item.size
+                            pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
+                            pitem["metadata"]["md5"] = item.md5sum
+                            pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
+                            pitem["metadata"]["size"] = pulp_push_item.size
                             self.process_file(pitem)
 
                     self.make_visible()
