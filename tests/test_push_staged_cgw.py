@@ -12,17 +12,13 @@ except ImportError:
     from unittest import mock
 
 test_dir = os.path.dirname(__file__)
-yaml_file_path = 'test_data/test_cgw_push_staged.yaml'
-invalid_push_item_path_yaml_file = 'test_data/test_invalid_cgw_push_staged.yaml'
+yaml_file_path = "test_data/test_cgw_push_staged.yaml"
+invalid_push_item_path_yaml_file = "test_data/test_invalid_cgw_push_staged.yaml"
 
 
 @pytest.fixture()
 def target_setting():
-    return {
-        "username": "foo",
-        "password": "bar",
-        "server_name": "http://fake/server/"
-    }
+    return {"username": "foo", "password": "bar", "server_name": "http://fake/server/"}
 
 
 class Struct:
@@ -41,20 +37,16 @@ def get_pulp_push_item():
         "description": "test",
         "sha256sum": "test",
         "size": "test",
-        "path": "test"
+        "path": "test",
     }
 
     return Struct(**pulp_push_item)
 
 
-@mock.patch('pubtools._content_gateway.push_base.CGWClient', return_value=TestClient())
+@mock.patch("pubtools._content_gateway.push_base.CGWClient", return_value=TestClient())
 def test_cgw_operations_success(mocked_cgw_client, target_setting):
-    cgw_item = CGWPushItem(name='cgw_push.yaml',
-                           src=yaml_file_path,
-                           origin=test_dir)
-    file_item = FilePushItem(name='file_push.yaml',
-                             src=yaml_file_path,
-                             origin=test_dir)
+    cgw_item = CGWPushItem(name="cgw_push.yaml", src=yaml_file_path, origin=test_dir)
+    file_item = FilePushItem(name="file_push.yaml", src=yaml_file_path, origin=test_dir)
 
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW("fake_target_name", target_setting)
@@ -70,12 +62,8 @@ def test_cgw_operations_success(mocked_cgw_client, target_setting):
 
 
 def test_invalid_push_items(target_setting):
-    cgw_item = CGWPushItem(name='cgw_push.yaml',
-                           src=invalid_push_item_path_yaml_file,
-                           origin=test_dir)
-    file_item = FilePushItem(name='file_push.yaml',
-                             src=invalid_push_item_path_yaml_file,
-                             origin=test_dir)
+    cgw_item = CGWPushItem(name="cgw_push.yaml", src=invalid_push_item_path_yaml_file, origin=test_dir)
+    file_item = FilePushItem(name="file_push.yaml", src=invalid_push_item_path_yaml_file, origin=test_dir)
 
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW("fake_target_name", target_setting)
@@ -92,12 +80,8 @@ def test_invalid_push_items(target_setting):
 
 
 def test_invalid_file_path(target_setting):
-    cgw_item = CGWPushItem(name='cgw_push.yaml',
-                           src="invalid_push_item_file_path",
-                           origin=test_dir)
-    file_item = FilePushItem(name='file_push.yaml',
-                             src='invalid_push_item_file_path',
-                             origin=test_dir)
+    cgw_item = CGWPushItem(name="cgw_push.yaml", src="invalid_push_item_file_path", origin=test_dir)
+    file_item = FilePushItem(name="file_push.yaml", src="invalid_push_item_file_path", origin=test_dir)
 
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW("fake_target_name", target_setting)
@@ -110,7 +94,7 @@ def test_invalid_file_path(target_setting):
     assert "No such file or directory" in str(exception.value)
 
 
-@mock.patch('pubtools._content_gateway.push_staged_cgw.PushStagedCGW', return_value="test")
+@mock.patch("pubtools._content_gateway.push_staged_cgw.PushStagedCGW", return_value="test")
 def test_entry_point_success(mock_push_cgw, target_setting):
     res = entry_point(target_setting, "fake_target_name")
     expected_result = "test"
@@ -120,9 +104,7 @@ def test_entry_point_success(mock_push_cgw, target_setting):
 
 
 def test_gather_source_items_success(target_setting):
-    cgw_item = CGWPushItem(name='cgw_push.yaml',
-                           src="invalid_push_item_file_path",
-                           origin=test_dir)
+    cgw_item = CGWPushItem(name="cgw_push.yaml", src="invalid_push_item_file_path", origin=test_dir)
 
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW("fake_target_name", target_setting)
@@ -133,9 +115,7 @@ def test_gather_source_items_success(target_setting):
 
 
 def test_cgw_operations_exception(target_setting):
-    cgw_item = CGWPushItem(name='cgw_push.yaml',
-                           src=yaml_file_path,
-                           origin=test_dir)
+    cgw_item = CGWPushItem(name="cgw_push.yaml", src=yaml_file_path, origin=test_dir)
 
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW("fake_target_name", target_setting)

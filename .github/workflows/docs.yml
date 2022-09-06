@@ -1,0 +1,30 @@
+name: Publish docs
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update existing dependencies
+        run: sudo apt-get update -y
+      - name: Install system dependencies
+        run: sudo apt-get install -y libkrb5-dev
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install Tox
+        run: pip install tox
+      - name: Run Tox
+        run: tox -e docs -vv
+      - name: Publish
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: docs/build/html
