@@ -32,8 +32,8 @@ class CGWSession(object):
         adapter = HTTPAdapter(max_retries=retry)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
-        self.session.headers["Content-type"] = 'application/json'
-        self.session.headers["Accept"] = 'application/json'
+        self.session.headers["Content-type"] = "application/json"
+        self.session.headers["Accept"] = "application/json"
 
     def get(self, endpoint, **kwargs):
         """HTTP get request against CGW server API

@@ -2,9 +2,8 @@ from base64 import b64encode
 
 
 class CGWAuth(object):
-    """
-    Custom exception to handle authentication errors
-    """
+    """Custom exception to handle authentication errors."""
+
     def __init__(self):
         raise NotImplementedError
 
@@ -13,9 +12,7 @@ class CGWAuth(object):
 
 
 class CGWClientError(Exception):
-    """
-    Custom exception to handle Content Gateway Client errors
-    """
+    """Custom exception to handle Content Gateway Client errors."""
 
     def __init__(self, message):
         self.message = message
@@ -26,7 +23,8 @@ class CGWBasicAuth(CGWAuth):
 
     # pylint: disable=super-init-not-called
     def __init__(self, user, password):
-        """
+        """Initializing
+
         Args:
             user (str)
                 Basic auth user_name
