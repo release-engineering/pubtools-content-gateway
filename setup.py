@@ -106,8 +106,8 @@ setup(
     include_package_data=True,
     python_requires=">=2.6",
     project_urls={
-        "Changelog": "https://github.com/jalam453/pubtools-content-gateway",
-        # "Documentation": "https://github.com/jalam453/pubtools-content-gateway",
+        "Changelog": "https://github.com/release-engineering/pubtools-content-gateway",
+        # "Documentation": "https://github.com/release-engineering/pubtools-content-gateway",
     },
     cmdclass={"test": Tox},
 )
