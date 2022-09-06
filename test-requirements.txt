@@ -5,3 +5,8 @@ pytest-pylint
 pytest-cov
 pyrsistent==0.15.7;python_version<'3.0'
 requests
+mock
+requests-mock==1.8.0
+pushcollector
+PyHamcrest
+pushsource

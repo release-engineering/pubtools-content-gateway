@@ -3,9 +3,7 @@ from .cgw_session import CGWSession
 
 
 class CGWClientError(Exception):
-    """
-    Custom exception class to handle Content Gateway Client errors
-    """
+    """Custom exception class to handle Content Gateway Client errors"""
 
     def __init__(self, message):
         self.message = message
@@ -38,7 +36,6 @@ class CGWClient:
             cgw_auth.make_auth(self.cgw_session)
 
     def call_cgw_api(self, method, endpoint, data=None):
-
         """
         Perform an HTTP API request on content gateway registry.
 
@@ -79,9 +76,10 @@ class CGWClient:
             raise CGWClientError(msg)
 
         if not response.ok:
-            raise CGWClientError("content gateway API returned error: "
-                                 "\nstatus_code: %s, reason: %s, error: %s"
-                                 % (response.status_code, response.reason, response.text))
+            raise CGWClientError(
+                "content gateway API returned error: "
+                "\nstatus_code: %s, reason: %s, error: %s" % (response.status_code, response.reason, response.text)
+            )
 
         if response.text:
             output = response.json()
@@ -95,7 +93,7 @@ class CGWClient:
             Returns list of products.
         """
 
-        resp_data = self.call_cgw_api("GET", '/products')
+        resp_data = self.call_cgw_api("GET", "/products")
         return resp_data
 
     def get_product(self, pid):
