@@ -13,15 +13,7 @@ def test_cgw_session_methods(patched_delete, patched_put, patched_post, patched_
     cgw_session.put("/fake-end-point")
     cgw_session.delete("/fake-end-point")
 
-    patched_get.assert_called_with(
-        "https://fake-host/fake-end-point", verify=True
-    )
-    patched_post.assert_called_with(
-        "https://fake-host/fake-end-point", verify=True
-    )
-    patched_put.assert_called_with(
-        "https://fake-host/fake-end-point", verify=True
-    )
-    patched_delete.assert_called_with(
-        "https://fake-host/fake-end-point", verify=True
-    )
+    patched_get.assert_called_with("https://fake-host/fake-end-point", verify=True)
+    patched_post.assert_called_with("https://fake-host/fake-end-point", verify=True)
+    patched_put.assert_called_with("https://fake-host/fake-end-point", verify=True)
+    patched_delete.assert_called_with("https://fake-host/fake-end-point", verify=True)

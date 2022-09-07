@@ -18,12 +18,12 @@ def get_all_products_response_json():
             "created": 1111111111111,
             "updated": 1111111111111,
             "modifiedBy": "R: test@example.com",
-            'homepage': 'https://test.fixture.com/',
-            'downloadpage': 'https://test.fixture.com/',
-            'thankYouPage': 'https://test.fixture.com/',
-            'eloquaCode': 'NOT_SET',
-            'featuredArtifactType': 'Server',
-            'thankYouTimeout': 5
+            "homepage": "https://test.fixture.com/",
+            "downloadpage": "https://test.fixture.com/",
+            "thankYouPage": "https://test.fixture.com/",
+            "eloquaCode": "NOT_SET",
+            "featuredArtifactType": "Server",
+            "thankYouTimeout": 5,
         },
         {
             "id": 222222,
@@ -33,12 +33,12 @@ def get_all_products_response_json():
             "created": 22222222,
             "updated": 22222222,
             "modifiedBy": "R: test@example.com",
-            'homepage': 'https://test.fixture.com/',
-            'downloadpage': 'https://test.fixture.com/',
-            'thankYouPage': 'https://test.fixture.com/',
-            'eloquaCode': 'NOT_SET',
-            'featuredArtifactType': 'Server',
-            'thankYouTimeout': 5
+            "homepage": "https://test.fixture.com/",
+            "downloadpage": "https://test.fixture.com/",
+            "thankYouPage": "https://test.fixture.com/",
+            "eloquaCode": "NOT_SET",
+            "featuredArtifactType": "Server",
+            "thankYouTimeout": 5,
         },
     ]
     return json
@@ -54,12 +54,12 @@ def product_response_json():
         "created": 1111111111111,
         "updated": 1111111111111,
         "modifiedBy": "R: test@example.com",
-        'homepage': 'https://test.fixture.com/',
-        'downloadpage': 'https://test.fixture.com/',
-        'thankYouPage': 'https://test.fixture.com/',
-        'eloquaCode': 'NOT_SET',
-        'featuredArtifactType': 'Server',
-        'thankYouTimeout': 5
+        "homepage": "https://test.fixture.com/",
+        "downloadpage": "https://test.fixture.com/",
+        "thankYouPage": "https://test.fixture.com/",
+        "eloquaCode": "NOT_SET",
+        "featuredArtifactType": "Server",
+        "thankYouTimeout": 5,
     }
     return json
 
@@ -80,7 +80,7 @@ def get_all_versions_response_json():
             "trackingDisabled": False,
             "hidden": False,
             "invisible": False,
-            "releaseDate": 1619136000000
+            "releaseDate": 1619136000000,
         },
         {
             "id": 444444,
@@ -95,8 +95,8 @@ def get_all_versions_response_json():
             "trackingDisabled": False,
             "hidden": False,
             "invisible": False,
-            "releaseDate": 1619136000000
-        }
+            "releaseDate": 1619136000000,
+        },
     ]
     return json
 
@@ -116,7 +116,7 @@ def version_response_json():
         "trackingDisabled": False,
         "hidden": False,
         "invisible": False,
-        "releaseDate": 1619136000000
+        "releaseDate": 1619136000000,
     }
     return json
 
@@ -142,7 +142,7 @@ def get_all_files_response_json():
             "shortURL": "/test/fake/openshift/shortURL",
             "md5": "null",
             "sha256": None,
-            "size": None
+            "size": None,
         },
         {
             "id": 222222,
@@ -162,8 +162,8 @@ def get_all_files_response_json():
             "shortURL": "/test/fake/openshift/shortURL",
             "md5": "null",
             "sha256": "null",
-            "size": "null"
-        }
+            "size": "null",
+        },
     ]
     return json
 
@@ -188,7 +188,7 @@ def file_response_json():
         "shortURL": "/test/fake/openshift/shortURL",
         "md5": "null",
         "sha256": None,
-        "size": None
+        "size": None,
     }
     return json
 
@@ -220,10 +220,10 @@ def test_get_products_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(CGWClientError, match="content gateway API returned error: "
-                                                 "\nstatus_code: 404, "
-                                                 "reason: None, "
-                                                 "error: false"):
+        with pytest.raises(
+            CGWClientError,
+            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
+        ):
             cgw_client.get_products()
         assert m.call_count == 1
 
@@ -249,7 +249,7 @@ def test_create_product_success(create_product_data, product_response_json, cgw_
             status_code=200,
             json=product_response_json,
         )
-        response = cgw_client.create_product(create_product_data['metadata'])
+        response = cgw_client.create_product(create_product_data["metadata"])
         assert m.call_count == 1
         assert product_response_json == response
 
@@ -262,7 +262,7 @@ def test_update_product_success(update_product_data, product_response_json, cgw_
             status_code=200,
             json=product_response_json,
         )
-        response = cgw_client.update_product(update_product_data['metadata'])
+        response = cgw_client.update_product(update_product_data["metadata"])
         assert m.call_count == 1
         assert product_response_json == response
 
@@ -299,10 +299,10 @@ def test_get_version_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(CGWClientError, match="content gateway API returned error: "
-                                                 "\nstatus_code: 404, "
-                                                 "reason: None, "
-                                                 "error: false"):
+        with pytest.raises(
+            CGWClientError,
+            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
+        ):
             cgw_client.get_versions(1)
         assert m.call_count == 1
 
@@ -328,7 +328,7 @@ def test_create_version_success(version_response_json, create_version_data, cgw_
             status_code=200,
             json=version_response_json,
         )
-        response = cgw_client.create_version(1, create_version_data['metadata'])
+        response = cgw_client.create_version(1, create_version_data["metadata"])
         assert m.call_count == 1
         assert version_response_json == response
 
@@ -341,7 +341,7 @@ def test_update_version_success(version_response_json, create_version_data, cgw_
             status_code=200,
             json=version_response_json,
         )
-        response = cgw_client.update_version(1, create_version_data['metadata'])
+        response = cgw_client.update_version(1, create_version_data["metadata"])
         assert m.call_count == 1
         assert version_response_json == response
 
@@ -391,10 +391,10 @@ def test_get_files_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(CGWClientError, match="content gateway API returned error: "
-                                                 "\nstatus_code: 404, "
-                                                 "reason: None, "
-                                                 "error: false"):
+        with pytest.raises(
+            CGWClientError,
+            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
+        ):
             cgw_client.get_file(1, 1, 1)
         assert m.call_count == 1
 
@@ -420,7 +420,7 @@ def test_create_file_success(file_response_json, create_file_data, cgw_client):
             status_code=200,
             json=file_response_json,
         )
-        response = cgw_client.create_file(1, 1, create_file_data['metadata'])
+        response = cgw_client.create_file(1, 1, create_file_data["metadata"])
         assert m.call_count == 1
         assert file_response_json == response
 
@@ -433,7 +433,7 @@ def test_update_file_success(file_response_json, create_version_data, cgw_client
             status_code=200,
             json=file_response_json,
         )
-        response = cgw_client.update_file(1, 1, create_version_data['metadata'])
+        response = cgw_client.update_file(1, 1, create_version_data["metadata"])
         assert m.call_count == 1
         assert file_response_json == response
 
@@ -450,7 +450,7 @@ def test_delete_file_success(cgw_client):
 
 
 def test_get_urls_success(cgw_client):
-    test_url = {'url': 'test/url'}
+    test_url = {"url": "test/url"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "GET",
@@ -471,16 +471,16 @@ def test_get_urls_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(CGWClientError, match="content gateway API returned error: "
-                                                 "\nstatus_code: 404, "
-                                                 "reason: None, "
-                                                 "error: false"):
+        with pytest.raises(
+            CGWClientError,
+            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
+        ):
             cgw_client.get_urls(1, 1)
         assert m.call_count == 1
 
 
 def test_get_single_url_success(cgw_client):
-    test_url = {'url': 'test/url'}
+    test_url = {"url": "test/url"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "GET",
@@ -494,7 +494,7 @@ def test_get_single_url_success(cgw_client):
 
 
 def test_create_url_success(cgw_client):
-    test_url = {'url': 'test/url'}
+    test_url = {"url": "test/url"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "PUT",
@@ -508,7 +508,7 @@ def test_create_url_success(cgw_client):
 
 
 def test_update_url_success(cgw_client):
-    test_url = {'url': 'test/url'}
+    test_url = {"url": "test/url"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "POST",
@@ -533,7 +533,7 @@ def test_delete_url_success(cgw_client):
 
 
 def test_get_internals_success(cgw_client):
-    test_internals = {'internals': 'test/internals'}
+    test_internals = {"internals": "test/internals"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "GET",
@@ -554,16 +554,16 @@ def test_get_internals_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(CGWClientError, match="content gateway API returned error: "
-                                                 "\nstatus_code: 404, "
-                                                 "reason: None, "
-                                                 "error: false"):
+        with pytest.raises(
+            CGWClientError,
+            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
+        ):
             cgw_client.get_internals(1, 1)
         assert m.call_count == 1
 
 
 def test_get_single_internals_success(cgw_client):
-    test_internals = {'internals': 'test/internals'}
+    test_internals = {"internals": "test/internals"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "GET",
@@ -577,7 +577,7 @@ def test_get_single_internals_success(cgw_client):
 
 
 def test_create_internals_success(cgw_client):
-    test_internals = {'internals': 'test/internals'}
+    test_internals = {"internals": "test/internals"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "PUT",
@@ -591,7 +591,7 @@ def test_create_internals_success(cgw_client):
 
 
 def test_update_internals_success(cgw_client):
-    test_internals = {'internals': 'test/internals'}
+    test_internals = {"internals": "test/internals"}
     with requests_mock.Mocker() as m:
         m.register_uri(
             "POST",
