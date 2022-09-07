@@ -220,11 +220,14 @@ def test_get_products_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(
-            CGWClientError,
-            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
-        ):
+        with pytest.raises(CGWClientError) as exception:
             cgw_client.get_products()
+        assert (
+            "content gateway API returned error: "
+            "\nstatus_code: 404, "
+            "reason: None, "
+            "error: false" in str(exception.value.message)
+        )
         assert m.call_count == 1
 
 
@@ -299,11 +302,14 @@ def test_get_version_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(
-            CGWClientError,
-            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
-        ):
+        with pytest.raises(CGWClientError) as exception:
             cgw_client.get_versions(1)
+        assert (
+            "content gateway API returned error: "
+            "\nstatus_code: 404, "
+            "reason: None, "
+            "error: false" in str(exception.value.message)
+        )
         assert m.call_count == 1
 
 
@@ -391,11 +397,14 @@ def test_get_files_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(
-            CGWClientError,
-            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
-        ):
+        with pytest.raises(CGWClientError) as exception:
             cgw_client.get_file(1, 1, 1)
+        assert (
+            "content gateway API returned error: "
+            "\nstatus_code: 404, "
+            "reason: None, "
+            "error: false" in str(exception.value.message)
+        )
         assert m.call_count == 1
 
 
@@ -471,11 +480,14 @@ def test_get_urls_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(
-            CGWClientError,
-            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
-        ):
+        with pytest.raises(CGWClientError) as exception:
             cgw_client.get_urls(1, 1)
+        assert (
+            "content gateway API returned error: "
+            "\nstatus_code: 404, "
+            "reason: None, "
+            "error: false" in str(exception.value.message)
+        )
         assert m.call_count == 1
 
 
@@ -554,11 +566,14 @@ def test_get_internals_failed(cgw_client):
             status_code=404,
             json=False,
         )
-        with pytest.raises(
-            CGWClientError,
-            match="content gateway API returned error: " "\nstatus_code: 404, " "reason: None, " "error: false",
-        ):
+        with pytest.raises(CGWClientError) as exception:
             cgw_client.get_internals(1, 1)
+        assert (
+            "content gateway API returned error: "
+            "\nstatus_code: 404, "
+            "reason: None, "
+            "error: false" in str(exception.value.message)
+        )
         assert m.call_count == 1
 
 
@@ -622,8 +637,9 @@ def test_invalid_http_method_call(cgw_client):
             "mock://test.com/products",
             json={"error": "An error has occurred!"},
         )
-        with pytest.raises(CGWClientError, match="Wrong request method passed"):
+        with pytest.raises(CGWClientError) as exception:
             cgw_client.call_cgw_api("INVALID_METHOD", "/products")
+        assert "Wrong request method passed" in str(exception.value.message)
         assert m.call_count == 0
 
 
@@ -648,6 +664,6 @@ def test_cgw_error_with_empty_host():
             status_code=400,
             json={"error": "An error has occurred!"},
         )
-
-        with pytest.raises(CGWClientError, match="No content gateway hostname found"):
+        with pytest.raises(CGWClientError) as exception:
             CGWClient(None)
+        assert "No content gateway hostname found" in str(exception.value.message)

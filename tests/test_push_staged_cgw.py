@@ -4,7 +4,6 @@ from tests.fake_cgw_client import TestClient
 import os
 from pushsource import CGWPushItem, FilePushItem
 import json
-from attrs import asdict
 
 try:
     import mock
@@ -52,7 +51,7 @@ def test_cgw_operations_success(mocked_cgw_client, target_setting):
     push_cgw = PushStagedCGW("fake_target_name", target_setting)
     push_cgw.push_items = [file_item, cgw_item]
     for item in push_cgw.push_items:
-        push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
+        push_cgw.pulp_push_items[json.dumps(repr(item), sort_keys=True)] = pulp_push_item
     push_cgw.push_staged_operations()
 
     assert len(push_cgw.cgw_client.create_product.calls) >= 1
@@ -69,7 +68,7 @@ def test_invalid_push_items(target_setting):
     push_cgw = PushStagedCGW("fake_target_name", target_setting)
     push_cgw.push_items = [file_item, cgw_item]
     for item in push_cgw.push_items:
-        push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
+        push_cgw.pulp_push_items[json.dumps(repr(item), sort_keys=True)] = pulp_push_item
 
     push_cgw.rollback_cgw_operation = mock.MagicMock()
 
@@ -77,21 +76,6 @@ def test_invalid_push_items(target_setting):
         push_cgw.push_staged_operations()
 
     assert "Unable to find push item with" in str(exception.value)
-
-
-def test_invalid_file_path(target_setting):
-    cgw_item = CGWPushItem(name="cgw_push.yaml", src="invalid_push_item_file_path", origin=test_dir)
-    file_item = FilePushItem(name="file_push.yaml", src="invalid_push_item_file_path", origin=test_dir)
-
-    pulp_push_item = get_pulp_push_item()
-    push_cgw = PushStagedCGW("fake_target_name", target_setting)
-    push_cgw.push_items = [file_item, cgw_item]
-    for item in push_cgw.push_items:
-        push_cgw.pulp_push_items[json.dumps(asdict(item), sort_keys=True)] = pulp_push_item
-
-    with pytest.raises(FileNotFoundError) as exception:
-        push_cgw.push_staged_operations()
-    assert "No such file or directory" in str(exception.value)
 
 
 @mock.patch("pubtools._content_gateway.push_staged_cgw.PushStagedCGW", return_value="test")
@@ -111,7 +95,7 @@ def test_gather_source_items_success(target_setting):
 
     push_cgw.gather_source_items(pulp_push_item, cgw_item)
     assert push_cgw.push_items == [cgw_item]
-    assert json.dumps(asdict(cgw_item), sort_keys=True) in push_cgw.pulp_push_items
+    assert json.dumps(repr(cgw_item), sort_keys=True) in push_cgw.pulp_push_items
 
 
 def test_cgw_operations_exception(target_setting):

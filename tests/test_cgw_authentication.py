@@ -1,12 +1,12 @@
 from mock import MagicMock
-from base64 import b64encode
-import pytest
 from pubtools._content_gateway.cgw_authentication import (
     CGWAuth,
     CGWBasicAuth,
     CGWClientError,
 )
 from pubtools._content_gateway.cgw_client import CGWClient
+from base64 import b64encode
+import pytest
 
 
 def test_client_auth():
@@ -32,8 +32,9 @@ def test_invalid_cgw_auth():
     session = MagicMock()
     session.session.headers = {}
     auth = CGWBasicAuth("", "")
-    with pytest.raises(CGWClientError, match="Error: username / password not found !!"):
+    with pytest.raises(CGWClientError) as exception:
         auth.make_auth(session)
+    assert "Error: username / password not found !!" in str(exception.value.message)
 
 
 def test_cgwauth_abstract():

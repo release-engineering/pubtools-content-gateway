@@ -1,7 +1,6 @@
 import os
 import json
 import pluggy
-from attrs import asdict
 import logging
 from pushsource import CGWPushItem
 from .push_base import PushBase
@@ -31,7 +30,10 @@ class PushStagedCGW(PushBase):
                 Target settings.
         """
         PushBase.__init__(
-            self, target_settings["server_name"], target_settings["username"], target_settings["password"]
+            self,
+            target_settings["server_name"],
+            target_settings["username"],
+            target_settings["password"],
         )
         self.push_items = []
         self.pulp_push_items = {}
@@ -55,7 +57,7 @@ class PushStagedCGW(PushBase):
         """
 
         self.push_items.append(push_item)
-        self.pulp_push_items[json.dumps(asdict(push_item), sort_keys=True)] = pulp_push_item
+        self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)] = pulp_push_item
 
     def push_staged_operations(self):
         """
@@ -85,7 +87,7 @@ class PushStagedCGW(PushBase):
                                 raise ValueError(
                                     "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
                                 )
-                            pulp_push_item = self.pulp_push_items[json.dumps(asdict(item), sort_keys=True)]
+                            pulp_push_item = self.pulp_push_items[json.dumps(repr(item), sort_keys=True)]
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
                             pitem["metadata"]["md5"] = item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
