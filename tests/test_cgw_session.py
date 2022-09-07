@@ -1,4 +1,7 @@
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 from pubtools._content_gateway.cgw_session import CGWSession
 
 
