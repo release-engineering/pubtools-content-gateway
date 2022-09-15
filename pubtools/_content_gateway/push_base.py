@@ -135,8 +135,7 @@ class PushBase:
     @staticmethod
     def _product_mapping_key_check(key):
         """
-        Checks the product mapping keys.
-        The keys must follow the following constraints:
+        Checks the product mapping keys. The keys must follow the following constraints:
             1) The key must be of tuple type
             2) Two keys must be present in the key tuple
 
@@ -158,8 +157,7 @@ class PushBase:
     @staticmethod
     def _product_version_mapping_key_check(key):
         """
-        Checks the product version mapping keys.
-        The keys must follow the following constraints:
+        Checks the product version mapping keys. The keys must follow the following constraints:
             1) The key must be of tuple type
             2) Three keys must be present in the key tuple
 
@@ -181,8 +179,7 @@ class PushBase:
     @staticmethod
     def _file_key_check(key):
         """
-        Checks the product version mapping keys.
-        The keys must follow the following constraints:
+        Checks the product version mapping keys. The keys must follow the following constraints:
             1) The key must be of tuple type
             2) Four keys must be present in the key tuple
 

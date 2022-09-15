@@ -213,13 +213,14 @@ def sort_items(items):
         4) all files with state absent
         5) all versions with state absent
         6) all products with state absent
+
     This is needed to process all the present state of products,
     versions and files first then absent state of files, versions and products
 
     This sorting is needed for the following reasons:
         1) A file cannot be created if it's parent version and product are not present.
             All parent data need to be present before creating child object.
-        2)A product cannot get deleted if it has versions and file.
+        2) A product cannot get deleted if it has versions and file.
             All nested data need to be cleared before deleting parent object
 
     Args:

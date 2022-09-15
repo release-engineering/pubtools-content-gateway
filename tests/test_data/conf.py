@@ -15,8 +15,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(".."))
-
+sys.path.insert(0, os.path.abspath("../pubtools/_content_gateway/"))
 
 # -- Project information -----------------------------------------------------
 
@@ -28,8 +27,6 @@ author = "Red Hat"
 version = "0.1"
 # The full version, including alpha/beta/rc tags
 release = "0.1"
-
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -75,7 +72,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
-
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -125,7 +121,6 @@ html_sidebars = {
         "donate.html",
     ]
 }
-
 
 # -- Extension configuration -------------------------------------------------
 autoclass_content = "both"
