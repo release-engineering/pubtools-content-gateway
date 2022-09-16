@@ -54,7 +54,7 @@ html_context = {
     'display_github': True,
     "github_user": "release-engineering",
     "github_repo": "pubtools-content-gateway",
-    'github_version': 'main/docs/'
+    'github_version': 'main/docs/',
 }
 
 # -- Options for HTML output -------------------------------------------------
