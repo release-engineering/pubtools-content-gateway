@@ -9,8 +9,7 @@
 import os
 import sys
 
-# sys.path.insert(0, os.path.abspath("../pubtools/_content_gateway/"))
-sys.path.append("../pubtools/_content_gateway/")
+sys.path.insert(0, os.path.abspath("../pubtools/_content_gateway/"))
 
 project = 'pubtools-content-gateway'
 copyright = '2022, Red Hat'
