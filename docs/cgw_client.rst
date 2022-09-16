@@ -1,7 +1,6 @@
 CGW Client Module
 ========================
 
---------
 
 Content Gateway REST API Services
 **************************************
