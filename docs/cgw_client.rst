@@ -9,7 +9,6 @@ In order to optimize the deployment of new files REST user interface was added t
 
 Return values 401 (for invalid credentials) and 403 (valid credentials but lack of permissions) are returned by all the functions listed here. Requests, that do changes lock the whole product for all users but you. In case you are trying to modify a product locked by someone else, you get 409 return value.
 
-You can request application/json or application/xml data (Accept header). If passing an object to be saved or edited, do not forget to use Content-Type header (can be application/json or appliction/xml). You can ignore modifiedBy, created and updated fields. They are created/updated automatically.
 
 ---------------------------------
 

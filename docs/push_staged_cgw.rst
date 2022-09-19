@@ -14,7 +14,7 @@ It shares the same YAML file structure except `downloadURL` user need to pass `p
 
 YAML file formats
 ***********************
-The user can pass a single or multiple records of product, version and file in a single YAML file.
+The user can pass a single or multiple records of product, version and files in a single YAML file.
 A typical YAML format for Product, version and file looks like this:
 
 .. code-block::

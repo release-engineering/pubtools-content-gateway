@@ -63,7 +63,7 @@ A typical invocation to push a metadata would look like this:
 
 YAML file formats
 ***********************
-One can Add, Update and Delete the contents from CGW
+One can Add, Update and Delete the contents from CGW.
 The YAML file can consist details of Products, Versions and Files.
 
 The user can pass a single or multiple records of product, version and file in a single YAML file.

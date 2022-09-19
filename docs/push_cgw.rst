@@ -1,7 +1,7 @@
 Push CGW Module
 ========================
 
-Content Gateway (CGW) is a library used for performing various content workflows related work. The ``push-cgw-metadata`` entrypoint will be utilized by users for pushing and managing the contents of products, versions and file on the content gateway server.
+Content Gateway (CGW) is a library used for performing various content workflows related work. The ``push-cgw-metadata`` entrypoint will be utilized by users for pushing and managing the contents of products, versions and files on the content gateway server.
 
 .. automodule:: pubtools._content_gateway.push_cgw
    :members:
