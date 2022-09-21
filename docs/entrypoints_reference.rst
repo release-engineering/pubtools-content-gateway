@@ -61,12 +61,11 @@ A typical invocation to push a metadata would look like this:
                     -f full_path_to_yaml_file/cgw_push.yaml
 
 
-YAML file formats
-***********************
+YAML file entities formats
+*****************************
 One can Add, Update and Delete the contents from CGW.
-The YAML file can consist details of Products, Versions and Files.
+The YAML file can consist list of Products, Versions and Files
 
-The user can pass a single or multiple records of product, version and file in a single YAML file.
 
 Product
 ---------------
@@ -140,7 +139,7 @@ To know more content gateway operations about add, update and delete please visi
 push-staged-cgw
 ........................
 
-The push-staged-cgw (:doc:`push_staged_cgw`) is a target entrypoint for Push Staged which will be invoked through Red Hat's internal service called `rcm-pub <https://pub.devel.redhat.com/pub/docs/usage.html>`_.
+The push-staged-cgw (:doc:`push_staged_cgw`) is a target entrypoint for Push Staged which will be invoked through Red Hat's internal service called `rcm-pub`.
 
 All the user credentials will be received through the argument ``target_settings`` consisting of `server_name`, `username` and `password`.
 It shares the same YAML file structure except `downloadURL` user need to pass `pushItemPath`.

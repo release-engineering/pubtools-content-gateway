@@ -1,7 +1,7 @@
 Push Staged CGW Module
 ====================================================
 
-The push-staged-cgw (:doc:`push_staged_cgw`) is a target entrypoint for Push Staged which will be invoked through Red Hat's internal service called `rcm-pub <https://pub.devel.redhat.com/pub/docs/usage.html>`_.
+The push-staged-cgw (:doc:`push_staged_cgw`) is a target entrypoint for Push Staged which will be invoked through Red Hat's internal service called `rcm-pub`.
 
 All the user credentials will be received through the argument ``target_settings`` consisting of `server_name`, `username` and `password`.
 It shares the same YAML file structure except `downloadURL` user need to pass `pushItemPath`.

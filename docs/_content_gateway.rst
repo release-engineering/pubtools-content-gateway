@@ -5,15 +5,6 @@ Submodules
 ----------
 
 
-``cgw_client module``
--------------------------------------
-
-.. automodule:: pubtools._content_gateway.cgw_client
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 ``push_base module``
 ------------------------------------
 

@@ -21,7 +21,6 @@ Content Gateway Package
 .. toctree::
    README
    entrypoints_reference
-   cgw_client
    push_base
    push_cgw
    push_staged_cgw
