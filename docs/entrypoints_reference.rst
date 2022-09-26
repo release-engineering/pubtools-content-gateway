@@ -61,6 +61,8 @@ A typical invocation to push a metadata would look like this:
                     -f full_path_to_yaml_file/cgw_push.yaml
 
 
+.. _YAML format:
+
 YAML file entities formats
 *****************************
 One can Add, Update and Delete the contents from CGW.
