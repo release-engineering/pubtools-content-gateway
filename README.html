@@ -1,122 +1,203 @@
-
 <!DOCTYPE html>
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; pubtools-content-gateway 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; pubtools-content-gateway 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="CHANGELOG.html" />
-    <link rel="prev" title="pubtools-content-gateway’s documentation" href="index.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="next" title="Entrypoints reference" href="entrypoints_reference.html" />
+    <link rel="prev" title="Welcome to pubtools-content-gateway’s documentation!" href="index.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> pubtools-content-gateway
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#details">Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#steps-to-use">Steps to use</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-yaml-file">Example YAML file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-of-entrypoint">Use of entrypoint</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="entrypoints_reference.html">Entrypoints reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="push_base.html">Push Base Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="push_cgw.html">Push CGW Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="push_staged_cgw.html">Push Staged CGW Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_content_gateway.html">Content Gateway package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">ChangeLog</a></li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
-  <p># pubtools-content-gateway (CGW)
-# A tool to do pushes on CGW
-<a class="reference external" href="https://github.com/release-engineering/pubtools-content-gateway">https://github.com/release-engineering/pubtools-content-gateway</a></p>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pubtools-content-gateway</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Overview</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/release-engineering/pubtools-content-gateway/blob/main/docs/README.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h1>
+<p>Set of scripts used for operating with the Content Gateway (CGW) service</p>
+<div class="section" id="details">
+<h2>Details<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
+<p>content-gateway is a library used for performing various content workflows related work. The library is utilized by Red Hat’s internal tooling or release engineers for pushing and managing the contents of products, versions and files on the content gateway server.</p>
+<p>The internal service which utilizes this library is called <cite>rcm-pub</cite>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 2.6+</p></li>
+<li><p>Python 3.5+</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt
+$ pip install .
+or
+$ python setup.py install
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="steps-to-use">
+<h2>Steps to use<a class="headerlink" href="#steps-to-use" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Setup</p></li>
+<li><p>Create a YAML file with required entries for Products, Versions or Files (See <a class="reference internal" href="entrypoints_reference.html"><span class="doc">Entrypoints reference</span></a> for more details)</p></li>
+<li><p>Use <em>push-cgw-metadata</em> entrypoint to do the push operation</p></li>
+</ol>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h3>
+<div class="section" id="example-yaml-file">
+<h4>Example YAML file<a class="headerlink" href="#example-yaml-file" title="Permalink to this heading"></a></h4>
+<p>In this example we are creating one product.
+We have created this <cite>cgw_example.yaml</cite> file with the following content</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">product</span>                                             <span class="c1"># MANDATORY</span>
+  <span class="n">state</span><span class="p">:</span> <span class="n">create</span>                                             <span class="c1"># MANDATORY</span>
+  <span class="n">metadata</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                                    <span class="c1"># MANDATORY</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
+    <span class="n">homepage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                           <span class="c1"># OPTIONAL</span>
+    <span class="n">downloadpage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                       <span class="c1"># OPTIONAL</span>
+    <span class="n">thankYouPage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                       <span class="c1"># OPTIONAL</span>
+    <span class="n">eloquaCode</span><span class="p">:</span> <span class="s2">&quot;NOT_SET&quot;</span>                                   <span class="c1"># OPTIONAL</span>
+    <span class="n">featuredArtifactType</span><span class="p">:</span> <span class="s2">&quot;Server&quot;</span>                          <span class="c1"># OPTIONAL</span>
+    <span class="n">thankYouTimeout</span><span class="p">:</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-of-entrypoint">
+<h4>Use of entrypoint<a class="headerlink" href="#use-of-entrypoint" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">push-cgw-metadata</span></code> (<a class="reference internal" href="entrypoints_reference.html"><span class="doc">Entrypoints reference</span></a>) entrypoint needs to be invoked to do the pushes.
+The below is an example of its invocation</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>push-cgw-metadata -host https://content-gateway/example.com \
+                  -p XXXXX \
+                  -u username \
+                  -f full_path_to_yaml_file/cgw_example.yaml
+
+2022-09-21 12:29:01,508 [INFO    ] Data validation successful for product: TestProduct
+2022-09-21 12:29:01,508 [DEBUG   ] Fetching for product_id of product_name:- Test Product and product_code:- TestProduct
+
+2022-09-21 12:29:01,515 [DEBUG   ] Starting new HTTPS connection (1): content-gateway/example.com:443
+2022-09-21 12:29:03,183 [DEBUG   ] https://content-gateway/example.com:443 &quot;GET /content-gateway/rest/admin/products HTTP/1.1&quot; 200 None
+2022-09-21 12:29:03,808 [DEBUG   ] https://content-gateway/example.com:443 &quot;PUT /content-gateway/rest/admin/products/ HTTP/1.1&quot; 201 7
+2022-09-21 12:29:03,808 [INFO    ] Created a new product with product_id:- 4009801
+
+2022-09-21 12:29:03,808 [DEBUG   ] Updating the invisible attribute of the created records
+2022-09-21 12:29:03,808 [DEBUG   ] Enabling the created records if required
+
+2022-09-21 12:29:03,808 [INFO    ]
+All CGW operations are successfully completed...!
+</pre></div>
+</div>
+<p>We can see in the logs that the product is created with some ID.</p>
+</div>
+</div>
+</div>
+</div>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to pubtools-content-gateway’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="entrypoints_reference.html" class="btn btn-neutral float-right" title="Entrypoints reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Red Hat.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pubtools-content-gateway</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-<p class="blurb">Publishing tools for Content Gateway (CGW)</p>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-
-<hr />
-<ul>
-    
-    <li class="toctree-l1"><a href="https://github.com/release-engineering/pubtools-content-gateway">Source</a></li>
-    
-    <li class="toctree-l1"><a href="genindex.html">Index</a></li>
-    
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">pubtools-content-gateway’s documentation</a></li>
-      <li>Next: <a href="CHANGELOG.html" title="next chapter">&lt;no title&gt;</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Red Hat.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/README.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-    <a href="https://github.com/release-engineering/pubtools-content-gateway" class="github">
-        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
-    </a>
-    
-
-    
-  </body>
+</body>
 </html>

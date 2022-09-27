@@ -1,21 +1,41 @@
-pubtools-content-gateway's documentation
-=============================
+.. pubtools-content-gateway documentation master file, created by
+   sphinx-quickstart on Fri Sep  9 18:08:31 2022.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-Contents:
+Welcome to pubtools-content-gateway's documentation!
+====================================================
+
+
+Content Gateway Package
+====================================================
+
+.. automodule:: pubtools._content_gateway
+   :members:
+   :special-members:
+
+-------------------
+
+**Sub-Modules:**
 
 .. toctree::
-   :maxdepth: 2
-
    README
    entrypoints_reference
-   modules_reference
-   
-.. ##### ToDo: Rewrite about documentation indexes. #####
-
-.. toctree::
-   :maxdepth: 1
-
+   push_base
+   push_cgw
+   push_staged_cgw
+   _content_gateway
    CHANGELOG
+
+-------------------
+
+
+GitHub URL
+==================
+https://github.com/release-engineering/pubtools-content-gateway
+
+-------------------
+
 
 Indices and tables
 ==================

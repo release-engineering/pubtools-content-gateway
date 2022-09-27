@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Push Base Module &mdash; pubtools-content-gateway 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Push CGW Module" href="push_cgw.html" />
+    <link rel="prev" title="Entrypoints reference" href="entrypoints_reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> pubtools-content-gateway
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entrypoints_reference.html">Entrypoints reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Push Base Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="push_cgw.html">Push CGW Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="push_staged_cgw.html">Push Staged CGW Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_content_gateway.html">Content Gateway package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">ChangeLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pubtools-content-gateway</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Push Base Module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/release-engineering/pubtools-content-gateway/blob/main/docs/push_base.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="push-base-module">
+<h1>Push Base Module<a class="headerlink" href="#push-base-module" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">PushBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for all operations on content gateway via
+either through entry points or from staged input.</p>
+<p>Adds arguments and environment variables common to all operations.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">make_visible</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.make_visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><ul>
+<li><p>Update the invisible attribute to False.
+once all the CGW operation completed successfully.</p></li>
+<li><p>This is needed to make the version and file records visible.</p></li>
+<li><p>The <cite>invisible</cite> attribute changes on the following conditions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>invisible=True</cite> :- sets if user externally specify the <cite>invisible=True</cite></p></li>
+<li><p><cite>invisible=False</cite> :- sets either if user externally specify the <cite>invisible=False</cite>
+or user doesn’t specify any value for this <cite>invisible</cite> attribute.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">process_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Responsible for file workflow operations such as Create,
+Update and delete the file based on the satisfied condition
+on content gateway (CGW).</p>
+<dl>
+<dt>The file operation follows the following workflow:</dt><dd><ul>
+<li><p>Search for the product record from the product mapping</p></li>
+<li><p>Search for the product version record from the product_version (pv_mapping) mapping</p></li>
+<li><p>Search for the file record from the file mapping (file_mapping) mapping</p></li>
+<li><p>If <cite>file state</cite> == <cite>create</cite></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Creates a new file record associated with product on CGW with given data</p></li>
+<li><p>Add the new record into the file mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>file state</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Update the file record on content gateway with given data</p></li>
+<li><p>Update the record into the file mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>file state</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Delete the file record on the content gateway</p></li>
+<li><p>Remove the record from the file mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>file state</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping
+or id is not provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Raises CGWError error</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_item</strong> (<em>dict</em>) – Metadata of file record</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="_content_gateway.html#pubtools._content_gateway.push_base.CGWError" title="pubtools._content_gateway.push_base.CGWError"><strong>CGWError</strong></a> – <ul class="simple">
+<li><p>When product record is not present
+    - When version record is not present
+    - When file record is not present and tries to update/delete the same</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns the file ID</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>file_id (int|None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">process_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Responsible for product workflow operations such as Create,
+Update and delete the product based on the satisfied condition.</p>
+<dl>
+<dt>The product operation follows the following workflow:</dt><dd><ul>
+<li><p>Search for the product record from the product mapping</p></li>
+<li><p>If <cite>product state</cite> == <cite>create</cite></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Creates a new product record on content gateway with given data</p></li>
+<li><p>Add the new record into the product mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>product state</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Update the product record on content gateway with given data</p></li>
+<li><p>Update the record into the product mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>product state</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Delete the product record on the content gateway</p></li>
+<li><p>Remove the record from the product mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>product state</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Raises CGWError error</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>dict</em>) – Metadata of product record</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="_content_gateway.html#pubtools._content_gateway.push_base.CGWError" title="pubtools._content_gateway.push_base.CGWError"><strong>CGWError</strong></a> – When product record is not present and tries to update/delete the same</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns the product ID</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>product_id (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">process_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Responsible for version workflow operations such as Create,
+Update and delete the product version based on the satisfied condition
+on content gateway (CGW).</p>
+<dl>
+<dt>The product version operation follows the following workflow:</dt><dd><ul>
+<li><p>Search for the product record from the product mapping</p></li>
+<li><p>Search for the product version record from the product_version(pv_mapping) mapping</p></li>
+<li><p>If <cite>version state</cite> == <cite>create</cite></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Creates a new version record associated with product on CGW with given data</p></li>
+<li><p>Add the new record into the mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>version state</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Update the version record on content gateway with given data</p></li>
+<li><p>Update the record into the version mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If <cite>version state</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Delete the version record on the content gateway</p></li>
+<li><p>Remove the record from the version mapping records</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>If <cite>version state</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping</dt><dd><p>or id is not provided in metadata</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Raises CGWError error</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>dict</em>) – Metadata of version record</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="_content_gateway.html#pubtools._content_gateway.push_base.CGWError" title="pubtools._content_gateway.push_base.CGWError"><strong>CGWError</strong></a> – <ul class="simple">
+<li><p>When product record is not present
+    - When version record is not present and tries to update/delete the same</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns the version ID</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>version_id (int|None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">rollback_cgw_operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.rollback_cgw_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="simple">
+<dt>Undo the partial completed CGW operation.</dt><dd><ul class="simple">
+<li><p>For the create operations it will delete the created data from CGW</p></li>
+<li><p>For the update operation it will revert the changes with old data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="entrypoints_reference.html" class="btn btn-neutral float-left" title="Entrypoints reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="push_cgw.html" class="btn btn-neutral float-right" title="Push CGW Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Red Hat.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
