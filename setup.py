@@ -35,8 +35,8 @@ def read_content(filepath):
         return fobj.read()
 
 
-long_description = read_content("docs/source/README.rst") + read_content(
-    os.path.join("docs/source", "CHANGELOG.rst")
+long_description = read_content("docs/README.rst") + read_content(
+    os.path.join("docs/", "CHANGELOG.rst")
 )
 
 extras_require = {"reST": ["Sphinx"]}
@@ -49,7 +49,7 @@ def get_description():
 
 
 def get_long_description():
-    with open("docs/source/README.rst") as f:
+    with open("docs/README.rst") as f:
         text = f.read()
 
     # Long description is everything after README's initial heading
