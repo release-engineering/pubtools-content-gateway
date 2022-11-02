@@ -4,3 +4,4 @@ six
 urllib3
 requests
 setuptools
+pubtools

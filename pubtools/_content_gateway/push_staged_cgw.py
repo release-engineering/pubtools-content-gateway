@@ -1,25 +1,22 @@
 import os
 import json
-import pluggy
 import logging
 from pushsource import CGWPushItem
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items
 
+from pubtools.pluggy import hookimpl
+from pushsource import Source
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
-pm = pluggy.PluginManager("pubtools")
-hookspec = pluggy.HookspecMarker("pubtools")
-hookimpl = pluggy.HookimplMarker("pubtools")
-
 
 class PushStagedCGW(PushBase):
     """Handle push staged CGW workflow."""
 
-    def __init__(self, target_name, target_settings):
+    def __init__(self, source_urls, target_name, target_settings):
         """
         Initialize.
 
@@ -31,15 +28,22 @@ class PushStagedCGW(PushBase):
         """
         PushBase.__init__(
             self,
-            target_settings["server_name"],
-            target_settings["username"],
-            target_settings["password"],
+            target_settings["target_address"],
+            target_settings["target_user"],
+            target_settings["target_password"],
         )
         self.push_items = []
         self.pulp_push_items = {}
+        self.source_urls = source_urls
+
+        for source_url in source_urls:
+            with Source.get(source_url) as source:
+                LOG.info("Loading items from %s", source_url)
+                for item in source:
+                    self.push_items.append(item)
 
     @hookimpl
-    def gather_source_items(self, pulp_push_item, push_item):
+    def pulp_item_push_finished(self, pulp_units=None, push_item=None):
         """
         Invoked during task execution after successful completion of all Pulp
         publishes.
@@ -56,8 +60,8 @@ class PushStagedCGW(PushBase):
                 push item.
         """
 
-        self.push_items.append(push_item)
-        self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)] = pulp_push_item
+        if pulp_units:
+            self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)] = pulp_units[0]
 
     def push_staged_operations(self):
         """
@@ -81,7 +85,18 @@ class PushStagedCGW(PushBase):
                             self.process_version(pitem)
                         if pitem["type"] == "file":
                             for push_item in self.push_items:
-                                if push_item.src == pitem["metadata"]["pushItemPath"]:
+                                found = False
+                                for source_url in self.source_urls:
+                                    print(source_url.replace("stage:", ""))
+                                    print(push_item.src.replace(source_url.replace("stage:", ""), "").lstrip("/"))
+                                    print(pitem["metadata"]["pushItemPath"])
+                                    if (
+                                        push_item.src.replace(source_url.replace("stage:", ""), "").lstrip("/")
+                                        == pitem["metadata"]["pushItemPath"]
+                                    ):
+                                        print("break")
+                                        found = True
+                                if found:
                                     break
                             else:
                                 raise ValueError(
@@ -106,7 +121,6 @@ class PushStagedCGW(PushBase):
                     raise error
 
 
-def entry_point(target_name, target_settings):
+def entry_point(source_urls, target_name, target_settings):
     """Entrypoint for CGW push stage."""
-    push_staged = PushStagedCGW(target_name, target_settings)
-    return push_staged
+    return PushStagedCGW(source_urls, target_name, target_settings).push_staged_operations()
