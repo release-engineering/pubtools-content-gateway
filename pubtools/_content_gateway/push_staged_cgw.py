@@ -87,14 +87,10 @@ class PushStagedCGW(PushBase):
                             for push_item in self.push_items:
                                 found = False
                                 for source_url in self.source_urls:
-                                    print(source_url.replace("stage:", ""))
-                                    print(push_item.src.replace(source_url.replace("stage:", ""), "").lstrip("/"))
-                                    print(pitem["metadata"]["pushItemPath"])
                                     if (
                                         push_item.src.replace(source_url.replace("stage:", ""), "").lstrip("/")
                                         == pitem["metadata"]["pushItemPath"]
                                     ):
-                                        print("break")
                                         found = True
                                 if found:
                                     break
