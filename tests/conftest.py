@@ -1,4 +1,8 @@
+import os
+
 import pytest
+
+from pushsource import Source
 
 
 @pytest.fixture
@@ -529,3 +533,13 @@ def delete_file_data():
             "size": None,
         },
     }
+
+
+def test_staging_dir():
+    return os.path.join(os.path.dirname(__file__), "test_data/test_staging_dir")
+
+
+@pytest.fixture()
+def fixture_source_stage(request):
+    yield Source.register_backend("stage", lambda: request.param)
+    Source.reset()
