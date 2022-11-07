@@ -14,7 +14,8 @@ sys.path.insert(0, os.path.abspath("../pubtools/_content_gateway/"))
 project = 'pubtools-content-gateway'
 copyright = '2022, Red Hat'
 author = 'Red Hat'
-release = '0.1'
+release = '0.2.0'
+release = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
