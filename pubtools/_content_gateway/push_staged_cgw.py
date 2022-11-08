@@ -119,4 +119,4 @@ class PushStagedCGW(PushBase):
 
 def entry_point(source_urls, target_name, target_settings):
     """Entrypoint for CGW push stage."""
-    return PushStagedCGW(source_urls, target_name, target_settings).push_staged_operations()
+    return PushStagedCGW(source_urls, target_name, target_settings)

@@ -116,7 +116,7 @@ def test_invalid_push_items(mocked_cgw_client, target_setting, fixture_source_st
 @mock.patch("pubtools._content_gateway.push_staged_cgw.PushStagedCGW")
 def test_entry_point_success(mock_push_cgw, target_setting):
     res = entry_point([], target_setting, "fake_target_name")
-    assert res == mock_push_cgw.return_value.push_staged_operations()
+    assert res == mock_push_cgw.return_value
     assert mock_push_cgw.call_count == 1
     assert mock_push_cgw.called is True
 
