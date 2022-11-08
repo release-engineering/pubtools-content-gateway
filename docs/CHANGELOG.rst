@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+0.2.1 (2022-07-11)
+------------------
+
+* Fixed entry point loading for push-staged
+
 0.2.0 (2022-07-11)
 ------------------
 
