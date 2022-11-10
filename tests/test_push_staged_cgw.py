@@ -69,7 +69,7 @@ def get_pulp_push_item():
 )
 def test_cgw_operations_success(mocked_cgw_client, target_setting, fixture_source_stage):
     pulp_push_item = get_pulp_push_item()
-    push_cgw = PushStagedCGW(["stage:%s" % test_staging_dir()], "fake_target_name", target_setting)
+    push_cgw = PushStagedCGW(["staged:%s" % test_staging_dir()], "fake_target_name", target_setting)
     for item in push_cgw.push_items:
         push_cgw.pulp_push_items[json.dumps(repr(item), sort_keys=True)] = pulp_push_item
     push_cgw.push_staged_operations()
