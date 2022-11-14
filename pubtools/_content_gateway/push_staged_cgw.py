@@ -1,11 +1,16 @@
 import os
 import json
 import logging
-from pushsource import CGWPushItem
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items
 
+try:
+    import attr as attrs
+except ImportError:  # pragma: no cover
+    import attrs
+
 from pubtools.pluggy import hookimpl, pm
+from pushsource import CGWPushItem
 from pushsource import Source
 
 LOG = logging.getLogger("pubtools.cgw")
@@ -61,7 +66,10 @@ class PushStagedCGW(PushBase):
         """
 
         if pulp_units:
-            self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)] = pulp_units[0]
+            push_item_dict = attrs.asdict(push_item)
+            push_item_dict["state"] = "PENDING"
+            push_item_copy = push_item.__class__(**push_item_dict)
+            self.pulp_push_items[json.dumps(repr(push_item_copy), sort_keys=True)] = pulp_units[0]
 
     def push_staged_operations(self):
         """
@@ -100,7 +108,7 @@ class PushStagedCGW(PushBase):
                                 )
                             pulp_push_item = self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)]
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
-                            pitem["metadata"]["md5"] = item.md5sum
+                            pitem["metadata"]["md5"] = pulp_push_item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
                             pitem["metadata"]["size"] = pulp_push_item.size
                             self.process_file(pitem)
