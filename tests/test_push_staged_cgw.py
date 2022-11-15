@@ -41,6 +41,7 @@ def get_pulp_push_item():
         "version": "v1",
         "description": "test",
         "sha256sum": "test",
+        "md5sum": "test",
         "size": "test",
         "path": "test",
     }
