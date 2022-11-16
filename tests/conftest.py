@@ -552,7 +552,7 @@ def yml_json_data():
                 "downloadpage": "https://developers.redhat.com/products/codeready-containers/download/",
                 "thankYouPage": "https://test.com/",
                 "thankYouTimeout": 5,
-                "eloquaCode": "7013a000002CtetAAC",
+                "eloquaCode": "FAKECODEID1234",
             },
         },
         {
