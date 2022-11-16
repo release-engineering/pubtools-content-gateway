@@ -47,6 +47,19 @@ class PushStagedCGW(PushBase):
                 for item in source:
                     self.push_items.append(item)
 
+    @staticmethod
+    def push_item_str(item):
+        push_item_dict = attrs.asdict(item)
+        item_json = {
+            "name": push_item_dict["name"],
+            "src": push_item_dict["src"],
+            "dest": push_item_dict["dest"],
+            "origin": push_item_dict["origin"],
+            "build": push_item_dict["build"],
+            "signing_key": push_item_dict["signing_key"],
+        }
+        return json.dumps(item_json, sort_keys=True)
+
     @hookimpl
     def pulp_item_push_finished(self, pulp_units, push_item):
         """
@@ -66,10 +79,7 @@ class PushStagedCGW(PushBase):
         """
 
         if pulp_units:
-            push_item_dict = attrs.asdict(push_item)
-            push_item_dict["state"] = "PENDING"
-            push_item_copy = push_item.__class__(**push_item_dict)
-            self.pulp_push_items[json.dumps(repr(push_item_copy), sort_keys=True)] = pulp_units[0]
+            self.pulp_push_items[self.push_item_str(push_item)] = pulp_units[0]
 
     def push_staged_operations(self):
         """
@@ -106,7 +116,7 @@ class PushStagedCGW(PushBase):
                                 raise ValueError(
                                     "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
                                 )
-                            pulp_push_item = self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)]
+                            pulp_push_item = self.pulp_push_items[self.push_item_str(push_item)]
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
                             pitem["metadata"]["md5"] = pulp_push_item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
