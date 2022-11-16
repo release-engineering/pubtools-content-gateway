@@ -27,12 +27,12 @@ A typical YAML format for Product, version and file looks like this:
         productName: "Test Product"                             # MANDATORY
         productCode: "TestProduct"                              # MANDATORY
         productVersionName: "TestProductVersion"                # MANDATORY
-        description: "Test description"                         # MANDATORY
-        label: "Release Info"                                   # MANDATORY
+        description: "Test description"                         # OPTIONAL
+        label: "Release Info"                                   # OPTIONAL
         order: 0                                                # OPTIONAL
         hidden: false                                           # OPTIONAL
         pushItemPath: "/content/origin/files/TestProduct/"      # MANDATORY
-        shortURL: "/test-1/example-v4/testing/"                 # MANDATORY
+        shortURL: "/test-1/example-v4/testing/"                 # OPTIONAL
         differentProductThankYouPage: "Any Thank You Page"      # OPTIONAL
 
     ... # other records

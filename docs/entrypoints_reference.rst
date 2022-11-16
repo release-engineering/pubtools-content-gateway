@@ -85,26 +85,26 @@ File
 ---------------
 Each product version may contain one or more files. The file is identified by its path on access.cdn
 
-A typical YAML format for Product, version and file looks like this:
+A typical linear YAML format for Product, version and file looks like this:
 
 .. code-block::
 
     # YAML file formats for Product
     - type: product                                             # MANDATORY
-      state: create                                             # MANDATORY
+      action: create                                            # MANDATORY
       metadata:
         name: "Test Product"                                    # MANDATORY
         productCode: "TestProduct"                              # MANDATORY
         homepage: "https://test.com/"                           # OPTIONAL
         downloadpage: "https://test.com/"                       # OPTIONAL
         thankYouPage: "https://test.com/"                       # OPTIONAL
-        eloquaCode: "NOT_SET"                                   # OPTIONAL
+        eloquaCode: "NOT_SET"                                   # MANDATORY
         featuredArtifactType: "Server"                          # OPTIONAL
         thankYouTimeout: 5                                      # OPTIONAL
 
     # YAML file formats for Version
     - type: product_version                                     # MANDATORY
-      state: create                                             # MANDATORY
+      action: create                                            # MANDATORY
       metadata:
         productName: "Test Product"                             # MANDATORY
         productCode: "TestProduct"                              # MANDATORY
@@ -118,24 +118,92 @@ A typical YAML format for Product, version and file looks like this:
 
     # YAML file formats for File
     - type: file                                                # MANDATORY
-      state: create                                             # MANDATORY
+      action: create                                            # MANDATORY
       metadata:
         type: "FILE"                                            # MANDATORY
         productName: "Test Product"                             # MANDATORY
         productCode: "TestProduct"                              # MANDATORY
         productVersionName: "TestProductVersion"                # MANDATORY
-        description: "Test description"                         # MANDATORY
-        label: "Release Info"                                   # MANDATORY
+        description: "Test description"                         # OPTIONAL
+        label: "Release Info"                                   # OPTIONAL
         order: 0                                                # OPTIONAL
         hidden: false                                           # OPTIONAL
         downloadURL: "/content/origin/files/TestProduct/"       # MANDATORY
-        shortURL: "/test-1/example-v4/testing/"                 # MANDATORY
+        shortURL: "/test-1/example-v4/testing/"                 # OPTIONAL
         differentProductThankYouPage: "Any Thank You Page"      # OPTIONAL
 
     ... # other records
 
 
+The YAML data can also be passed in nested structure like:-
+
+.. code-block::
+
+    # nested yaml data structure
+    - product:
+        action: create
+        name: Product_Name_1
+        productCode: Product_code_1
+        homepage: https://fake.example.com/products/fake-containers/overview/
+        downloadpage: https://fake.example.com/products/fake-containers/download/
+        thankYouPage: https://example.com/
+        thankYouTimeout: 5
+        eloquaCode: fakeCODE9999
+
+        releases:
+          - versionName: 3.4.0
+            action: create
+            masterProductVersion: null
+            ga: true
+            hidden: false
+            invisible: false
+            termsAndConditions: Anonymous Download
+
+            files:
+              - downloadURL: "/content/origin/files/AnsibleNewTest_1/"
+                action: create
+
+              - downloadURL: "/content/fake/files/AnsibleNewTest_2/"
+                action: create
+                # other metadata
+
+          - versionName: 3.4.1
+            action: create
+            termsAndConditions: Anonymous Download
+            # other metadata
+
+            files:
+              - downloadURL: "/content/fake/files/AnsibleNewTest_3/"
+                action: create
+                # other metadata
+
+    - product:
+        action: create
+        name: Product_Name_2
+        productCode: Product_code_2
+        eloquaCode: FAKECODE1234
+
+        releases:
+          - versionName: 3.4.4
+            action: create
+            termsAndConditions: Anonymous Download
+
+            files:
+              - downloadURL: "/content/origin/files/AnsibleNewTest_4/"
+                action: create
+
 To know more content gateway operations about add, update and delete please visit :doc:`push_base`.
+
+.. note::
+    To update any record you can either pass the exact id of the product, version and file or
+    the CGW will automatically fetch the id of the record if it is not mentioned in the metadata.
+
+    ID is mandatory to update the following fields:
+        #. name of product
+        #. productCode
+        #. versionName
+        #. downloadURL
+        #. pushItemPath
 
 
 push-staged-cgw
@@ -162,12 +230,15 @@ A typical YAML format for Product, version and file looks like this:
         productName: "Test Product"                             # MANDATORY
         productCode: "TestProduct"                              # MANDATORY
         productVersionName: "TestProductVersion"                # MANDATORY
-        description: "Test description"                         # MANDATORY
-        label: "Release Info"                                   # MANDATORY
+        description: "Test description"                         # OPTIONAL
+        label: "Release Info"                                   # OPTIONAL
         order: 0                                                # OPTIONAL
         hidden: false                                           # OPTIONAL
         pushItemPath: "/content/origin/files/TestProduct/"      # MANDATORY
-        shortURL: "/test-1/example-v4/testing/"                 # MANDATORY
+        shortURL: "/test-1/example-v4/testing/"                 # OPTIONAL
         differentProductThankYouPage: "Any Thank You Page"      # OPTIONAL
 
     ... # other records
+
+.. note::
+    This data can also be passed in nested structure same as defined above.

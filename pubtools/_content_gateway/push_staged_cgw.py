@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from .push_base import PushBase
-from .utils import yaml_parser, validate_data, sort_items
+from .utils import yaml_parser, validate_data, sort_items, formate_cgw_items
 
 try:
     import attr as attrs
@@ -81,6 +81,8 @@ class PushStagedCGW(PushBase):
         for item in self.push_items:
             if isinstance(item, CGWPushItem):
                 parsed_items = yaml_parser(os.path.join(item.origin, item.src))
+                parsed_items = formate_cgw_items(parsed_items)
+
                 for pitem in parsed_items:
                     validate_data(pitem, staged=True)
 
