@@ -1,7 +1,7 @@
 import argparse
 import logging
 from .push_base import PushBase
-from .utils import yaml_parser, validate_data, sort_items, formate_cgw_items
+from .utils import yaml_parser, validate_data, sort_items, format_cgw_items
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
@@ -37,7 +37,7 @@ class PushCGW(PushBase):
         """
 
         self.cgw_items = yaml_parser(self.cgw_filepath)
-        self.cgw_items = formate_cgw_items(self.cgw_items)
+        self.cgw_items = format_cgw_items(self.cgw_items)
 
         for item in self.cgw_items:
             validate_data(item)

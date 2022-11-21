@@ -152,7 +152,6 @@ The YAML data can also be passed in nested structure like:-
 
         releases:
           - versionName: 3.4.0
-            action: create
             masterProductVersion: null
             ga: true
             hidden: false
@@ -161,20 +160,16 @@ The YAML data can also be passed in nested structure like:-
 
             files:
               - downloadURL: "/content/origin/files/AnsibleNewTest_1/"
-                action: create
 
               - downloadURL: "/content/fake/files/AnsibleNewTest_2/"
-                action: create
                 # other metadata
 
           - versionName: 3.4.1
-            action: create
             termsAndConditions: Anonymous Download
             # other metadata
 
             files:
               - downloadURL: "/content/fake/files/AnsibleNewTest_3/"
-                action: create
                 # other metadata
 
     - product:
@@ -185,12 +180,10 @@ The YAML data can also be passed in nested structure like:-
 
         releases:
           - versionName: 3.4.4
-            action: create
             termsAndConditions: Anonymous Download
 
             files:
               - downloadURL: "/content/origin/files/AnsibleNewTest_4/"
-                action: create
 
 To know more content gateway operations about add, update and delete please visit :doc:`push_base`.
 

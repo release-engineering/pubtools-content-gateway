@@ -228,7 +228,7 @@ def sort_items(items):
     return sorted_items
 
 
-def formate_cgw_items(items):
+def format_cgw_items(items):
     """
     The yaml file can accept both linear and nested data structure
     and the function will re-format the yaml nested data structure to linear data structure
@@ -244,17 +244,27 @@ def formate_cgw_items(items):
     formatted_list = list()
     for product_rec in items:
         if product_rec.get("type"):
+            """
+            Checking whether the cgw data structure is nested or linear.
+                - For the linear structure "type", "action" and "metadata" keys will be present
+                - If data is of linear type, we are appending the record in the main (i.e formatted_list) list
+                - Else we are re-formatting nested data into linear data in the outer scope of the "if" condition.
+            """
             formatted_list.append(product_rec)
             continue
-        product_metadata = copy.deepcopy(product_rec["product"])
+        product_metadata = copy.deepcopy(product_rec["product"])  # creating a temp record of product data
         payload = {"type": "product", "action": product_metadata["action"]}
+        # performing further operations on temp record
+        # i.e "product_metadata" to keep original data intact
         product_metadata.pop("releases", None)
         product_metadata.pop("action", None)
         payload["metadata"] = product_metadata
         product_name = product_metadata["name"]
         product_code = product_metadata["productCode"]
-        formatted_list.append(payload)
+        # nested product data got converted to linear structure
+        formatted_list.append(payload)  # adding record to the result list
 
+        # re-formatting nested versions records in linear order
         for version_rec in product_rec["product"]["releases"]:
             version_payload = {"type": "product_version", "action": version_rec["action"]}
             version_metadata = copy.deepcopy(version_rec)
@@ -267,6 +277,7 @@ def formate_cgw_items(items):
             formatted_list.append(version_payload)
 
             order = 0
+            # re-formatting nested file records in linear order
             for file_rec in version_rec["files"]:
                 file_payload = {"type": "file", "action": file_rec["action"]}
                 file_rec.pop("action", None)
