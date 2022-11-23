@@ -44,8 +44,8 @@ def get_pulp_push_item():
 
 @mock.patch("pubtools._content_gateway.push_base.CGWClient", return_value=TestClient())
 def test_cgw_operations_success(mocked_cgw_client, target_setting):
-    cgw_item = CGWPushItem(name="cgw_push.yaml", src=yaml_file_path, origin=test_dir)
-    file_item = FilePushItem(name="file_push.yaml", src=yaml_file_path, origin=test_dir)
+    cgw_item = CGWPushItem(name="cgw_push.yaml", src=os.path.join(test_dir, yaml_file_path), origin=test_dir)
+    file_item = FilePushItem(name="file_push.yaml", src=os.path.join(test_dir, yaml_file_path), origin=test_dir)
 
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW("fake_target_name", target_setting)

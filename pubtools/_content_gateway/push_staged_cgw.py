@@ -2,6 +2,7 @@ import os
 import json
 import pluggy
 import logging
+
 from pushsource import CGWPushItem
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items
@@ -81,7 +82,10 @@ class PushStagedCGW(PushBase):
                             self.process_version(pitem)
                         if pitem["type"] == "file":
                             for push_item in self.push_items:
-                                if push_item.src == pitem["metadata"]["pushItemPath"]:
+                                if (
+                                    push_item.src.replace(push_item.origin, "").lstrip("/")
+                                    == pitem["metadata"]["pushItemPath"]
+                                ):
                                     break
                             else:
                                 raise ValueError(
@@ -91,7 +95,7 @@ class PushStagedCGW(PushBase):
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
                             pitem["metadata"]["md5"] = item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
-                            pitem["metadata"]["size"] = pulp_push_item.size
+                            pitem["metadata"]["size"] = os.stat(push_item.src).st_size
                             self.process_file(pitem)
 
                     self.make_visible()
