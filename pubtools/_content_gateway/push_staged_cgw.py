@@ -106,7 +106,7 @@ class PushStagedCGW(PushBase):
                                 found = False
                                 for source_url in self.source_urls:
                                     if (
-                                        push_item.src.replace(source_url.replace("staged:", ""), "").lstrip("/")
+                                        push_item.src.replace(push_item.origin, "").lstrip("/")
                                         == pitem["metadata"]["pushItemPath"]
                                     ):
                                         found = True
@@ -120,7 +120,7 @@ class PushStagedCGW(PushBase):
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
                             pitem["metadata"]["md5"] = pulp_push_item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
-                            pitem["metadata"]["size"] = pulp_push_item.size
+                            pitem["metadata"]["size"] = os.stat(push_item.src).st_size
                             self.process_file(pitem)
 
                     self.make_visible()
