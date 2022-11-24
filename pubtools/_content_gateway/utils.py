@@ -247,17 +247,23 @@ def format_cgw_items(items):
             """
             Checking whether the cgw data structure is nested or linear.
                 - For the linear structure "type", "action" and "metadata" keys will be present
-                - If data is of linear type, we are appending the record in the main (i.e formatted_list) list
+                - If data is of linear type, we are appending the record directly in the formatted_list list
                 - Else we are re-formatting nested data into linear data in the outer scope of the "if" condition.
             """
             formatted_list.append(product_rec)
             continue
-        product_metadata = copy.deepcopy(product_rec["product"])  # creating a temp record of product data
-        payload = {"type": "product", "action": product_metadata["action"]}
+
+        # creating a temp record of product data
+        product_metadata = copy.deepcopy(product_rec["product"])
+        # this action value will be shared crossed to child records i.e versions and files
+        action = product_metadata["action"]
+        payload = {"type": "product", "action": action}
         # performing further operations on temp record
         # i.e "product_metadata" to keep original data intact
+        # and removing unnecessary fields from the temp product_metadata to form expected metadata
         product_metadata.pop("releases", None)
         product_metadata.pop("action", None)
+        # expected metadata is ready, adding to the main dict
         payload["metadata"] = product_metadata
         product_name = product_metadata["name"]
         product_code = product_metadata["productCode"]
@@ -265,28 +271,34 @@ def format_cgw_items(items):
         formatted_list.append(payload)  # adding record to the result list
 
         # re-formatting nested versions records in linear order
-        for version_rec in product_rec["product"]["releases"]:
-            version_payload = {"type": "product_version", "action": version_rec["action"]}
-            version_metadata = copy.deepcopy(version_rec)
-            version_metadata.pop("action", None)
-            version_payload["metadata"] = version_metadata
-            version_payload["metadata"]["productName"] = product_name
-            version_payload["metadata"]["productCode"] = product_code
-            version_name = version_metadata["versionName"]
-            version_metadata.pop("files", None)
-            formatted_list.append(version_payload)
+        # version follows the same steps as product
+        # to convert sequential structure to linear record
+        if product_rec.get("product").get("releases"):
+            for version_rec in product_rec.get("product").get("releases"):
+                # version shares the same action value as product
+                version_payload = {"type": "product_version", "action": action}
+                version_metadata = copy.deepcopy(version_rec)
+                version_payload["metadata"] = version_metadata
+                version_payload["metadata"]["productName"] = product_name
+                version_payload["metadata"]["productCode"] = product_code
+                version_name = version_metadata["versionName"]
+                version_metadata.pop("files", None)
+                formatted_list.append(version_payload)
 
-            order = 0
-            # re-formatting nested file records in linear order
-            for file_rec in version_rec["files"]:
-                file_payload = {"type": "file", "action": file_rec["action"]}
-                file_rec.pop("action", None)
-                order = file_rec.get("order") if file_rec.get("order") is not None else order + 10
-                file_rec["order"] = file_rec.get("order") if file_rec.get("order") else order
-                file_payload["metadata"] = file_rec
-                file_payload["metadata"]["productName"] = product_name
-                file_payload["metadata"]["productCode"] = product_code
-                file_payload["metadata"]["productVersionName"] = version_name
-                formatted_list.append(file_payload)
+                order = 0
+                # re-formatting nested file records in linear order
+                # file follows the same steps as product and version
+                # to convert sequential structure to linear record
+                if version_rec.get("files"):
+                    for file_rec in version_rec.get("files"):
+                        # file shares the same action value as product
+                        file_payload = {"type": "file", "action": action}
+                        order = file_rec.get("order") if file_rec.get("order") is not None else order + 10
+                        file_rec["order"] = file_rec.get("order") if file_rec.get("order") else order
+                        file_payload["metadata"] = file_rec
+                        file_payload["metadata"]["productName"] = product_name
+                        file_payload["metadata"]["productCode"] = product_code
+                        file_payload["metadata"]["productVersionName"] = version_name
+                        formatted_list.append(file_payload)
 
     return formatted_list

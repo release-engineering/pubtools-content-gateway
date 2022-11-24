@@ -198,6 +198,65 @@ To know more content gateway operations about add, update and delete please visi
         #. downloadURL
         #. pushItemPath
 
+Benefit of using Linear YAML structure
+---------------------------------------------
+Linear YAML structure gives us the flexibility to perform operation on a single
+record at a time without being bothered by its subsequent or parent records.
+We can update multiple independent records by using linear structure. Refer examples in next section.
+
+Operation on a single record
+-----------------------------
+One can create, update and delete multiple records with the nested YAML structure at a time,
+but if we want to perform a single operation, especially on the child records then we must use
+linear/sequential YAML structure. Because it gives us the flexibility to define data for only a single
+record without being bothered by its subsequent or parent records.
+
+Examples
+___________
+Creating, updating and deleting a single or independent child records can be
+easily achieved by using linear structure. Linear YAML file structure also allow
+us to perform multiple distinct operations on individual records.
+
+Please refer the below example:-
+.. code-block::
+
+    # Create request for a single file entry of a product and version
+    - type: file
+      action: create
+      metadata:
+        type: "FILE"
+        productName: "Test Product"
+        productCode: "TestProduct"
+        productVersionName: "TestProductVersion"
+        description: "Test description"
+        label: "Release Info"
+        order: 0
+        hidden: false
+        downloadURL: "/content/origin/files/TestProduct/"
+        shortURL: "/test-1/example-v4/testing/"
+        differentProductThankYouPage: "Any Thank You Page"
+
+    # Update request for a single file entry of a version
+    - type: product_version
+      action: update
+      metadata:
+        productName: "Test Product"
+        productCode: "TestProduct"
+        versionName: "TestProductVersion"
+        ga: true
+        termsAndConditions: "Anonymous Download"
+        hidden: true
+
+    # Delete request for an independent Product
+    # the product must not have any child associated with it during deletion
+    - type: product
+      action: delete
+      metadata:
+        name: "AnsibleTest Product"
+        productCode: "Ansible TestProduct"
+
+    ... # other records
+
 
 push-staged-cgw
 ........................
@@ -223,7 +282,6 @@ A typical YAML format for Product, version and file looks like this:
         productName: "Test Product"                             # MANDATORY
         productCode: "TestProduct"                              # MANDATORY
         productVersionName: "TestProductVersion"                # MANDATORY
-        description: "Test description"                         # OPTIONAL
         label: "Release Info"                                   # OPTIONAL
         order: 0                                                # OPTIONAL
         hidden: false                                           # OPTIONAL
