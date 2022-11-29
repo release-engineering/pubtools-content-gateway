@@ -47,6 +47,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#product">Product</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#version">Version</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#file">File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#benefit-of-using-linear-yaml-structure">Benefit of using Linear YAML structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#operation-on-a-single-record">Operation on a single record</a></li>
 </ul>
 </li>
 </ul>
@@ -155,23 +157,23 @@ The YAML file can consist list of Products, Versions and Files</p>
 <div class="section" id="file">
 <h4>File<a class="headerlink" href="#file" title="Permalink to this heading"></a></h4>
 <p>Each product version may contain one or more files. The file is identified by its path on access.cdn</p>
-<p>A typical YAML format for Product, version and file looks like this:</p>
+<p>A typical linear YAML format for Product, version and file looks like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># YAML file formats for Product</span>
 <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">product</span>                                             <span class="c1"># MANDATORY</span>
-  <span class="n">state</span><span class="p">:</span> <span class="n">create</span>                                             <span class="c1"># MANDATORY</span>
+  <span class="n">action</span><span class="p">:</span> <span class="n">create</span>                                            <span class="c1"># MANDATORY</span>
   <span class="n">metadata</span><span class="p">:</span>
     <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                                    <span class="c1"># MANDATORY</span>
     <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
     <span class="n">homepage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                           <span class="c1"># OPTIONAL</span>
     <span class="n">downloadpage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                       <span class="c1"># OPTIONAL</span>
     <span class="n">thankYouPage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                       <span class="c1"># OPTIONAL</span>
-    <span class="n">eloquaCode</span><span class="p">:</span> <span class="s2">&quot;NOT_SET&quot;</span>                                   <span class="c1"># OPTIONAL</span>
+    <span class="n">eloquaCode</span><span class="p">:</span> <span class="s2">&quot;NOT_SET&quot;</span>                                   <span class="c1"># MANDATORY</span>
     <span class="n">featuredArtifactType</span><span class="p">:</span> <span class="s2">&quot;Server&quot;</span>                          <span class="c1"># OPTIONAL</span>
     <span class="n">thankYouTimeout</span><span class="p">:</span> <span class="mi">5</span>                                      <span class="c1"># OPTIONAL</span>
 
 <span class="c1"># YAML file formats for Version</span>
 <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">product_version</span>                                     <span class="c1"># MANDATORY</span>
-  <span class="n">state</span><span class="p">:</span> <span class="n">create</span>                                             <span class="c1"># MANDATORY</span>
+  <span class="n">action</span><span class="p">:</span> <span class="n">create</span>                                            <span class="c1"># MANDATORY</span>
   <span class="n">metadata</span><span class="p">:</span>
     <span class="n">productName</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                             <span class="c1"># MANDATORY</span>
     <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
@@ -185,24 +187,146 @@ The YAML file can consist list of Products, Versions and Files</p>
 
 <span class="c1"># YAML file formats for File</span>
 <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">file</span>                                                <span class="c1"># MANDATORY</span>
-  <span class="n">state</span><span class="p">:</span> <span class="n">create</span>                                             <span class="c1"># MANDATORY</span>
+  <span class="n">action</span><span class="p">:</span> <span class="n">create</span>                                            <span class="c1"># MANDATORY</span>
   <span class="n">metadata</span><span class="p">:</span>
     <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;FILE&quot;</span>                                            <span class="c1"># MANDATORY</span>
     <span class="n">productName</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                             <span class="c1"># MANDATORY</span>
     <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
     <span class="n">productVersionName</span><span class="p">:</span> <span class="s2">&quot;TestProductVersion&quot;</span>                <span class="c1"># MANDATORY</span>
-    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Test description&quot;</span>                         <span class="c1"># MANDATORY</span>
-    <span class="n">label</span><span class="p">:</span> <span class="s2">&quot;Release Info&quot;</span>                                   <span class="c1"># MANDATORY</span>
+    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Test description&quot;</span>                         <span class="c1"># OPTIONAL</span>
+    <span class="n">label</span><span class="p">:</span> <span class="s2">&quot;Release Info&quot;</span>                                   <span class="c1"># OPTIONAL</span>
     <span class="n">order</span><span class="p">:</span> <span class="mi">0</span>                                                <span class="c1"># OPTIONAL</span>
     <span class="n">hidden</span><span class="p">:</span> <span class="n">false</span>                                           <span class="c1"># OPTIONAL</span>
     <span class="n">downloadURL</span><span class="p">:</span> <span class="s2">&quot;/content/origin/files/TestProduct/&quot;</span>       <span class="c1"># MANDATORY</span>
-    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">&quot;/test-1/example-v4/testing/&quot;</span>                 <span class="c1"># MANDATORY</span>
+    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">&quot;/test-1/example-v4/testing/&quot;</span>                 <span class="c1"># OPTIONAL</span>
     <span class="n">differentProductThankYouPage</span><span class="p">:</span> <span class="s2">&quot;Any Thank You Page&quot;</span>      <span class="c1"># OPTIONAL</span>
 
 <span class="o">...</span> <span class="c1"># other records</span>
 </pre></div>
 </div>
+<p>The YAML data can also be passed in nested structure like:-</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># nested yaml data structure</span>
+<span class="o">-</span> <span class="n">product</span><span class="p">:</span>
+    <span class="n">action</span><span class="p">:</span> <span class="n">create</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Product_Name_1</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="n">Product_code_1</span>
+    <span class="n">homepage</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">fake</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">products</span><span class="o">/</span><span class="n">fake</span><span class="o">-</span><span class="n">containers</span><span class="o">/</span><span class="n">overview</span><span class="o">/</span>
+    <span class="n">downloadpage</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">fake</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">products</span><span class="o">/</span><span class="n">fake</span><span class="o">-</span><span class="n">containers</span><span class="o">/</span><span class="n">download</span><span class="o">/</span>
+    <span class="n">thankYouPage</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span>
+    <span class="n">thankYouTimeout</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="n">eloquaCode</span><span class="p">:</span> <span class="n">fakeCODE9999</span>
+
+    <span class="n">releases</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">versionName</span><span class="p">:</span> <span class="mf">3.4.0</span>
+        <span class="n">masterProductVersion</span><span class="p">:</span> <span class="n">null</span>
+        <span class="n">ga</span><span class="p">:</span> <span class="n">true</span>
+        <span class="n">hidden</span><span class="p">:</span> <span class="n">false</span>
+        <span class="n">invisible</span><span class="p">:</span> <span class="n">false</span>
+        <span class="n">termsAndConditions</span><span class="p">:</span> <span class="n">Anonymous</span> <span class="n">Download</span>
+
+        <span class="n">files</span><span class="p">:</span>
+          <span class="o">-</span> <span class="n">downloadURL</span><span class="p">:</span> <span class="s2">&quot;/content/origin/files/AnsibleNewTest_1/&quot;</span>
+
+          <span class="o">-</span> <span class="n">downloadURL</span><span class="p">:</span> <span class="s2">&quot;/content/fake/files/AnsibleNewTest_2/&quot;</span>
+            <span class="c1"># other metadata</span>
+
+      <span class="o">-</span> <span class="n">versionName</span><span class="p">:</span> <span class="mf">3.4.1</span>
+        <span class="n">termsAndConditions</span><span class="p">:</span> <span class="n">Anonymous</span> <span class="n">Download</span>
+        <span class="c1"># other metadata</span>
+
+        <span class="n">files</span><span class="p">:</span>
+          <span class="o">-</span> <span class="n">downloadURL</span><span class="p">:</span> <span class="s2">&quot;/content/fake/files/AnsibleNewTest_3/&quot;</span>
+            <span class="c1"># other metadata</span>
+
+<span class="o">-</span> <span class="n">product</span><span class="p">:</span>
+    <span class="n">action</span><span class="p">:</span> <span class="n">create</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Product_Name_2</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="n">Product_code_2</span>
+    <span class="n">eloquaCode</span><span class="p">:</span> <span class="n">FAKECODE1234</span>
+
+    <span class="n">releases</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">versionName</span><span class="p">:</span> <span class="mf">3.4.4</span>
+        <span class="n">termsAndConditions</span><span class="p">:</span> <span class="n">Anonymous</span> <span class="n">Download</span>
+
+        <span class="n">files</span><span class="p">:</span>
+          <span class="o">-</span> <span class="n">downloadURL</span><span class="p">:</span> <span class="s2">&quot;/content/origin/files/AnsibleNewTest_4/&quot;</span>
+</pre></div>
+</div>
 <p>To know more content gateway operations about add, update and delete please visit <a class="reference internal" href="push_base.html"><span class="doc">Push Base Module</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To update any record you can either pass the exact id of the product, version and file or
+the CGW will automatically fetch the id of the record if it is not mentioned in the metadata.</p>
+<dl class="simple">
+<dt>ID is mandatory to update the following fields:</dt><dd><ol class="arabic simple">
+<li><p>name of product</p></li>
+<li><p>productCode</p></li>
+<li><p>versionName</p></li>
+<li><p>downloadURL</p></li>
+<li><p>pushItemPath</p></li>
+</ol>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="benefit-of-using-linear-yaml-structure">
+<h4>Benefit of using Linear YAML structure<a class="headerlink" href="#benefit-of-using-linear-yaml-structure" title="Permalink to this heading"></a></h4>
+<p>Linear YAML structure gives us the flexibility to perform operation on a single
+record at a time without being bothered by its subsequent or parent records.
+We can update multiple independent records by using linear structure. Refer examples in next section.</p>
+</div>
+<div class="section" id="operation-on-a-single-record">
+<h4>Operation on a single record<a class="headerlink" href="#operation-on-a-single-record" title="Permalink to this heading"></a></h4>
+<p>One can create, update and delete multiple records with the nested YAML structure at a time,
+but if we want to perform a single operation, especially on the child records then we must use
+linear/sequential YAML structure. Because it gives us the flexibility to define data for only a single
+record without being bothered by its subsequent or parent records.</p>
+<div class="section" id="examples">
+<h5>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h5>
+<p>Creating, updating and deleting a single or independent child records can be
+easily achieved by using linear structure. Linear YAML file structure also allow
+us to perform multiple distinct operations on individual records.</p>
+<p>Please refer the below example:-
+.. code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create request for a single file entry of a product and version</span>
+<span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">file</span>
+  <span class="n">action</span><span class="p">:</span> <span class="n">create</span>
+  <span class="n">metadata</span><span class="p">:</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;FILE&quot;</span>
+    <span class="n">productName</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>
+    <span class="n">productVersionName</span><span class="p">:</span> <span class="s2">&quot;TestProductVersion&quot;</span>
+    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Test description&quot;</span>
+    <span class="n">label</span><span class="p">:</span> <span class="s2">&quot;Release Info&quot;</span>
+    <span class="n">order</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="n">hidden</span><span class="p">:</span> <span class="n">false</span>
+    <span class="n">downloadURL</span><span class="p">:</span> <span class="s2">&quot;/content/origin/files/TestProduct/&quot;</span>
+    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">&quot;/test-1/example-v4/testing/&quot;</span>
+    <span class="n">differentProductThankYouPage</span><span class="p">:</span> <span class="s2">&quot;Any Thank You Page&quot;</span>
+
+<span class="c1"># Update request for a single file entry of a version</span>
+<span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">product_version</span>
+  <span class="n">action</span><span class="p">:</span> <span class="n">update</span>
+  <span class="n">metadata</span><span class="p">:</span>
+    <span class="n">productName</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>
+    <span class="n">versionName</span><span class="p">:</span> <span class="s2">&quot;TestProductVersion&quot;</span>
+    <span class="n">ga</span><span class="p">:</span> <span class="n">true</span>
+    <span class="n">termsAndConditions</span><span class="p">:</span> <span class="s2">&quot;Anonymous Download&quot;</span>
+    <span class="n">hidden</span><span class="p">:</span> <span class="n">true</span>
+
+<span class="c1"># Delete request for an independent Product</span>
+<span class="c1"># the product must not have any child associated with it during deletion</span>
+<span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">product</span>
+  <span class="n">action</span><span class="p">:</span> <span class="n">delete</span>
+  <span class="n">metadata</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;AnsibleTest Product&quot;</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;Ansible TestProduct&quot;</span>
+
+<span class="o">...</span> <span class="c1"># other records</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -223,16 +347,19 @@ A typical YAML format for Product, version and file looks like this:</p>
     <span class="n">productName</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                             <span class="c1"># MANDATORY</span>
     <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
     <span class="n">productVersionName</span><span class="p">:</span> <span class="s2">&quot;TestProductVersion&quot;</span>                <span class="c1"># MANDATORY</span>
-    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Test description&quot;</span>                         <span class="c1"># MANDATORY</span>
-    <span class="n">label</span><span class="p">:</span> <span class="s2">&quot;Release Info&quot;</span>                                   <span class="c1"># MANDATORY</span>
+    <span class="n">label</span><span class="p">:</span> <span class="s2">&quot;Release Info&quot;</span>                                   <span class="c1"># OPTIONAL</span>
     <span class="n">order</span><span class="p">:</span> <span class="mi">0</span>                                                <span class="c1"># OPTIONAL</span>
     <span class="n">hidden</span><span class="p">:</span> <span class="n">false</span>                                           <span class="c1"># OPTIONAL</span>
     <span class="n">pushItemPath</span><span class="p">:</span> <span class="s2">&quot;/content/origin/files/TestProduct/&quot;</span>      <span class="c1"># MANDATORY</span>
-    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">&quot;/test-1/example-v4/testing/&quot;</span>                 <span class="c1"># MANDATORY</span>
+    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">&quot;/test-1/example-v4/testing/&quot;</span>                 <span class="c1"># OPTIONAL</span>
     <span class="n">differentProductThankYouPage</span><span class="p">:</span> <span class="s2">&quot;Any Thank You Page&quot;</span>      <span class="c1"># OPTIONAL</span>
 
 <span class="o">...</span> <span class="c1"># other records</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This data can also be passed in nested structure same as defined above.</p>
 </div>
 </div>
 </div>

@@ -169,7 +169,7 @@ on content gateway (CGW).</p>
 <li><p>Search for the product record from the product mapping</p></li>
 <li><p>Search for the product version record from the product_version (pv_mapping) mapping</p></li>
 <li><p>Search for the file record from the file mapping (file_mapping) mapping</p></li>
-<li><p>If <cite>file state</cite> == <cite>create</cite></p>
+<li><p>If <cite>file action</cite> == <cite>create</cite></p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Creates a new file record associated with product on CGW with given data</p></li>
@@ -177,7 +177,7 @@ on content gateway (CGW).</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>file state</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
+<li><p>If <cite>file action</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Update the file record on content gateway with given data</p></li>
@@ -185,7 +185,7 @@ on content gateway (CGW).</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>file state</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
+<li><p>If <cite>file action</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Delete the file record on the content gateway</p></li>
@@ -193,7 +193,7 @@ on content gateway (CGW).</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>file state</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping
+<li><p>If <cite>file action</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping
 or id is not provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
@@ -201,6 +201,8 @@ or id is not provided in metadata</p>
 </ul>
 </div></blockquote>
 </li>
+<li><p>The default file <cite>order</cite> value will be <cite>10</cite> if provided none</p></li>
+<li><p>file <cite>order</cite> will be auto incremented by <cite>10</cite> for nested data yml structure</p></li>
 </ul>
 </dd>
 </dl>
@@ -233,7 +235,7 @@ Update and delete the product based on the satisfied condition.</p>
 <dl>
 <dt>The product operation follows the following workflow:</dt><dd><ul>
 <li><p>Search for the product record from the product mapping</p></li>
-<li><p>If <cite>product state</cite> == <cite>create</cite></p>
+<li><p>If <cite>product action</cite> == <cite>create</cite></p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Creates a new product record on content gateway with given data</p></li>
@@ -241,7 +243,7 @@ Update and delete the product based on the satisfied condition.</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>product state</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
+<li><p>If <cite>product action</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Update the product record on content gateway with given data</p></li>
@@ -249,7 +251,7 @@ Update and delete the product based on the satisfied condition.</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>product state</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
+<li><p>If <cite>product action</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Delete the product record on the content gateway</p></li>
@@ -257,7 +259,7 @@ Update and delete the product based on the satisfied condition.</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>product state</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping</p>
+<li><p>If <cite>product action</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Raises CGWError error</p></li>
@@ -293,7 +295,7 @@ on content gateway (CGW).</p>
 <dt>The product version operation follows the following workflow:</dt><dd><ul>
 <li><p>Search for the product record from the product mapping</p></li>
 <li><p>Search for the product version record from the product_version(pv_mapping) mapping</p></li>
-<li><p>If <cite>version state</cite> == <cite>create</cite></p>
+<li><p>If <cite>version action</cite> == <cite>create</cite></p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Creates a new version record associated with product on CGW with given data</p></li>
@@ -301,7 +303,7 @@ on content gateway (CGW).</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>version state</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
+<li><p>If <cite>version action</cite> == <cite>update</cite> and record found in mapping or id is provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Update the version record on content gateway with given data</p></li>
@@ -309,7 +311,7 @@ on content gateway (CGW).</p>
 </ul>
 </div></blockquote>
 </li>
-<li><p>If <cite>version state</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
+<li><p>If <cite>version action</cite> == <cite>delete</cite> and record found in mapping or id is provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Delete the version record on the content gateway</p></li>
@@ -318,7 +320,7 @@ on content gateway (CGW).</p>
 </div></blockquote>
 </li>
 <li><dl>
-<dt>If <cite>version state</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping</dt><dd><p>or id is not provided in metadata</p>
+<dt>If <cite>version action</cite> == <cite>delete</cite> or <cite>update</cite> and record not found in mapping</dt><dd><p>or id is not provided in metadata</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Raises CGWError error</p></li>

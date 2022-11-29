@@ -362,22 +362,22 @@
 
 <span class="sd">        The product operation follows the following workflow:</span>
 <span class="sd">            - Search for the product record from the product mapping</span>
-<span class="sd">            - If `product state` == `create`</span>
+<span class="sd">            - If `product action` == `create`</span>
 
 <span class="sd">                - Creates a new product record on content gateway with given data</span>
 <span class="sd">                - Add the new record into the product mapping records</span>
 
-<span class="sd">            - If `product state` == `update` and record found in mapping or id is provided in metadata</span>
+<span class="sd">            - If `product action` == `update` and record found in mapping or id is provided in metadata</span>
 
 <span class="sd">                - Update the product record on content gateway with given data</span>
 <span class="sd">                - Update the record into the product mapping records</span>
 
-<span class="sd">            - If `product state` == `delete` and record found in mapping or id is provided in metadata</span>
+<span class="sd">            - If `product action` == `delete` and record found in mapping or id is provided in metadata</span>
 
 <span class="sd">                - Delete the product record on the content gateway</span>
 <span class="sd">                - Remove the record from the product mapping records</span>
 
-<span class="sd">            - If `product state` == `delete` or `update` and record not found in mapping</span>
+<span class="sd">            - If `product action` == `delete` or `update` and record not found in mapping</span>
 
 <span class="sd">                - Raises CGWError error</span>
 
@@ -409,7 +409,7 @@
         <span class="c1">#  To update the product name and productCode the product_id must be provided in the metadata</span>
         <span class="n">product_id</span> <span class="o">=</span> <span class="n">product_id</span> <span class="k">if</span> <span class="n">product_id</span> <span class="k">else</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">product_id</span><span class="p">:</span>
                 <span class="n">LOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="s2">&quot;Record already present for the product name:- </span><span class="si">%s</span><span class="s2"> and code:- </span><span class="si">%s</span><span class="s2"> and product_id is </span><span class="si">%s</span><span class="s2"> &quot;</span>
@@ -428,7 +428,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">product_id</span>
 
-        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span> <span class="ow">and</span> <span class="n">product_id</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span> <span class="ow">and</span> <span class="n">product_id</span><span class="p">:</span>
             <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">product_id</span>
             <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Updating product record of id:- </span><span class="si">%s</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">product_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_product</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">))</span>
@@ -436,7 +436,7 @@
             <span class="c1"># keeping a copy of data that has been used to update the cgw data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">and</span> <span class="n">product_id</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">and</span> <span class="n">product_id</span><span class="p">:</span>
             <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting existing product records for product_id:- </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">product_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">delete_product</span><span class="p">(</span><span class="n">product_id</span><span class="p">)</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_mapping</span><span class="p">[(</span><span class="n">product_name</span><span class="p">,</span> <span class="n">product_code</span><span class="p">)]</span>
@@ -461,22 +461,22 @@
 <span class="sd">        The product version operation follows the following workflow:</span>
 <span class="sd">            - Search for the product record from the product mapping</span>
 <span class="sd">            - Search for the product version record from the product_version(pv_mapping) mapping</span>
-<span class="sd">            - If `version state` == `create`</span>
+<span class="sd">            - If `version action` == `create`</span>
 
 <span class="sd">                - Creates a new version record associated with product on CGW with given data</span>
 <span class="sd">                - Add the new record into the mapping records</span>
 
-<span class="sd">            - If `version state` == `update` and record found in mapping or id is provided in metadata</span>
+<span class="sd">            - If `version action` == `update` and record found in mapping or id is provided in metadata</span>
 
 <span class="sd">                - Update the version record on content gateway with given data</span>
 <span class="sd">                - Update the record into the version mapping records</span>
 
-<span class="sd">            - If `version state` == `delete` and record found in mapping or id is provided in metadata</span>
+<span class="sd">            - If `version action` == `delete` and record found in mapping or id is provided in metadata</span>
 
 <span class="sd">                - Delete the version record on the content gateway</span>
 <span class="sd">                - Remove the record from the version mapping records</span>
 
-<span class="sd">            - If `version state` == `delete` or `update` and record not found in mapping</span>
+<span class="sd">            - If `version action` == `delete` or `update` and record not found in mapping</span>
 <span class="sd">               or id is not provided in metadata</span>
 
 <span class="sd">                - Raises CGWError error</span>
@@ -520,7 +520,7 @@
         <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;productId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">product_id</span>
         <span class="k">del</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;productName&quot;</span><span class="p">],</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;productCode&quot;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">version_id</span><span class="p">:</span>
                 <span class="n">LOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="s2">&quot;Record already present for the version name:- </span><span class="si">%s</span><span class="s2"> and code:- </span><span class="si">%s</span><span class="s2"> and version_id is </span><span class="si">%s</span><span class="s2"> &quot;</span>
@@ -539,14 +539,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span> <span class="ow">and</span> <span class="n">version_id</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span> <span class="ow">and</span> <span class="n">version_id</span><span class="p">:</span>
             <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">version_id</span>
             <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Updating the version metadata </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_version</span><span class="p">(</span><span class="n">product_id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">))</span>
             <span class="c1"># keeping a copy of data that has been used to update the cgw data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">and</span> <span class="n">version_id</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">and</span> <span class="n">version_id</span><span class="p">:</span>
             <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting existing version records for version_id:- </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">version_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">delete_version</span><span class="p">(</span><span class="n">product_id</span><span class="p">,</span> <span class="n">version_id</span><span class="p">)</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">pv_mapping</span><span class="p">[(</span><span class="n">product_name</span><span class="p">,</span> <span class="n">product_code</span><span class="p">,</span> <span class="n">version_name</span><span class="p">)]</span>
@@ -575,25 +575,28 @@
 <span class="sd">            - Search for the product record from the product mapping</span>
 <span class="sd">            - Search for the product version record from the product_version (pv_mapping) mapping</span>
 <span class="sd">            - Search for the file record from the file mapping (file_mapping) mapping</span>
-<span class="sd">            - If `file state` == `create`</span>
+<span class="sd">            - If `file action` == `create`</span>
 
 <span class="sd">                - Creates a new file record associated with product on CGW with given data</span>
 <span class="sd">                - Add the new record into the file mapping records</span>
 
-<span class="sd">            - If `file state` == `update` and record found in mapping or id is provided in metadata</span>
+<span class="sd">            - If `file action` == `update` and record found in mapping or id is provided in metadata</span>
 
 <span class="sd">                - Update the file record on content gateway with given data</span>
 <span class="sd">                - Update the record into the file mapping records</span>
 
-<span class="sd">            - If `file state` == `delete` and record found in mapping or id is provided in metadata</span>
+<span class="sd">            - If `file action` == `delete` and record found in mapping or id is provided in metadata</span>
 
 <span class="sd">                - Delete the file record on the content gateway</span>
 <span class="sd">                - Remove the record from the file mapping records</span>
 
-<span class="sd">            - If `file state` == `delete` or `update` and record not found in mapping</span>
+<span class="sd">            - If `file action` == `delete` or `update` and record not found in mapping</span>
 <span class="sd">              or id is not provided in metadata</span>
 
 <span class="sd">                - Raises CGWError error</span>
+
+<span class="sd">            - The default file `order` value will be `10` if provided none</span>
+<span class="sd">            - file `order` will be auto incremented by `10` for nested data yml structure</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_item (dict):</span>
@@ -643,7 +646,7 @@
         <span class="p">)</span>
         <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;productVersionId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">version_id</span>
 
-        <span class="k">if</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">file_id</span><span class="p">:</span>
                 <span class="n">LOG</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="s2">&quot;Record already present for the file download_url :- </span><span class="si">%s</span><span class="s2"> and file_id is </span><span class="si">%s</span><span class="s2"> &quot;</span>
@@ -662,7 +665,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_item</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span> <span class="ow">and</span> <span class="n">file_id</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span> <span class="ow">and</span> <span class="n">file_id</span><span class="p">:</span>
             <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Updating the file record </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_id</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_file</span><span class="p">(</span><span class="n">product_id</span><span class="p">,</span> <span class="n">version_id</span><span class="p">,</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">))</span>
@@ -672,7 +675,7 @@
             <span class="c1"># keeping a copy of data that has been used to update the cgw data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_item</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">and</span> <span class="n">file_id</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">file_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span> <span class="ow">and</span> <span class="n">file_id</span><span class="p">:</span>
             <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting existing file records for file_id:- </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">file_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="n">product_id</span><span class="p">,</span> <span class="n">version_id</span><span class="p">,</span> <span class="n">file_id</span><span class="p">)</span>
 
@@ -712,13 +715,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;product_version&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;version_id&quot;</span><span class="p">]</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;invisible&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;invisible&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">True</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_version</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;productId&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">])</span>
 
             <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;file_id&quot;</span><span class="p">]</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;invisible&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;invisible&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">True</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_file</span><span class="p">(</span>
@@ -739,24 +742,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">completed_operations</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;product&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">delete_product</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">])</span>
                     <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Rollback done for created product:- </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">])</span>
 
-                <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_product</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">])</span>
                     <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Rollback done for updated product:- </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
 
             <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;product_version&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">delete_version</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;productId&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;version_id&quot;</span><span class="p">])</span>
                     <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                         <span class="s2">&quot;Rollback done for created product_version:- </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="n">item</span><span class="p">[</span><span class="s2">&quot;version_id&quot;</span><span class="p">],</span>
                     <span class="p">)</span>
 
-                <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_version</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;productId&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">])</span>
                     <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -765,7 +768,7 @@
                     <span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;create&quot;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span>
                         <span class="n">item</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">],</span>
                         <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;productVersionId&quot;</span><span class="p">],</span>
@@ -773,7 +776,7 @@
                     <span class="p">)</span>
                     <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Rollback done for created file:- </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;file_id&quot;</span><span class="p">])</span>
 
-                <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
                     <span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_records</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">cgw_client</span><span class="o">.</span><span class="n">update_file</span><span class="p">(</span>
                         <span class="n">item</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">],</span>
