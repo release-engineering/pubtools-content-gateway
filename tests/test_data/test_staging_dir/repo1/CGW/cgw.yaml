@@ -1,5 +1,5 @@
 - type: product
-  state: create
+  action: create
   metadata:
     name: "Test Product"
     productCode: "TestProduct"                          
@@ -11,7 +11,7 @@
     thankYouTimeout: 5                                  
 
 - type: product_version                                 
-  state: create                                         
+  action: create                                         
   metadata:
     productName: "Test Product"                         
     productCode: "TestProduct"                          
@@ -25,7 +25,7 @@
     releaseDate: "01-01-1900"
 
 - type: file                                            
-  state: create                                         
+  action: create                                         
   metadata:
     type: "FILE"                                        
     productName: "Test Product"                         

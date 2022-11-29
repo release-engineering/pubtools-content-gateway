@@ -10,7 +10,7 @@ def fixture_unsorted_files_json():
     json = [
         {
             "type": "product",
-            "state": "create",
+            "action": "create",
             "metadata": {
                 "name": "Cloud: Ansible NEW Test",
                 "productCode": "AnsibleNewTest",
@@ -24,7 +24,7 @@ def fixture_unsorted_files_json():
         },
         {
             "type": "product_version",
-            "state": "create",
+            "action": "create",
             "metadata": {
                 "productName": "Cloud: Ansible NEW Test",
                 "productCode": "AnsibleNewTest",
@@ -40,7 +40,7 @@ def fixture_unsorted_files_json():
         },
         {
             "type": "product",
-            "state": "delete",
+            "action": "delete",
             "metadata": {
                 "name": "Cloud: Ansible NEW Test 2",
                 "productCode": "AnsibleNewTest",
@@ -54,7 +54,7 @@ def fixture_unsorted_files_json():
         },
         {
             "type": "product_version",
-            "state": "delete",
+            "action": "delete",
             "metadata": {
                 "productName": "Cloud: Ansible NEW Test 2",
                 "productCode": "AnsibleNewTest",
@@ -70,7 +70,7 @@ def fixture_unsorted_files_json():
         },
         {
             "type": "file",
-            "state": "create",
+            "action": "create",
             "metadata": {
                 "productName": "Cloud: Ansible NEW TEST",
                 "productCode": "AnsibleNewTest",
@@ -90,7 +90,7 @@ def fixture_unsorted_files_json():
         },
         {
             "type": "file",
-            "state": "delete",
+            "action": "delete",
             "metadata": {
                 "productName": "Cloud: Ansible NEW TESTTEST",
                 "productCode": "AnsibleNewTest",
@@ -117,7 +117,7 @@ def fixture_sorted_files_json():
     json = [
         {
             "type": "product",
-            "state": "create",
+            "action": "create",
             "metadata": {
                 "name": "Cloud: Ansible NEW Test",
                 "productCode": "AnsibleNewTest",
@@ -131,7 +131,7 @@ def fixture_sorted_files_json():
         },
         {
             "type": "product_version",
-            "state": "create",
+            "action": "create",
             "metadata": {
                 "productName": "Cloud: Ansible NEW Test",
                 "productCode": "AnsibleNewTest",
@@ -147,7 +147,7 @@ def fixture_sorted_files_json():
         },
         {
             "type": "file",
-            "state": "create",
+            "action": "create",
             "metadata": {
                 "productName": "Cloud: Ansible NEW TEST",
                 "productCode": "AnsibleNewTest",
@@ -167,7 +167,7 @@ def fixture_sorted_files_json():
         },
         {
             "type": "file",
-            "state": "delete",
+            "action": "delete",
             "metadata": {
                 "productName": "Cloud: Ansible NEW TESTTEST",
                 "productCode": "AnsibleNewTest",
@@ -187,7 +187,7 @@ def fixture_sorted_files_json():
         },
         {
             "type": "product_version",
-            "state": "delete",
+            "action": "delete",
             "metadata": {
                 "productName": "Cloud: Ansible NEW Test 2",
                 "productCode": "AnsibleNewTest",
@@ -203,7 +203,7 @@ def fixture_sorted_files_json():
         },
         {
             "type": "product",
-            "state": "delete",
+            "action": "delete",
             "metadata": {
                 "name": "Cloud: Ansible NEW Test 2",
                 "productCode": "AnsibleNewTest",
@@ -223,7 +223,7 @@ def fixture_sorted_files_json():
 def create_product_data():
     return {
         "type": "product",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "name": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -241,7 +241,7 @@ def create_product_data():
 def create_product2_data():
     return {
         "type": "product",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "name": "Cloud: Ansible NEW Test 1",
             "productCode": "AnsibleNewTest 1",
@@ -259,7 +259,7 @@ def create_product2_data():
 def update_product_data():
     return {
         "type": "product",
-        "state": "update",
+        "action": "update",
         "metadata": {
             "name": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -277,7 +277,7 @@ def update_product_data():
 def delete_product_data():
     return {
         "type": "product",
-        "state": "delete",
+        "action": "delete",
         "metadata": {
             "name": "Cloud: Ansible NEW Test 1",
             "productCode": "AnsibleNewTest 1",
@@ -295,7 +295,7 @@ def delete_product_data():
 def create_version_data():
     return {
         "type": "product_version",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -315,7 +315,7 @@ def create_version_data():
 def update_version_data():
     return {
         "type": "product_version",
-        "state": "update",
+        "action": "update",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -335,7 +335,7 @@ def update_version_data():
 def create_version2_data():
     return {
         "type": "product_version",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -355,7 +355,7 @@ def create_version2_data():
 def create_version_without_product():
     return {
         "type": "product_version",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "InvalidProduct",
             "productCode": "InvalidProduct",
@@ -375,7 +375,7 @@ def create_version_without_product():
 def delete_version():
     return {
         "type": "product_version",
-        "state": "delete",
+        "action": "delete",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -395,7 +395,7 @@ def delete_version():
 def create_file_data():
     return {
         "type": "file",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -419,7 +419,7 @@ def create_file_data():
 def create_file_without_product():
     return {
         "type": "file",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "Invalid product name",
             "productCode": "InvalidCode",
@@ -443,7 +443,7 @@ def create_file_without_product():
 def create_file_without_version():
     return {
         "type": "file",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -467,7 +467,7 @@ def create_file_without_version():
 def create_file2_data():
     return {
         "type": "file",
-        "state": "create",
+        "action": "create",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -491,7 +491,7 @@ def create_file2_data():
 def update_file_data():
     return {
         "type": "file",
-        "state": "update",
+        "action": "update",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -515,7 +515,7 @@ def update_file_data():
 def delete_file_data():
     return {
         "type": "file",
-        "state": "delete",
+        "action": "delete",
         "metadata": {
             "productName": "Cloud: Ansible NEW Test",
             "productCode": "AnsibleNewTest",
@@ -533,6 +533,126 @@ def delete_file_data():
             "size": None,
         },
     }
+
+
+@pytest.fixture
+def yml_json_data():
+    # This data will be used to verify the hybrid model of yml structure.
+    # The yml file can accept both linear and nested yml data structure.
+    # The nested yml data will get converted to linear format inorder to process
+
+    json = [
+        {
+            "type": "product",
+            "action": "create",
+            "metadata": {
+                "name": "Product_Name_1",
+                "productCode": "Product_code_1",
+                "homepage": "https://developers.redhat.com/products/codeready-containers/overview/",
+                "downloadpage": "https://developers.redhat.com/products/codeready-containers/download/",
+                "thankYouPage": "https://test.com/",
+                "thankYouTimeout": 5,
+                "eloquaCode": "FAKECODEID1234",
+            },
+        },
+        {
+            "type": "product_version",
+            "action": "create",
+            "metadata": {
+                "versionName": "3.4.0",
+                "masterProductVersion": None,
+                "releaseDate": "2022-25-05",
+                "ga": True,
+                "hidden": False,
+                "invisible": False,
+                "trackingDisabled": False,
+                "termsAndConditions": "Anonymous Download",
+                "productName": "Product_Name_1",
+                "productCode": "Product_code_1",
+            },
+        },
+        {
+            "type": "file",
+            "action": "create",
+            "metadata": {
+                "downloadURL": "/content/origin/files/AnsibleNewTest_1/",
+                "label": "Checksum File",
+                "shortURL": "/pub/openshift-v1/clients/sha256sum.txt",
+                "description": "Red Hat OpenShift Local",
+                "differentProductThankYouPage": None,
+                "order": 10,
+                "productName": "Product_Name_1",
+                "productCode": "Product_code_1",
+                "productVersionName": "3.4.0",
+            },
+        },
+        {
+            "type": "file",
+            "action": "create",
+            "metadata": {
+                "downloadURL": "/content/origin/files/AnsibleNewTest_2/",
+                "label": "Release Info",
+                "shortURL": "/pub/openshift-v2/clients/sha256sum.txt",
+                "description": "Red Hat OpenShift Local",
+                "differentProductThankYouPage": None,
+                "order": 20,
+                "productName": "Product_Name_1",
+                "productCode": "Product_code_1",
+                "productVersionName": "3.4.0",
+            },
+        },
+        {
+            "type": "product",
+            "action": "create",
+            "metadata": {
+                "name": "Cloud: Ansible NEW Test 1",
+                "productCode": "AnsibleNewTest",
+                "homepage": "https://test.com/",
+                "downloadpage": "https://test.com/",
+                "thankYouPage": "https://test.com/",
+                "eloquaCode": "NOT_SET",
+                "featuredArtifactType": "Server",
+                "thankYouTimeout": 5,
+            },
+        },
+        {
+            "type": "product_version",
+            "action": "create",
+            "metadata": {
+                "productName": "Cloud: Ansible NEW Test 1",
+                "productCode": "AnsibleNewTest",
+                "versionName": "AnsibleNewTestVersion 1",
+                "ga": True,
+                "masterProductVersion": None,
+                "termsAndConditions": "Anonymous Download",
+                "trackingDisabled": False,
+                "hidden": False,
+                "invisible": False,
+                "releaseDate": "2022-25-05",
+            },
+        },
+        {
+            "type": "file",
+            "action": "create",
+            "metadata": {
+                "productName": "Cloud: Ansible NEW Test 1",
+                "productCode": "AnsibleNewTest",
+                "productVersionName": "AnsibleNewTestVersion 1",
+                "description": "Red Hat OpenShift Local Sandbox Test",
+                "label": "Checksum File Sandbox Test",
+                "order": 0,
+                "hidden": False,
+                "invisible": False,
+                "type": "FILE",
+                "differentProductThankYouPage": None,
+                "downloadURL": "/content/origin/test",
+                "shortURL": "/pub-1/openshift-v4/test",
+                "md5": None,
+                "size": None,
+            },
+        },
+    ]
+    return json
 
 
 def test_staging_dir():

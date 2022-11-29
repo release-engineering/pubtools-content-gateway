@@ -289,22 +289,22 @@ class PushBase:
 
         The product operation follows the following workflow:
             - Search for the product record from the product mapping
-            - If `product state` == `create`
+            - If `product action` == `create`
 
                 - Creates a new product record on content gateway with given data
                 - Add the new record into the product mapping records
 
-            - If `product state` == `update` and record found in mapping or id is provided in metadata
+            - If `product action` == `update` and record found in mapping or id is provided in metadata
 
                 - Update the product record on content gateway with given data
                 - Update the record into the product mapping records
 
-            - If `product state` == `delete` and record found in mapping or id is provided in metadata
+            - If `product action` == `delete` and record found in mapping or id is provided in metadata
 
                 - Delete the product record on the content gateway
                 - Remove the record from the product mapping records
 
-            - If `product state` == `delete` or `update` and record not found in mapping
+            - If `product action` == `delete` or `update` and record not found in mapping
 
                 - Raises CGWError error
 
@@ -336,7 +336,7 @@ class PushBase:
         #  To update the product name and productCode the product_id must be provided in the metadata
         product_id = product_id if product_id else item.get("metadata").get("id")
 
-        if item.get("state") == "create":
+        if item.get("action") == "create":
             if product_id:
                 LOG.error(
                     "Record already present for the product name:- %s and code:- %s and product_id is %s "
@@ -355,7 +355,7 @@ class PushBase:
             self.completed_operations.append(item)
             return product_id
 
-        elif item.get("state") == "update" and product_id:
+        elif item.get("action") == "update" and product_id:
             item.get("metadata")["id"] = product_id
             LOG.info("Updating product record of id:- %s \n", product_id)
             self.cgw_client.update_product(item.get("metadata"))
@@ -363,7 +363,7 @@ class PushBase:
             # keeping a copy of data that has been used to update the cgw data
             self.completed_operations.append(item)
 
-        elif item.get("state") == "delete" and product_id:
+        elif item.get("action") == "delete" and product_id:
             LOG.info("Deleting existing product records for product_id:- %s" % product_id)
             self.cgw_client.delete_product(product_id)
             del self.product_mapping[(product_name, product_code)]
@@ -388,22 +388,22 @@ class PushBase:
         The product version operation follows the following workflow:
             - Search for the product record from the product mapping
             - Search for the product version record from the product_version(pv_mapping) mapping
-            - If `version state` == `create`
+            - If `version action` == `create`
 
                 - Creates a new version record associated with product on CGW with given data
                 - Add the new record into the mapping records
 
-            - If `version state` == `update` and record found in mapping or id is provided in metadata
+            - If `version action` == `update` and record found in mapping or id is provided in metadata
 
                 - Update the version record on content gateway with given data
                 - Update the record into the version mapping records
 
-            - If `version state` == `delete` and record found in mapping or id is provided in metadata
+            - If `version action` == `delete` and record found in mapping or id is provided in metadata
 
                 - Delete the version record on the content gateway
                 - Remove the record from the version mapping records
 
-            - If `version state` == `delete` or `update` and record not found in mapping
+            - If `version action` == `delete` or `update` and record not found in mapping
                or id is not provided in metadata
 
                 - Raises CGWError error
@@ -447,7 +447,7 @@ class PushBase:
         item.get("metadata")["productId"] = product_id
         del item.get("metadata")["productName"], item.get("metadata")["productCode"]
 
-        if item.get("state") == "create":
+        if item.get("action") == "create":
             if version_id:
                 LOG.error(
                     "Record already present for the version name:- %s and code:- %s and version_id is %s "
@@ -466,14 +466,14 @@ class PushBase:
             self.completed_operations.append(item)
             return
 
-        if item.get("state") == "update" and version_id:
+        if item.get("action") == "update" and version_id:
             item.get("metadata")["id"] = version_id
             LOG.info("Updating the version metadata \n")
             self.cgw_client.update_version(product_id, item.get("metadata"))
             # keeping a copy of data that has been used to update the cgw data
             self.completed_operations.append(item)
 
-        elif item.get("state") == "delete" and version_id:
+        elif item.get("action") == "delete" and version_id:
             LOG.info("Deleting existing version records for version_id:- %s" % version_id)
             self.cgw_client.delete_version(product_id, version_id)
             del self.pv_mapping[(product_name, product_code, version_name)]
@@ -502,25 +502,28 @@ class PushBase:
             - Search for the product record from the product mapping
             - Search for the product version record from the product_version (pv_mapping) mapping
             - Search for the file record from the file mapping (file_mapping) mapping
-            - If `file state` == `create`
+            - If `file action` == `create`
 
                 - Creates a new file record associated with product on CGW with given data
                 - Add the new record into the file mapping records
 
-            - If `file state` == `update` and record found in mapping or id is provided in metadata
+            - If `file action` == `update` and record found in mapping or id is provided in metadata
 
                 - Update the file record on content gateway with given data
                 - Update the record into the file mapping records
 
-            - If `file state` == `delete` and record found in mapping or id is provided in metadata
+            - If `file action` == `delete` and record found in mapping or id is provided in metadata
 
                 - Delete the file record on the content gateway
                 - Remove the record from the file mapping records
 
-            - If `file state` == `delete` or `update` and record not found in mapping
+            - If `file action` == `delete` or `update` and record not found in mapping
               or id is not provided in metadata
 
                 - Raises CGWError error
+
+            - The default file `order` value will be `10` if provided none
+            - file `order` will be auto incremented by `10` for nested data yml structure
 
         Args:
             file_item (dict):
@@ -570,7 +573,7 @@ class PushBase:
         )
         file_item.get("metadata")["productVersionId"] = version_id
 
-        if file_item.get("state") == "create":
+        if file_item.get("action") == "create":
             if file_id:
                 LOG.error(
                     "Record already present for the file download_url :- %s and file_id is %s "
@@ -589,7 +592,7 @@ class PushBase:
             self.completed_operations.append(file_item)
             return
 
-        if file_item.get("state") == "update" and file_id:
+        if file_item.get("action") == "update" and file_id:
             LOG.info("Updating the file record \n")
             file_item.get("metadata")["id"] = file_id
             self.cgw_client.update_file(product_id, version_id, file_item.get("metadata"))
@@ -599,7 +602,7 @@ class PushBase:
             # keeping a copy of data that has been used to update the cgw data
             self.completed_operations.append(file_item)
 
-        elif file_item.get("state") == "delete" and file_id:
+        elif file_item.get("action") == "delete" and file_id:
             LOG.info("Deleting existing file records for file_id:- %s" % file_id)
             self.cgw_client.delete_file(product_id, version_id, file_id)
 
@@ -639,13 +642,13 @@ class PushBase:
         self.completed_operations.reverse()
         for item in self.completed_operations:
             if item.get("type") == "product_version":
-                if item.get("state") == "create":
+                if item.get("action") == "create":
                     item["metadata"]["id"] = item["version_id"]
                     item["metadata"]["invisible"] = False if not item["metadata"].get("invisible") else True
                     self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
 
             elif item.get("type") == "file":
-                if item.get("state") == "create":
+                if item.get("action") == "create":
                     item["metadata"]["id"] = item["file_id"]
                     item["metadata"]["invisible"] = False if not item["metadata"].get("invisible") else True
                     self.cgw_client.update_file(
@@ -666,24 +669,24 @@ class PushBase:
         self.completed_operations.reverse()
         for item in self.completed_operations:
             if item.get("type") == "product":
-                if item.get("state") == "create":
+                if item.get("action") == "create":
                     self.cgw_client.delete_product(item["product_id"])
                     LOG.info("Rollback done for created product:- %s", item["product_id"])
 
-                elif item.get("state") == "update":
+                elif item.get("action") == "update":
                     item["metadata"] = self.product_records.get(item["metadata"]["id"])
                     self.cgw_client.update_product(item["metadata"])
                     LOG.info("Rollback done for updated product:- %s", item["metadata"]["id"])
 
             elif item.get("type") == "product_version":
-                if item.get("state") == "create":
+                if item.get("action") == "create":
                     self.cgw_client.delete_version(item["metadata"]["productId"], item["version_id"])
                     LOG.info(
                         "Rollback done for created product_version:- %s",
                         item["version_id"],
                     )
 
-                elif item.get("state") == "update":
+                elif item.get("action") == "update":
                     item["metadata"] = self.version_records.get(item["metadata"]["id"])
                     self.cgw_client.update_version(item["metadata"]["productId"], item["metadata"])
                     LOG.info(
@@ -692,7 +695,7 @@ class PushBase:
                     )
 
             elif item.get("type") == "file":
-                if item.get("state") == "create":
+                if item.get("action") == "create":
                     self.cgw_client.delete_file(
                         item["product_id"],
                         item["metadata"]["productVersionId"],
@@ -700,7 +703,7 @@ class PushBase:
                     )
                     LOG.info("Rollback done for created file:- %s", item["file_id"])
 
-                elif item.get("state") == "update":
+                elif item.get("action") == "update":
                     item["metadata"] = self.file_records.get(item["metadata"]["id"])
                     self.cgw_client.update_file(
                         item["product_id"],

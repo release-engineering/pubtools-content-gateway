@@ -1,5 +1,5 @@
 - type: product
-  state: create
+  action: create
   metadata:
     name: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -11,7 +11,7 @@
     thankYouTimeout: 5
 
 - type: product
-  state: create
+  action: create
   metadata:
     name: "Cloud: Ansible NEW Test 2"
     productCode: "AnsibleNewTest 2"
@@ -23,7 +23,7 @@
     thankYouTimeout: 5
 
 - type: product_version
-  state: create
+  action: create
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -37,7 +37,7 @@
     releaseDate: "2022-25-05"
 
 - type: product_version
-  state: create
+  action: create
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -51,7 +51,7 @@
     releaseDate: "2022-25-05"
 
 - type: file
-  state: create
+  action: create
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -69,7 +69,7 @@
     size: null
 
 - type: file
-  state: update
+  action: update
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -87,7 +87,7 @@
     size: null
 
 - type: file
-  state: delete
+  action: delete
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -105,7 +105,7 @@
     size: null
 
 - type: product
-  state: delete
+  action: delete
   metadata:
     name: "Cloud: Ansible NEW Test 2"
     productCode: "AnsibleNewTest 2"
@@ -117,7 +117,7 @@
     thankYouTimeout: 5
 
 - type: product
-  state: update
+  action: update
   metadata:
     name: "Cloud: Ansible NEW Test 2"
     productCode: "AnsibleNewTest 2"
@@ -129,7 +129,7 @@
     thankYouTimeout: 5
 
 - type: product_version
-  state: delete
+  action: delete
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -143,7 +143,7 @@
     releaseDate: "2022-25-05"
 
 - type: product_version
-  state: update
+  action: update
   metadata:
     productName: "Cloud: Ansible NEW Test 1"
     productCode: "AnsibleNewTest"
@@ -155,3 +155,39 @@
     hidden: True
     invisible: false
     releaseDate: "2022-25-05"
+
+# nested data structure to verify the CGW workflow are intact
+- product:
+    action: create
+    name: Product_Name_1
+    productCode: Product_code_1
+    homepage: https://developers.redhat.com/products/codeready-containers/overview/
+    downloadpage: https://developers.redhat.com/products/codeready-containers/download/
+    thankYouPage: https://test.com/
+    thankYouTimeout: 5
+    eloquaCode: FAKETESTID2321
+
+    releases:
+      - versionName: 3.4.0
+        masterProductVersion: null
+        releaseDate: "2022-25-05"
+        ga: true
+        hidden: false
+        invisible: false
+        trackingDisabled: false
+        termsAndConditions: Anonymous Download
+
+        files:
+          - downloadURL: "/content/origin/files/AnsibleNewTest_1/"
+            label: Checksum File
+            shortURL: /pub/openshift-v1/clients/sha256sum.txt
+            description: Red Hat OpenShift Local
+            differentProductThankYouPage: null
+            order: 10
+
+          - downloadURL: "/content/origin/files/AnsibleNewTest_2/"
+            action: create
+            label: Release Info
+            shortURL: /pub/openshift-v2/clients/sha256sum.txt
+            description: Red Hat OpenShift Local
+            differentProductThankYouPage: null
