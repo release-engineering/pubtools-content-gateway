@@ -118,7 +118,7 @@ class PushStagedCGW(PushBase):
                                 )
                             pulp_push_item = self.pulp_push_items[self.push_item_str(push_item)]
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
-                            pitem["metadata"]["md5"] = pulp_push_item.md5sum
+                            pitem["metadata"]["md5"] = push_item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
                             pitem["metadata"]["size"] = os.stat(push_item.src).st_size
                             self.process_file(pitem)
