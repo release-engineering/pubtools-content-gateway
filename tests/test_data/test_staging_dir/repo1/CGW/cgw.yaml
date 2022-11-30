@@ -1,0 +1,40 @@
+- type: product
+  action: create
+  metadata:
+    name: "Test Product"
+    productCode: "TestProduct"                          
+    homepage: "https://test.com/"                       
+    downloadpage: "https://test.com/"                   
+    thankYouPage: "https://test.com/"                   
+    eloquaCode: "NOT_SET"                               
+    featuredArtifactType: "Server"                      
+    thankYouTimeout: 5                                  
+
+- type: product_version                                 
+  action: create                                         
+  metadata:
+    productName: "Test Product"                         
+    productCode: "TestProduct"                          
+    versionName: "TestProductVersion"                   
+    ga: true                                            
+    masterProductVersion: null                          
+    termsAndConditions: "Anonymous Download"            
+    trackingDisabled: true                              
+    hidden: true                                        
+    invisible: true                                     
+    releaseDate: "01-01-1900"
+
+- type: file                                            
+  action: create                                         
+  metadata:
+    type: "FILE"                                        
+    productName: "Test Product"                         
+    productCode: "TestProduct"                          
+    productVersionName: "TestProductVersion"            
+    description: "Test description"                     
+    label: "Release Info"                               
+    order: 0                                            
+    hidden: false                                       
+    pushItemPath: repo1/RPMS/dummy-1.0.0-0.x86_64.rpm
+    shortURL: "/test-1/example-v4/testing/"             
+    differentProductThankYouPage:

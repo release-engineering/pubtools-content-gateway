@@ -1,25 +1,27 @@
 import os
 import json
-import pluggy
 import logging
-from pushsource import CGWPushItem
 from .push_base import PushBase
-from .utils import yaml_parser, validate_data, sort_items
+from .utils import yaml_parser, validate_data, sort_items, format_cgw_items
 
+try:
+    import attr as attrs
+except ImportError:  # pragma: no cover
+    import attrs
+
+from pubtools.pluggy import hookimpl, pm
+from pushsource import CGWPushItem
+from pushsource import Source
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
-pm = pluggy.PluginManager("pubtools")
-hookspec = pluggy.HookspecMarker("pubtools")
-hookimpl = pluggy.HookimplMarker("pubtools")
-
 
 class PushStagedCGW(PushBase):
     """Handle push staged CGW workflow."""
 
-    def __init__(self, target_name, target_settings):
+    def __init__(self, source_urls, target_name, target_settings):
         """
         Initialize.
 
@@ -31,15 +33,35 @@ class PushStagedCGW(PushBase):
         """
         PushBase.__init__(
             self,
-            target_settings["server_name"],
-            target_settings["username"],
-            target_settings["password"],
+            target_settings["target_address"],
+            target_settings["target_user"],
+            target_settings["target_password"],
         )
         self.push_items = []
         self.pulp_push_items = {}
+        self.source_urls = source_urls
+
+        for source_url in source_urls:
+            with Source.get(source_url) as source:
+                LOG.info("Loading items from %s", source_url)
+                for item in source:
+                    self.push_items.append(item)
+
+    @staticmethod
+    def push_item_str(item):
+        push_item_dict = attrs.asdict(item)
+        item_json = {
+            "name": push_item_dict["name"],
+            "src": push_item_dict["src"],
+            "dest": push_item_dict["dest"],
+            "origin": push_item_dict["origin"],
+            "build": push_item_dict["build"],
+            "signing_key": push_item_dict["signing_key"],
+        }
+        return json.dumps(item_json, sort_keys=True)
 
     @hookimpl
-    def gather_source_items(self, pulp_push_item, push_item):
+    def pulp_item_push_finished(self, pulp_units, push_item):
         """
         Invoked during task execution after successful completion of all Pulp
         publishes.
@@ -56,8 +78,8 @@ class PushStagedCGW(PushBase):
                 push item.
         """
 
-        self.push_items.append(push_item)
-        self.pulp_push_items[json.dumps(repr(push_item), sort_keys=True)] = pulp_push_item
+        if pulp_units:
+            self.pulp_push_items[self.push_item_str(push_item)] = pulp_units[0]
 
     def push_staged_operations(self):
         """
@@ -69,6 +91,8 @@ class PushStagedCGW(PushBase):
         for item in self.push_items:
             if isinstance(item, CGWPushItem):
                 parsed_items = yaml_parser(os.path.join(item.origin, item.src))
+                parsed_items = format_cgw_items(parsed_items)
+
                 for pitem in parsed_items:
                     validate_data(pitem, staged=True)
 
@@ -81,17 +105,24 @@ class PushStagedCGW(PushBase):
                             self.process_version(pitem)
                         if pitem["type"] == "file":
                             for push_item in self.push_items:
-                                if push_item.src == pitem["metadata"]["pushItemPath"]:
+                                found = False
+                                for source_url in self.source_urls:
+                                    if (
+                                        push_item.src.replace(push_item.origin, "").lstrip("/")
+                                        == pitem["metadata"]["pushItemPath"]
+                                    ):
+                                        found = True
+                                if found:
                                     break
                             else:
                                 raise ValueError(
                                     "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
                                 )
-                            pulp_push_item = self.pulp_push_items[json.dumps(repr(item), sort_keys=True)]
+                            pulp_push_item = self.pulp_push_items[self.push_item_str(push_item)]
                             pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
-                            pitem["metadata"]["md5"] = item.md5sum
+                            pitem["metadata"]["md5"] = push_item.md5sum
                             pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
-                            pitem["metadata"]["size"] = pulp_push_item.size
+                            pitem["metadata"]["size"] = os.stat(push_item.src).st_size
                             self.process_file(pitem)
 
                     self.make_visible()
@@ -106,7 +137,8 @@ class PushStagedCGW(PushBase):
                     raise error
 
 
-def entry_point(target_name, target_settings):
+def entry_point(source_urls, target_name, target_settings):
     """Entrypoint for CGW push stage."""
-    push_staged = PushStagedCGW(target_name, target_settings)
-    return push_staged
+    ret = PushStagedCGW(source_urls, target_name, target_settings)
+    pm.register(ret)
+    return ret

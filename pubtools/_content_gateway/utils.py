@@ -2,6 +2,7 @@ import yaml
 from yaml.loader import SafeLoader
 from jsonschema import validate
 import logging
+import copy
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
@@ -11,7 +12,7 @@ PRODUCT_SCHEMA = {
     "type": "object",
     "properties": {
         "type": {"type": "string"},
-        "state": {"type": "string", "enum": ["create", "update", "delete"]},
+        "action": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
@@ -24,26 +25,17 @@ PRODUCT_SCHEMA = {
                 "featuredArtifactType": {"type": "string"},
                 "thankYouTimeout": {"type": "integer"},
             },
-            "required": [
-                "name",
-                "productCode",
-                "homepage",
-                "downloadpage",
-                "thankYouPage",
-                "eloquaCode",
-                "featuredArtifactType",
-                "thankYouTimeout",
-            ],
+            "required": ["name", "productCode", "eloquaCode"],
         },
     },
-    "required": ["type", "state", "metadata"],
+    "required": ["type", "action", "metadata"],
 }
 
 VERSION_SCHEMA = {
     "type": "object",
     "properties": {
         "type": {"type": "string"},
-        "state": {"type": "string", "enum": ["create", "update", "delete"]},
+        "action": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
@@ -57,26 +49,17 @@ VERSION_SCHEMA = {
                 "invisible": {"type": "boolean"},
                 "releaseDate": {"type": "string"},
             },
-            "required": [
-                "productName",
-                "productCode",
-                "versionName",
-                "ga",
-                "termsAndConditions",
-                "trackingDisabled",
-                "hidden",
-                "releaseDate",
-            ],
+            "required": ["productName", "productCode", "versionName", "termsAndConditions"],
         },
     },
-    "required": ["type", "state", "metadata"],
+    "required": ["type", "action", "metadata"],
 }
 
 FILE_SCHEMA = {
     "type": "object",
     "properties": {
         "type": {"type": "string"},
-        "state": {"type": "string", "enum": ["create", "update", "delete"]},
+        "action": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
@@ -99,27 +82,18 @@ FILE_SCHEMA = {
                 "productName",
                 "productCode",
                 "productVersionName",
-                "description",
-                "label",
-                "order",
-                "hidden",
-                "type",
-                "differentProductThankYouPage",
                 "downloadURL",
-                "shortURL",
-                "size",
-                "md5",
             ],
         },
     },
-    "required": ["type", "state", "metadata"],
+    "required": ["type", "action", "metadata"],
 }
 
 FILE_STAGED_SCHEMA = {
     "type": "object",
     "properties": {
         "type": {"type": "string"},
-        "state": {"type": "string", "enum": ["create", "update", "delete"]},
+        "action": {"type": "string", "enum": ["create", "update", "delete"]},
         "metadata": {
             "type": "object",
             "properties": {
@@ -140,18 +114,11 @@ FILE_STAGED_SCHEMA = {
                 "productName",
                 "productCode",
                 "productVersionName",
-                "description",
-                "label",
-                "order",
-                "hidden",
-                "type",
-                "differentProductThankYouPage",
-                "shortURL",
                 "pushItemPath",
             ],
         },
     },
-    "required": ["type", "state", "metadata"],
+    "required": ["type", "action", "metadata"],
 }
 
 
@@ -207,15 +174,15 @@ def yaml_parser(file_path):
 def sort_items(items):
     """
     Sort the items in the following order
-        1) all products with state present
-        2) all versions with state present
-        3) all files with state present
-        4) all files with state absent
-        5) all versions with state absent
-        6) all products with state absent
+        1) all products with action create/update
+        2) all versions with action create/update
+        3) all files with action create/update
+        4) all files with action delete
+        5) all versions with action delete
+        6) all products with action delete
 
-    This is needed to process all the present state of products,
-    versions and files first then absent state of files, versions and products
+    This is needed to process all the creation and update action of products,
+    versions and files, then delete action of files, versions and products
 
     This sorting is needed for the following reasons:
         1) A file cannot be created if it's parent version and product are not present.
@@ -239,13 +206,17 @@ def sort_items(items):
 
     for data in items:
         if data["type"] == "product":
-            product_create_update.append(data) if data["state"] in ["create", "update"] else product_delete.append(data)
+            product_create_update.append(data) if data["action"] in ["create", "update"] else product_delete.append(
+                data
+            )
 
         if data["type"] == "product_version":
-            version_create_update.append(data) if data["state"] in ["create", "update"] else version_delete.append(data)
+            version_create_update.append(data) if data["action"] in ["create", "update"] else version_delete.append(
+                data
+            )
 
         if data["type"] == "file":
-            file_create_update.append(data) if data["state"] in ["create", "update"] else file_delete.append(data)
+            file_create_update.append(data) if data["action"] in ["create", "update"] else file_delete.append(data)
 
     sorted_items.extend(product_create_update)
     sorted_items.extend(version_create_update)
@@ -255,3 +226,79 @@ def sort_items(items):
     sorted_items.extend(product_delete)
 
     return sorted_items
+
+
+def format_cgw_items(items):
+    """
+    The yaml file can accept both linear and nested data structure
+    and the function will re-format the yaml nested data structure to linear data structure
+    inorder to process.
+
+    Args:
+        items (list(dict))
+            list of JSON dictionary
+    Returns:
+        list(dict): list of JSON dictionary
+    """
+
+    formatted_list = list()
+    for product_rec in items:
+        if product_rec.get("type"):
+            """
+            Checking whether the cgw data structure is nested or linear.
+                - For the linear structure "type", "action" and "metadata" keys will be present
+                - If data is of linear type, we are appending the record directly in the formatted_list list
+                - Else we are re-formatting nested data into linear data in the outer scope of the "if" condition.
+            """
+            formatted_list.append(product_rec)
+            continue
+
+        # creating a temp record of product data
+        product_metadata = copy.deepcopy(product_rec["product"])
+        # this action value will be shared crossed to child records i.e versions and files
+        action = product_metadata["action"]
+        payload = {"type": "product", "action": action}
+        # performing further operations on temp record
+        # i.e "product_metadata" to keep original data intact
+        # and removing unnecessary fields from the temp product_metadata to form expected metadata
+        product_metadata.pop("releases", None)
+        product_metadata.pop("action", None)
+        # expected metadata is ready, adding to the main dict
+        payload["metadata"] = product_metadata
+        product_name = product_metadata["name"]
+        product_code = product_metadata["productCode"]
+        # nested product data got converted to linear structure
+        formatted_list.append(payload)  # adding record to the result list
+
+        # re-formatting nested versions records in linear order
+        # version follows the same steps as product
+        # to convert sequential structure to linear record
+        if product_rec.get("product").get("releases"):
+            for version_rec in product_rec.get("product").get("releases"):
+                # version shares the same action value as product
+                version_payload = {"type": "product_version", "action": action}
+                version_metadata = copy.deepcopy(version_rec)
+                version_payload["metadata"] = version_metadata
+                version_payload["metadata"]["productName"] = product_name
+                version_payload["metadata"]["productCode"] = product_code
+                version_name = version_metadata["versionName"]
+                version_metadata.pop("files", None)
+                formatted_list.append(version_payload)
+
+                order = 0
+                # re-formatting nested file records in linear order
+                # file follows the same steps as product and version
+                # to convert sequential structure to linear record
+                if version_rec.get("files"):
+                    for file_rec in version_rec.get("files"):
+                        # file shares the same action value as product
+                        file_payload = {"type": "file", "action": action}
+                        order = file_rec.get("order") if file_rec.get("order") is not None else order + 10
+                        file_rec["order"] = file_rec.get("order") if file_rec.get("order") else order
+                        file_payload["metadata"] = file_rec
+                        file_payload["metadata"]["productName"] = product_name
+                        file_payload["metadata"]["productCode"] = product_code
+                        file_payload["metadata"]["productVersionName"] = version_name
+                        formatted_list.append(file_payload)
+
+    return formatted_list

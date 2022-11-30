@@ -1,7 +1,7 @@
 import argparse
 import logging
 from .push_base import PushBase
-from .utils import yaml_parser, validate_data, sort_items
+from .utils import yaml_parser, validate_data, sort_items, format_cgw_items
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
@@ -37,7 +37,8 @@ class PushCGW(PushBase):
         """
 
         self.cgw_items = yaml_parser(self.cgw_filepath)
-        # Creating product mapping to get the product_id with name and productCode
+        self.cgw_items = format_cgw_items(self.cgw_items)
+
         for item in self.cgw_items:
             validate_data(item)
         self.cgw_items = sort_items(self.cgw_items)
@@ -70,7 +71,6 @@ def main():
     parser.add_argument(
         "-u", "--CGW_username", required=True, metavar="CGW-username", help="Username of Content Gateway"
     )
-    # TODO: Read password form the environment variable if it's set
     parser.add_argument("-p", "--CGW_password", metavar="CGW-password", help="Password for Content Gateway")
     parser.add_argument(
         "-f", "--CGW_filepath", required=True, metavar="CGW-filepath", help="File path to read metadata"

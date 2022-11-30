@@ -82,13 +82,12 @@ classifiers = [
 
 setup(
     name="pubtools-content-gateway",
-    version="0.1.0",
+    version="0.3.0",
     description=get_description(),
     long_description_content_type="text/markdown",
     author="Javed Alam",
     author_email="jalam@redhat.com",
-    # url="https://github.com/release-engineering/pubtools-content-gateway",
-    url="https://github.com/jalam453/pubtools-content-gateway",
+    url="https://github.com/release-engineering/pubtools-content-gateway",
     classifiers=classifiers,
     packages=find_packages(exclude=["tests"]),
     install_requires=INSTALL_REQUIRES,
@@ -106,8 +105,8 @@ setup(
     include_package_data=True,
     python_requires=">=2.6",
     project_urls={
-        "Changelog": "https://github.com/release-engineering/pubtools-content-gateway",
-        # "Documentation": "https://github.com/release-engineering/pubtools-content-gateway",
+        "Changelog": "https://release-engineering.github.io/pubtools-content-gateway/CHANGELOG.html",
+        "Documentation": "https://release-engineering.github.io/pubtools-content-gateway/",
     },
     cmdclass={"test": Tox},
 )

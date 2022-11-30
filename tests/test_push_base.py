@@ -203,7 +203,7 @@ class TestRollbackOperations:
     def test_rollback_created_product(self, push_base_object):
         data = {
             "type": "product",
-            "state": "create",
+            "action": "create",
             "product_id": 1234,
             "metadata": {
                 # some data
@@ -222,7 +222,7 @@ class TestRollbackOperations:
     def test_rollback_updated_product(self, push_base_object):
         data = {
             "type": "product",
-            "state": "update",
+            "action": "update",
             "metadata": {
                 "id": 1111,
                 "name": "nameTest",
@@ -249,7 +249,7 @@ class TestRollbackOperations:
     def test_rollback_created_version(self, push_base_object):
         data = {
             "type": "product_version",
-            "state": "create",
+            "action": "create",
             "version_id": 2222,
             "metadata": {
                 "productId": 1111,
@@ -270,7 +270,7 @@ class TestRollbackOperations:
     def test_rollback_update_versions(self, push_base_object):
         data = {
             "type": "product_version",
-            "state": "update",
+            "action": "update",
             "metadata": {
                 "id": 2222,
                 "productId": 1111,
@@ -298,7 +298,7 @@ class TestRollbackOperations:
     def test_rollback_created_file(self, push_base_object):
         data = {
             "type": "file",
-            "state": "create",
+            "action": "create",
             "product_id": 1111,
             "file_id": 333,
             "metadata": {
@@ -322,7 +322,7 @@ class TestRollbackOperations:
     def test_rollback_update_files(self, push_base_object):
         data = {
             "type": "file",
-            "state": "update",
+            "action": "update",
             "product_id": 1111,
             "metadata": {
                 "description": "Red Hat OpenShift Local Sandbox Test",
@@ -361,7 +361,7 @@ class TestMakeVisible:
     def test_make_visible_created_version(self, push_base_object):
         data = {
             "type": "product_version",
-            "state": "create",
+            "action": "create",
             "version_id": 2222,
             "metadata": {
                 "productId": 1111,
@@ -388,7 +388,7 @@ class TestMakeVisible:
     def test_make_visible_created_file(self, push_base_object):
         data = {
             "type": "file",
-            "state": "create",
+            "action": "create",
             "product_id": 1111,
             "file_id": 333,
             "metadata": {

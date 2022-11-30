@@ -1,6 +1,8 @@
+attrs
 cffi
 pycparser
 six
 urllib3
 requests
 setuptools
+pubtools
