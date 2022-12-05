@@ -581,7 +581,10 @@ class PushBase:
                 )
                 raise CGWError("Cannot create new file. Record already present.")
             LOG.info("Creating file entry for the given downloadURL: %s ", download_url)
-            file_id = self.cgw_client.create_file(product_id, version_id, file_item.get("metadata"))
+            file_metadata = file_item.get("metadata")
+            if "pushItemPath" in file_metadata:
+                file_metadata.pop("pushItemPath")
+            file_id = self.cgw_client.create_file(product_id, version_id, file_metadata)
             self.file_mapping[(product_name, product_code, version_name, download_url)] = file_id
             LOG.info("New file created with file_id:- %s \n" % file_id)
 
