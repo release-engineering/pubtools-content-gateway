@@ -38,7 +38,8 @@ class PushStagedCGW(PushBase):
             target_settings["target_password"],
         )
         self.push_items = []
-        self.pulp_push_items = {}
+        self.pulp_push_units = {}
+        self.processed_push_items = {}
         self.source_urls = source_urls
 
         for source_url in source_urls:
@@ -79,7 +80,8 @@ class PushStagedCGW(PushBase):
         """
 
         if pulp_units:
-            self.pulp_push_items[self.push_item_str(push_item)] = pulp_units[0]
+            self.pulp_push_units[self.push_item_str(push_item)] = pulp_units[0]
+            self.processed_push_items[self.push_item_str(push_item)] = push_item
 
     def push_staged_operations(self):
         """
@@ -118,10 +120,11 @@ class PushStagedCGW(PushBase):
                                 raise ValueError(
                                     "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
                                 )
-                            pulp_push_item = self.pulp_push_items[self.push_item_str(push_item)]
-                            pitem["metadata"]["downloadURL"] = pulp_push_item.cdn_path
-                            pitem["metadata"]["md5"] = push_item.md5sum
-                            pitem["metadata"]["sha256"] = pulp_push_item.sha256sum
+                            pulp_push_unit = self.pulp_push_units[self.push_item_str(push_item)]
+                            pulp_push_item = self.processed_push_items[self.push_item_str(push_item)]
+                            pitem["metadata"]["downloadURL"] = pulp_push_unit.cdn_path
+                            pitem["metadata"]["md5"] = pulp_push_item.md5sum
+                            pitem["metadata"]["sha256"] = pulp_push_unit.sha256sum
                             pitem["metadata"]["size"] = os.stat(push_item.src).st_size
                             self.process_file(pitem)
 

@@ -72,7 +72,8 @@ def test_cgw_operations_success(mocked_cgw_client, target_setting, fixture_sourc
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW(["staged:%s" % test_staging_dir()], "fake_target_name", target_setting)
     for item in push_cgw.push_items:
-        push_cgw.pulp_push_items[push_cgw.push_item_str(item)] = pulp_push_item
+        push_cgw.pulp_push_units[push_cgw.push_item_str(item)] = pulp_push_item
+        push_cgw.processed_push_items[push_cgw.push_item_str(item)] = item
     push_cgw.push_staged_operations()
 
     assert len(push_cgw.cgw_client.create_product.calls) >= 1
@@ -104,7 +105,8 @@ def test_invalid_push_items(mocked_cgw_client, target_setting, fixture_source_st
     pulp_push_item = get_pulp_push_item()
     push_cgw = PushStagedCGW(["stage:%s" % test_staging_dir()], "fake_target_name", target_setting)
     for item in push_cgw.push_items:
-        push_cgw.pulp_push_items[json.dumps(repr(item), sort_keys=True)] = pulp_push_item
+        push_cgw.processed_push_items[json.dumps(repr(item), sort_keys=True)] = item
+        push_cgw.pulp_push_units[json.dumps(repr(item), sort_keys=True)] = pulp_push_item
 
     push_cgw.rollback_cgw_operation = mock.MagicMock()
 
@@ -163,4 +165,4 @@ def test_pulp_item_push_finished_success(target_setting, fixture_source_stage):
             origin="",
         ),
     ]
-    assert push_cgw.push_item_str(cgw_item) in push_cgw.pulp_push_items
+    assert push_cgw.push_item_str(cgw_item) in push_cgw.pulp_push_units
