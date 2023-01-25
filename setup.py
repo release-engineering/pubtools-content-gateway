@@ -72,7 +72,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.9",
@@ -103,7 +102,7 @@ setup(
         ]
     },
     include_package_data=True,
-    python_requires=">=2.6",
+    python_requires=">=3.6",
     project_urls={
         "Changelog": "https://release-engineering.github.io/pubtools-content-gateway/CHANGELOG.html",
         "Documentation": "https://release-engineering.github.io/pubtools-content-gateway/",

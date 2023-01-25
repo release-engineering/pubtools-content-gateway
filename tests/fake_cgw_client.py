@@ -1,5 +1,4 @@
 from pubtools._content_gateway.cgw_client import CGWClientError
-import six
 import inspect
 
 
@@ -32,8 +31,7 @@ class TestClientMeta(type):
         return type.__new__(cls, clsname, bases, new_attrs)
 
 
-@six.add_metaclass(TestClientMeta)
-class TestClient(object):
+class TestClient(object, metaclass=TestClientMeta):
     def __init__(self, *args, **kwargs):
         self.products = {}
         self.product_versions = {}
