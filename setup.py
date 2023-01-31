@@ -82,7 +82,7 @@ classifiers = [
 
 setup(
     name="pubtools-content-gateway",
-    version="0.3.0",
+    version="0.3.1",
     description=get_description(),
     long_description_content_type="text/markdown",
     author="Javed Alam",
