@@ -68,7 +68,7 @@ def get_requirements():
 INSTALL_REQUIRES = get_requirements()
 
 classifiers = [
-    "Development Status :: 1 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Programming Language :: Python",
@@ -81,7 +81,7 @@ classifiers = [
 
 setup(
     name="pubtools-content-gateway",
-    version="0.3.0",
+    version="0.4.0",
     description=get_description(),
     long_description_content_type="text/markdown",
     author="Javed Alam",
