@@ -3,8 +3,6 @@ from .cgw_authentication import CGWBasicAuth
 import logging
 
 LOG = logging.getLogger("pubtools.cgw")
-LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class CGWError(Exception):
