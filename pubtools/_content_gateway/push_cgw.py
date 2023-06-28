@@ -5,7 +5,6 @@ from .utils import yaml_parser, validate_data, sort_items, format_cgw_items
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class PushCGW(PushBase):
@@ -66,6 +65,7 @@ class PushCGW(PushBase):
 def main():
     """Entrypoint for CGW Push."""
 
+    logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
     parser = argparse.ArgumentParser()
     parser.add_argument("-host", "--CGW_hostname", required=True, metavar="CGW-hostname", help="Hostname of the server")
     parser.add_argument(

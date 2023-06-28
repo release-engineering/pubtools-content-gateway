@@ -15,7 +15,6 @@ from pushsource import Source
 
 LOG = logging.getLogger("pubtools.cgw")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class PushStagedCGW(PushBase):
@@ -142,6 +141,7 @@ class PushStagedCGW(PushBase):
 
 def entry_point(source_urls, target_name, target_settings):
     """Entrypoint for CGW push stage."""
+    logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
     ret = PushStagedCGW(source_urls, target_name, target_settings)
     pm.register(ret)
     return ret
