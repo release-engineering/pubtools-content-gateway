@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import hashlib
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items, format_cgw_items
 
@@ -10,7 +11,7 @@ except ImportError:  # pragma: no cover
     import attrs
 
 from pubtools.pluggy import hookimpl, pm
-from pushsource import CGWPushItem
+from pushsource import CGWPushItem, DirectoryPushItem
 from pushsource import Source
 
 LOG = logging.getLogger("pubtools.cgw")
@@ -105,26 +106,39 @@ class PushStagedCGW(PushBase):
                         if pitem.get("type") == "product_version":
                             self.process_version(pitem)
                         if pitem["type"] == "file":
+                            found = None
                             for push_item in self.push_items:
-                                found = False
-                                for source_url in self.source_urls:
-                                    if (
-                                        push_item.src.replace(push_item.origin, "").lstrip("/")
-                                        == pitem["metadata"]["pushItemPath"]
-                                    ):
-                                        found = True
+                                if isinstance(push_item, DirectoryPushItem):
+                                    found = "directory_item"
+                                elif (
+                                    push_item.src.replace(push_item.origin, "").lstrip("/")
+                                    == pitem["metadata"]["pushItemPath"]
+                                ):
+                                    found = "file_item"
                                 if found:
                                     break
                             else:
                                 raise ValueError(
                                     "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
                                 )
-                            pulp_push_unit = self.pulp_push_units[self.push_item_str(push_item)]
-                            pulp_push_item = self.processed_push_items[self.push_item_str(push_item)]
-                            pitem["metadata"]["downloadURL"] = pulp_push_unit.cdn_path
-                            pitem["metadata"]["md5"] = pulp_push_item.md5sum
-                            pitem["metadata"]["sha256"] = pulp_push_unit.sha256sum
-                            pitem["metadata"]["size"] = os.stat(push_item.src).st_size
+                            if found == "file_item":
+                                pulp_push_unit = self.pulp_push_units[self.push_item_str(push_item)]
+                                pulp_push_item = self.processed_push_items[self.push_item_str(push_item)]
+                                pitem["metadata"]["downloadURL"] = pulp_push_unit.cdn_path
+                                pitem["metadata"]["md5"] = pulp_push_item.md5sum
+                                pitem["metadata"]["sha256"] = pulp_push_unit.sha256sum
+                                pitem["metadata"]["size"] = os.stat(push_item.src).st_size
+                            else:
+                                filename = pitem["metadata"]["pushItemPath"].split("/")[-1]
+                                file_path = os.path.join(push_item.src, filename)
+                                with open(file_path, "rb") as f:
+                                    bytes = f.read()
+                                    pitem["metadata"]["md5"] = hashlib.md5(bytes).hexdigest()
+                                    pitem["metadata"]["sha256"] = hashlib.sha256(bytes).hexdigest()
+                                pitem["metadata"]["size"] = os.path.getsize(file_path)
+                                pitem["metadata"]["downloadURL"] = "/content/origin/files/sha256/{0}/{1}/{2}".format(
+                                    pitem["metadata"]["sha256"][:2], pitem["metadata"]["sha256"], filename
+                                )
                             self.process_file(pitem)
 
                     self.make_visible()

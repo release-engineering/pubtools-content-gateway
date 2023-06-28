@@ -659,6 +659,10 @@ def test_staging_dir():
     return os.path.join(os.path.dirname(__file__), "test_data/test_staging_dir")
 
 
+def test_staging_dir_raw():
+    return os.path.join(os.path.dirname(__file__), "test_data/test_staging_dir_raw")
+
+
 @pytest.fixture()
 def fixture_source_stage(request):
     yield Source.register_backend("stage", lambda: request.param)
