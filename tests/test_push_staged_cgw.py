@@ -2,10 +2,10 @@ from pubtools._content_gateway.push_staged_cgw import PushStagedCGW, entry_point
 import pytest
 from tests.fake_cgw_client import TestClient
 import os
-from pushsource import CGWPushItem, FilePushItem
+from pushsource import CGWPushItem, FilePushItem, DirectoryPushItem
 import json
 
-from tests.conftest import test_staging_dir
+from tests.conftest import test_staging_dir, test_staging_dir_raw
 
 try:
     import mock
@@ -74,6 +74,35 @@ def test_cgw_operations_success(mocked_cgw_client, target_setting, fixture_sourc
     for item in push_cgw.push_items:
         push_cgw.pulp_push_units[push_cgw.push_item_str(item)] = pulp_push_item
         push_cgw.processed_push_items[push_cgw.push_item_str(item)] = item
+    push_cgw.push_staged_operations()
+
+    assert len(push_cgw.cgw_client.create_product.calls) >= 1
+    assert len(push_cgw.cgw_client.create_version.calls) >= 1
+    assert len(push_cgw.cgw_client.create_file.calls) >= 1
+    assert mocked_cgw_client.called is True
+
+
+@mock.patch("pubtools._content_gateway.push_base.CGWClient", return_value=TestClient())
+@pytest.mark.parametrize(
+    "fixture_source_stage",
+    [
+        [
+            DirectoryPushItem(
+                name="origin",
+                src="%s/origin/RAW" % test_staging_dir_raw(),
+                origin="",
+            ),
+            CGWPushItem(
+                name="cgw_push.yaml",
+                src="%s/origin/CGW/cgw.yaml" % test_staging_dir_raw(),
+                origin="",
+            ),
+        ],
+    ],
+    indirect=True,
+)
+def test_cgw_operations_success_raw(mocked_cgw_client, target_setting, fixture_source_stage):
+    push_cgw = PushStagedCGW(["staged:%s" % test_staging_dir_raw()], "fake_target_name", target_setting)
     push_cgw.push_staged_operations()
 
     assert len(push_cgw.cgw_client.create_product.calls) >= 1
