@@ -17,7 +17,7 @@ The internal service which utilizes this library is called `rcm-pub`.
 Requirements
 ============
 
-- Python 3.5+
+- Python 3.9+
 
 --------------------------------
 
