@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+0.5.1 (2023-07-10)
+------------------
+* Fix release workflow
+
 0.5.0 (2023-07-10)
 ------------------
 * Support RAW content push

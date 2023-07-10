@@ -68,12 +68,11 @@ def get_requirements():
 INSTALL_REQUIRES = get_requirements()
 
 classifiers = [
-    "Development Status :: 1 - Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -81,7 +80,7 @@ classifiers = [
 
 setup(
     name="pubtools-content-gateway",
-    version="0.5.0",
+    version="0.5.1",
     description=get_description(),
     long_description_content_type="text/markdown",
     author="Javed Alam",
@@ -102,7 +101,7 @@ setup(
         ]
     },
     include_package_data=True,
-    python_requires=">=3.6",
+    python_requires=">=3.9",
     project_urls={
         "Changelog": "https://release-engineering.github.io/pubtools-content-gateway/CHANGELOG.html",
         "Documentation": "https://release-engineering.github.io/pubtools-content-gateway/",
