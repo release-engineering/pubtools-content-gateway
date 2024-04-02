@@ -47,7 +47,12 @@ VERSION_SCHEMA = {
                 "invisible": {"type": "boolean"},
                 "releaseDate": {"type": "string"},
             },
-            "required": ["productName", "productCode", "versionName", "termsAndConditions"],
+            "required": [
+                "productName",
+                "productCode",
+                "versionName",
+                "termsAndConditions",
+            ],
         },
     },
     "required": ["type", "action", "metadata"],
@@ -58,56 +63,58 @@ FILE_SCHEMA = {
     "properties": {
         "type": {"type": "string"},
         "action": {"type": "string", "enum": ["create", "update", "delete"]},
-        "metadata": {"oneOf": [
-            {
-                "type": "object",
-                "properties": {
-                    "productName": {"type": "string"},
-                    "productCode": {"type": ["string", "null"]},
-                    "productVersionName": {"type": ["string", "number", "null"]},
-                    "description": {"type": ["string", "null"]},
-                    "label": {"type": ["string", "null"]},
-                    "order": {"type": "integer"},
-                    "hidden": {"type": "boolean"},
-                    "invisible": {"type": "boolean"},
-                    "type": {"type": "string"},
-                    "differentProductThankYouPage": {"type": ["number", "null"]},
-                    "shortURL": {"type": "string"},
-                    "pushItemPath": {"type": "string"},
+        "metadata": {
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "productName": {"type": "string"},
+                        "productCode": {"type": ["string", "null"]},
+                        "productVersionName": {"type": ["string", "number", "null"]},
+                        "description": {"type": ["string", "null"]},
+                        "label": {"type": ["string", "null"]},
+                        "order": {"type": "integer"},
+                        "hidden": {"type": "boolean"},
+                        "invisible": {"type": "boolean"},
+                        "type": {"type": "string"},
+                        "differentProductThankYouPage": {"type": ["number", "null"]},
+                        "shortURL": {"type": "string"},
+                        "pushItemPath": {"type": "string"},
+                    },
+                    "required": [
+                        "productName",
+                        "productCode",
+                        "productVersionName",
+                        "pushItemPath",
+                    ],
                 },
-                "required": [
-                    "productName",
-                    "productCode",
-                    "productVersionName",
-                    "pushItemPath",
-                ],
-            },
-            {
-                "type": "object",
-                "properties": {
-                    "productName": {"type": "string"},
-                    "productCode": {"type": ["string", "null"]},
-                    "productVersionName": {"type": ["string", "number", "null"]},
-                    "description": {"type": ["string", "null"]},
-                    "label": {"type": ["string", "null"]},
-                    "order": {"type": "integer"},
-                    "hidden": {"type": "boolean"},
-                    "invisible": {"type": "boolean"},
-                    "type": {"type": "string"},
-                    "differentProductThankYouPage": {"type": ["number", "null"]},
-                    "downloadURL": {"type": "string"},
-                    "shortURL": {"type": "string"},
-                    "size": {"type": ["number", "null"]},
-                    "md5": {"type": ["string", "number", "null"]},
+                {
+                    "type": "object",
+                    "properties": {
+                        "productName": {"type": "string"},
+                        "productCode": {"type": ["string", "null"]},
+                        "productVersionName": {"type": ["string", "number", "null"]},
+                        "description": {"type": ["string", "null"]},
+                        "label": {"type": ["string", "null"]},
+                        "order": {"type": "integer"},
+                        "hidden": {"type": "boolean"},
+                        "invisible": {"type": "boolean"},
+                        "type": {"type": "string"},
+                        "differentProductThankYouPage": {"type": ["number", "null"]},
+                        "downloadURL": {"type": "string"},
+                        "shortURL": {"type": "string"},
+                        "size": {"type": ["number", "null"]},
+                        "md5": {"type": ["string", "number", "null"]},
+                    },
+                    "required": [
+                        "productName",
+                        "productCode",
+                        "productVersionName",
+                        "downloadURL",
+                    ],
                 },
-                "required": [
-                    "productName",
-                    "productCode",
-                    "productVersionName",
-                    "downloadURL",
-                ],
-            },
-        ]},
+            ]
+        },
     },
     "required": ["type", "action", "metadata"],
 }
@@ -136,7 +143,10 @@ def validate_data(json_data):
         validate(instance=json_data, schema=VERSION_SCHEMA)
     elif item_type == "file":
         validate(instance=json_data, schema=FILE_SCHEMA)
-    LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get("metadata").get("productCode")))
+    LOG.info(
+        "Data validation successful for %s: %s"
+        % (item_type, json_data.get("metadata").get("productCode"))
+    )
     return True
 
 
@@ -194,17 +204,22 @@ def sort_items(items):
 
     for data in items:
         if data["type"] == "product":
-            product_create_update.append(data) if data["action"] in ["create", "update"] else product_delete.append(
-                data
-            )
+            product_create_update.append(data) if data["action"] in [
+                "create",
+                "update",
+            ] else product_delete.append(data)
 
         if data["type"] == "product_version":
-            version_create_update.append(data) if data["action"] in ["create", "update"] else version_delete.append(
-                data
-            )
+            version_create_update.append(data) if data["action"] in [
+                "create",
+                "update",
+            ] else version_delete.append(data)
 
         if data["type"] == "file":
-            file_create_update.append(data) if data["action"] in ["create", "update"] else file_delete.append(data)
+            file_create_update.append(data) if data["action"] in [
+                "create",
+                "update",
+            ] else file_delete.append(data)
 
     sorted_items.extend(product_create_update)
     sorted_items.extend(version_create_update)
@@ -281,8 +296,14 @@ def format_cgw_items(items):
                     for file_rec in version_rec.get("files"):
                         # file shares the same action value as product
                         file_payload = {"type": "file", "action": action}
-                        order = file_rec.get("order") if file_rec.get("order") is not None else order + 10
-                        file_rec["order"] = file_rec.get("order") if file_rec.get("order") else order
+                        order = (
+                            file_rec.get("order")
+                            if file_rec.get("order") is not None
+                            else order + 10
+                        )
+                        file_rec["order"] = (
+                            file_rec.get("order") if file_rec.get("order") else order
+                        )
                         file_payload["metadata"] = file_rec
                         file_payload["metadata"]["productName"] = product_name
                         file_payload["metadata"]["productCode"] = product_code
