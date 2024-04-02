@@ -96,7 +96,7 @@ class PushStagedCGW(PushBase):
                 parsed_items = format_cgw_items(parsed_items)
 
                 for pitem in parsed_items:
-                    validate_data(pitem, staged=True)
+                    validate_data(pitem)
 
                 parsed_items = sort_items(parsed_items)
                 try:

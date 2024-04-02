@@ -58,69 +58,62 @@ FILE_SCHEMA = {
     "properties": {
         "type": {"type": "string"},
         "action": {"type": "string", "enum": ["create", "update", "delete"]},
-        "metadata": {
-            "type": "object",
-            "properties": {
-                "productName": {"type": "string"},
-                "productCode": {"type": ["string", "null"]},
-                "productVersionName": {"type": ["string", "number", "null"]},
-                "description": {"type": ["string", "null"]},
-                "label": {"type": ["string", "null"]},
-                "order": {"type": "integer"},
-                "hidden": {"type": "boolean"},
-                "invisible": {"type": "boolean"},
-                "type": {"type": "string"},
-                "differentProductThankYouPage": {"type": ["number", "null"]},
-                "downloadURL": {"type": "string"},
-                "shortURL": {"type": "string"},
-                "size": {"type": ["number", "null"]},
-                "md5": {"type": ["string", "number", "null"]},
+        "metadata": {"oneOf": [
+            {
+                "type": "object",
+                "properties": {
+                    "productName": {"type": "string"},
+                    "productCode": {"type": ["string", "null"]},
+                    "productVersionName": {"type": ["string", "number", "null"]},
+                    "description": {"type": ["string", "null"]},
+                    "label": {"type": ["string", "null"]},
+                    "order": {"type": "integer"},
+                    "hidden": {"type": "boolean"},
+                    "invisible": {"type": "boolean"},
+                    "type": {"type": "string"},
+                    "differentProductThankYouPage": {"type": ["number", "null"]},
+                    "shortURL": {"type": "string"},
+                    "pushItemPath": {"type": "string"},
+                },
+                "required": [
+                    "productName",
+                    "productCode",
+                    "productVersionName",
+                    "pushItemPath",
+                ],
             },
-            "required": [
-                "productName",
-                "productCode",
-                "productVersionName",
-                "downloadURL",
-            ],
-        },
-    },
-    "required": ["type", "action", "metadata"],
-}
-
-FILE_STAGED_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "type": {"type": "string"},
-        "action": {"type": "string", "enum": ["create", "update", "delete"]},
-        "metadata": {
-            "type": "object",
-            "properties": {
-                "productName": {"type": "string"},
-                "productCode": {"type": ["string", "null"]},
-                "productVersionName": {"type": ["string", "number", "null"]},
-                "description": {"type": ["string", "null"]},
-                "label": {"type": ["string", "null"]},
-                "order": {"type": "integer"},
-                "hidden": {"type": "boolean"},
-                "invisible": {"type": "boolean"},
-                "type": {"type": "string"},
-                "differentProductThankYouPage": {"type": ["number", "null"]},
-                "shortURL": {"type": "string"},
-                "pushItemPath": {"type": "string"},
+            {
+                "type": "object",
+                "properties": {
+                    "productName": {"type": "string"},
+                    "productCode": {"type": ["string", "null"]},
+                    "productVersionName": {"type": ["string", "number", "null"]},
+                    "description": {"type": ["string", "null"]},
+                    "label": {"type": ["string", "null"]},
+                    "order": {"type": "integer"},
+                    "hidden": {"type": "boolean"},
+                    "invisible": {"type": "boolean"},
+                    "type": {"type": "string"},
+                    "differentProductThankYouPage": {"type": ["number", "null"]},
+                    "downloadURL": {"type": "string"},
+                    "shortURL": {"type": "string"},
+                    "size": {"type": ["number", "null"]},
+                    "md5": {"type": ["string", "number", "null"]},
+                },
+                "required": [
+                    "productName",
+                    "productCode",
+                    "productVersionName",
+                    "downloadURL",
+                ],
             },
-            "required": [
-                "productName",
-                "productCode",
-                "productVersionName",
-                "pushItemPath",
-            ],
-        },
+        ]},
     },
     "required": ["type", "action", "metadata"],
 }
 
 
-def validate_data(json_data, staged=False):
+def validate_data(json_data):
     """
     Validate that json_data contains all the necessary data
     with defined with json schemas
@@ -128,9 +121,6 @@ def validate_data(json_data, staged=False):
     Args:
         json_data (dict)
             JSON dictionary with content gateway data
-        staged (bool)
-            optional. Indicates if resulting json_data needs to
-            validate against FILE_STAGED_SCHEMA
 
     Raises:
         ValidationError
@@ -145,7 +135,7 @@ def validate_data(json_data, staged=False):
     elif item_type == "product_version":
         validate(instance=json_data, schema=VERSION_SCHEMA)
     elif item_type == "file":
-        validate(instance=json_data, schema=FILE_STAGED_SCHEMA if staged else FILE_SCHEMA)
+        validate(instance=json_data, schema=FILE_SCHEMA)
     LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get("metadata").get("productCode")))
     return True
 
