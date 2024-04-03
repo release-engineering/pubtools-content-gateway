@@ -106,7 +106,7 @@ class PushStagedCGW(PushBase):
                         if pitem.get("type") == "product_version":
                             self.process_version(pitem)
                         if pitem["type"] == "file":
-                            if "pushItemPath" in pitem:
+                            if "pushItemPath" in pitem["metadata"]:
                                 # push to CDN and set required pitem attributes for CGW entry
                                 found = None
                                 for push_item in self.push_items:
