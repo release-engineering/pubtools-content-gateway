@@ -143,10 +143,7 @@ def validate_data(json_data):
         validate(instance=json_data, schema=VERSION_SCHEMA)
     elif item_type == "file":
         validate(instance=json_data, schema=FILE_SCHEMA)
-    LOG.info(
-        "Data validation successful for %s: %s"
-        % (item_type, json_data.get("metadata").get("productCode"))
-    )
+    LOG.info("Data validation successful for %s: %s" % (item_type, json_data.get("metadata").get("productCode")))
     return True
 
 
@@ -204,22 +201,37 @@ def sort_items(items):
 
     for data in items:
         if data["type"] == "product":
-            product_create_update.append(data) if data["action"] in [
-                "create",
-                "update",
-            ] else product_delete.append(data)
+            (
+                product_create_update.append(data)
+                if data["action"]
+                in [
+                    "create",
+                    "update",
+                ]
+                else product_delete.append(data)
+            )
 
         if data["type"] == "product_version":
-            version_create_update.append(data) if data["action"] in [
-                "create",
-                "update",
-            ] else version_delete.append(data)
+            (
+                version_create_update.append(data)
+                if data["action"]
+                in [
+                    "create",
+                    "update",
+                ]
+                else version_delete.append(data)
+            )
 
         if data["type"] == "file":
-            file_create_update.append(data) if data["action"] in [
-                "create",
-                "update",
-            ] else file_delete.append(data)
+            (
+                file_create_update.append(data)
+                if data["action"]
+                in [
+                    "create",
+                    "update",
+                ]
+                else file_delete.append(data)
+            )
 
     sorted_items.extend(product_create_update)
     sorted_items.extend(version_create_update)
@@ -296,14 +308,8 @@ def format_cgw_items(items):
                     for file_rec in version_rec.get("files"):
                         # file shares the same action value as product
                         file_payload = {"type": "file", "action": action}
-                        order = (
-                            file_rec.get("order")
-                            if file_rec.get("order") is not None
-                            else order + 10
-                        )
-                        file_rec["order"] = (
-                            file_rec.get("order") if file_rec.get("order") else order
-                        )
+                        order = file_rec.get("order") if file_rec.get("order") is not None else order + 10
+                        file_rec["order"] = file_rec.get("order") if file_rec.get("order") else order
                         file_payload["metadata"] = file_rec
                         file_payload["metadata"]["productName"] = product_name
                         file_payload["metadata"]["productCode"] = product_code
