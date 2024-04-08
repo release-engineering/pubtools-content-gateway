@@ -96,7 +96,7 @@ class PushStagedCGW(PushBase):
                 parsed_items = format_cgw_items(parsed_items)
 
                 for pitem in parsed_items:
-                    validate_data(pitem, staged=True)
+                    validate_data(pitem)
 
                 parsed_items = sort_items(parsed_items)
                 try:
@@ -106,39 +106,46 @@ class PushStagedCGW(PushBase):
                         if pitem.get("type") == "product_version":
                             self.process_version(pitem)
                         if pitem["type"] == "file":
-                            found = None
-                            for push_item in self.push_items:
-                                if isinstance(push_item, DirectoryPushItem):
-                                    found = "directory_item"
-                                elif (
-                                    push_item.src.replace(push_item.origin, "").lstrip("/")
-                                    == pitem["metadata"]["pushItemPath"]
-                                ):
-                                    found = "file_item"
-                                if found:
-                                    break
-                            else:
-                                raise ValueError(
-                                    "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
-                                )
-                            if found == "file_item":
-                                pulp_push_unit = self.pulp_push_units[self.push_item_str(push_item)]
-                                pulp_push_item = self.processed_push_items[self.push_item_str(push_item)]
-                                pitem["metadata"]["downloadURL"] = pulp_push_unit.cdn_path
-                                pitem["metadata"]["md5"] = pulp_push_item.md5sum
-                                pitem["metadata"]["sha256"] = pulp_push_unit.sha256sum
-                                pitem["metadata"]["size"] = os.stat(push_item.src).st_size
-                            else:
-                                filename = pitem["metadata"]["pushItemPath"].split("/")[-1]
-                                file_path = os.path.join(push_item.src, filename)
-                                with open(file_path, "rb") as f:
-                                    bytes = f.read()
-                                    pitem["metadata"]["md5"] = hashlib.md5(bytes).hexdigest()
-                                    pitem["metadata"]["sha256"] = hashlib.sha256(bytes).hexdigest()
-                                pitem["metadata"]["size"] = os.path.getsize(file_path)
-                                pitem["metadata"]["downloadURL"] = "/content/origin/files/sha256/{0}/{1}/{2}".format(
-                                    pitem["metadata"]["sha256"][:2], pitem["metadata"]["sha256"], filename
-                                )
+                            if "pushItemPath" in pitem["metadata"]:
+                                # push to CDN and set required pitem attributes for CGW entry
+                                found = None
+                                for push_item in self.push_items:
+                                    if isinstance(push_item, DirectoryPushItem):
+                                        found = "directory_item"
+                                    elif (
+                                        push_item.src.replace(push_item.origin, "").lstrip("/")
+                                        == pitem["metadata"]["pushItemPath"]
+                                    ):
+                                        found = "file_item"
+                                    if found:
+                                        break
+                                else:
+                                    raise ValueError(
+                                        "Unable to find push item with path:%s" % pitem["metadata"]["pushItemPath"]
+                                    )
+                                if found == "file_item":
+                                    pulp_push_unit = self.pulp_push_units[self.push_item_str(push_item)]
+                                    pulp_push_item = self.processed_push_items[self.push_item_str(push_item)]
+                                    pitem["metadata"]["downloadURL"] = pulp_push_unit.cdn_path
+                                    pitem["metadata"]["md5"] = pulp_push_item.md5sum
+                                    pitem["metadata"]["sha256"] = pulp_push_unit.sha256sum
+                                    pitem["metadata"]["size"] = os.stat(push_item.src).st_size
+                                else:
+                                    filename = pitem["metadata"]["pushItemPath"].split("/")[-1]
+                                    file_path = os.path.join(push_item.src, filename)
+                                    with open(file_path, "rb") as f:
+                                        bytes = f.read()
+                                        pitem["metadata"]["md5"] = hashlib.md5(bytes).hexdigest()
+                                        pitem["metadata"]["sha256"] = hashlib.sha256(bytes).hexdigest()
+                                    pitem["metadata"]["size"] = os.path.getsize(file_path)
+                                    pitem["metadata"]["downloadURL"] = (
+                                        "/content/origin/files/sha256/{0}/{1}/{2}".format(
+                                            pitem["metadata"]["sha256"][:2],
+                                            pitem["metadata"]["sha256"],
+                                            filename,
+                                        )
+                                    )
+                            # carry out CGW operations
                             self.process_file(pitem)
 
                     self.make_visible()
