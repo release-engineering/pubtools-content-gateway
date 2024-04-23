@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+0.5.2 (2024-04-23)
+------------------
+* adjust schema for Pub pushes without pushItemPath
+
 0.5.1 (2023-07-10)
 ------------------
 * Fix release workflow
