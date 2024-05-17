@@ -94,7 +94,8 @@ setup(
     data_files=[],
     entry_points={
         "console_scripts": [
-            "push-cgw-metadata = pubtools._content_gateway.push_cgw:main"
+            "push-cgw-metadata = pubtools._content_gateway.push_cgw:main",
+            "test-cgw-client = pubtools._content_gateway.cgw_client:test_auth"
         ],
         "target": [
             "push-staged-cgw = pubtools._content_gateway.push_staged_cgw:entry_point",
