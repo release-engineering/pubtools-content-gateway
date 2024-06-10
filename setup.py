@@ -3,7 +3,7 @@
 
 import os
 import sys
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 from setuptools.command.test import test as TestCommand
 
 
@@ -87,7 +87,8 @@ setup(
     author_email="jalam@redhat.com",
     url="https://github.com/release-engineering/pubtools-content-gateway",
     classifiers=classifiers,
-    packages=find_packages(exclude=["tests"]),
+    packages=find_namespace_packages(where="src"),
+    package_dir={"": "src"},
     install_requires=INSTALL_REQUIRES,
     tests_require=["tox", "mock", "requests_mock", "pushcollector", "requests", "tox", "pytest", "covdefaults",
                    "pytest-cov"],
