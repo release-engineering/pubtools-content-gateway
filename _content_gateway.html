@@ -68,7 +68,14 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#push-cgw-module"><code class="docutils literal notranslate"><span class="pre">push_cgw</span> <span class="pre">module</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pubtools._content_gateway.push_cgw"><code class="docutils literal notranslate"><span class="pre">push_cgw</span> <span class="pre">module</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pubtools._content_gateway.push_cgw.PushCGW"><code class="docutils literal notranslate"><span class="pre">PushCGW</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._content_gateway.push_cgw.PushCGW.cgw_operations"><code class="docutils literal notranslate"><span class="pre">PushCGW.cgw_operations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pubtools._content_gateway.push_cgw.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#push-staged-cgw-module"><code class="docutils literal notranslate"><span class="pre">push_staged_cgw</span> <span class="pre">module</span></code></a></li>
 </ul>
 </li>
@@ -373,8 +380,28 @@ on content gateway (CGW).</p>
 </dd></dl>
 
 </div>
-<div class="section" id="push-cgw-module">
-<h2><code class="docutils literal notranslate"><span class="pre">push_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#push-cgw-module" title="Permalink to this heading"></a></h2>
+<div class="section" id="module-pubtools._content_gateway.push_cgw">
+<span id="push-cgw-module"></span><h2><code class="docutils literal notranslate"><span class="pre">push_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#module-pubtools._content_gateway.push_cgw" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_cgw.PushCGW">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">PushCGW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.PushCGW" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pubtools._content_gateway.push_base.PushBase" title="pubtools._content_gateway.push_base.PushBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PushBase</span></code></a></p>
+<p>Handle push CGW workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_cgw.PushCGW.cgw_operations">
+<span class="sig-name descname"><span class="pre">cgw_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW.cgw_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.PushCGW.cgw_operations" title="Permalink to this definition"></a></dt>
+<dd><p>Initiate the CGW operations such as create, update or delete
+on products, versions and files.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_cgw.main">
+<span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.main" title="Permalink to this definition"></a></dt>
+<dd><p>Entrypoint for CGW Push.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="push-staged-cgw-module">
 <h2><code class="docutils literal notranslate"><span class="pre">push_staged_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#push-staged-cgw-module" title="Permalink to this heading"></a></h2>

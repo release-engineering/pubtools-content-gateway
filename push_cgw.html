@@ -86,6 +86,42 @@
   <div class="section" id="push-cgw-module">
 <h1>Push CGW Module<a class="headerlink" href="#push-cgw-module" title="Permalink to this heading"></a></h1>
 <p>Content Gateway (CGW) is a library used for performing various content workflows related work. The <code class="docutils literal notranslate"><span class="pre">push-cgw-metadata</span></code> entrypoint will be utilized by users for pushing and managing the contents of products, versions and files on the content gateway server.</p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">PushCGW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="_content_gateway.html#pubtools._content_gateway.push_base.PushBase" title="pubtools._content_gateway.push_base.PushBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PushBase</span></code></a></p>
+<p>Handle push CGW workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cgw_hostname</strong> (<em>str</em>) – CGW registry URL</p></li>
+<li><p><strong>cgw_username</strong> (<em>str</em>) – username for CGW HTTP API</p></li>
+<li><p><strong>cgw_password</strong> (<em>str</em>) – password for CGW HTTP API</p></li>
+<li><p><strong>cgw_filepath</strong> (<em>str</em>) – filepath of the yaml file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">cgw_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW.cgw_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initiate the CGW operations such as create, update or delete
+on products, versions and files.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Entrypoint for CGW Push.</p>
+</dd></dl>
+
 <p>The main() method will be invoked when entrypoint is called and it will pass all required received credentials to the <code class="docutils literal notranslate"><span class="pre">PushCGW</span></code> class for the CGW operations.</p>
 <div class="section" id="cgw-environment">
 <h2>CGW environment<a class="headerlink" href="#cgw-environment" title="Permalink to this heading"></a></h2>
