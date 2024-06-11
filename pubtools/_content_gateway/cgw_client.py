@@ -1,10 +1,6 @@
 import json
-import logging
-import argparse
 from .cgw_session import CGWSession
-from .cgw_authentication import CGWBasicAuth
 
-LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 
 class CGWClientError(Exception):
     """Custom exception class to handle Content Gateway Client errors"""
@@ -566,19 +562,3 @@ class CGWClient:
         endpoint = "/products/%s/versions/%s/internals/%s" % (pid, vid, iid)
         resp_data = self.call_cgw_api("DELETE", endpoint)
         return resp_data
-
-
-def test_auth():
-    """Entrypoint for CGW Client."""
-
-    logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-host", "--CGW_hostname", required=True, metavar="CGW-hostname", help="Hostname of the server")
-    parser.add_argument(
-        "-u", "--CGW_username", required=True, metavar="CGW-username", help="Username of Content Gateway"
-    )
-    parser.add_argument("-p", "--CGW_password", metavar="CGW-password", help="Password for Content Gateway")
-    args = parser.parse_args()
-    auth = CGWBasicAuth(args.CGW_username, args.CGW_password)
-    client = CGWClient(args.CGW_hostname, auth)
-    client.get_products()
