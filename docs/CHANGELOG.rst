@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+0.5.3 (2024-07-17)
+------------------
+* fixed wrong init file
+* Added pyyaml and jsonschema to req.txt
+
 0.5.2 (2024-04-23)
 ------------------
 * adjust schema for Pub pushes without pushItemPath
