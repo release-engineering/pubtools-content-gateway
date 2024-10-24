@@ -33,7 +33,7 @@ def test_cgw_operations(mocked_cgw_client):
 @mock.patch(
     "pubtools._content_gateway.push_cgw.argparse.ArgumentParser.parse_args",
     return_value=argparse.Namespace(
-        CGW_hostname="http://fake_host_nmae/test",
+        CGW_hostname="http://fake_host_name/test",
         CGW_username="test_username",
         CGW_password="**********",
         CGW_filepath=yaml_file_path,
@@ -55,3 +55,60 @@ def test_cgw_operations_exception():
         push_cgw.cgw_operations()
 
     assert push_cgw.rollback_cgw_operation.called is True
+
+
+@pytest.fixture
+def mock_cgw_password():
+    os.environ["CGW_PASSWORD"] = "test_password_from_env"
+    yield
+    del os.environ["CGW_PASSWORD"]
+
+
+@mock.patch("pubtools._content_gateway.push_cgw.PushCGW")
+@mock.patch(
+    "pubtools._content_gateway.push_cgw.argparse.ArgumentParser.parse_args",
+    return_value=argparse.Namespace(
+        CGW_hostname="http://fake_host_name/test",
+        CGW_username="test_username",
+        CGW_password=None,
+        CGW_filepath=yaml_file_path,
+    ),
+)
+def test_main_with_env_var_password(mock_args, mock_push_cgw, mock_cgw_password):
+
+    main()
+
+    mock_push_cgw.assert_called_once_with(
+        "http://fake_host_name/test", "test_username", "test_password_from_env", yaml_file_path
+    )
+
+    assert mock_args.called is True
+
+
+@mock.patch("pubtools._content_gateway.push_cgw.PushCGW")
+@mock.patch(
+    "pubtools._content_gateway.push_cgw.argparse.ArgumentParser.parse_args",
+    return_value=argparse.Namespace(
+        CGW_hostname="http://fake_host_name/test",
+        CGW_username="test_username",
+        CGW_password=None,
+        CGW_filepath=yaml_file_path,
+    ),
+)
+def test_main_fail_without_password(mock_args, mock_push_cgw, capfd):
+    if "CGW_PASSWORD" in os.environ:
+        del os.environ["CGW_PASSWORD"]
+
+    with pytest.raises(SystemExit) as excinfo:
+        try:
+            main()
+        except SystemExit:
+            captured = capfd.readouterr()
+            assert "CGW password must be provided" in captured.err
+            raise
+
+    assert excinfo.value.code == 2
+
+    mock_push_cgw.assert_not_called()
+
+    assert mock_args.called is True
