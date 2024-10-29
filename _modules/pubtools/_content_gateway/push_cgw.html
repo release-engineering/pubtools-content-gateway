@@ -79,6 +79,7 @@
   <h1>Source code for pubtools._content_gateway.push_cgw</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">.push_base</span> <span class="kn">import</span> <span class="n">PushBase</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">yaml_parser</span><span class="p">,</span> <span class="n">validate_data</span><span class="p">,</span> <span class="n">sort_items</span><span class="p">,</span> <span class="n">format_cgw_items</span>
 
@@ -150,12 +151,26 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--CGW_username&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CGW-username&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Username of Content Gateway&quot;</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--CGW_password&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CGW-password&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Password for Content Gateway&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--CGW_password&quot;</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CGW-password&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Password for Content Gateway (optional if set as </span><span class="se">\</span>
+<span class="s2">        environment variable)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--CGW_filepath&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CGW-filepath&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File path to read metadata&quot;</span>
     <span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">push_cgw</span> <span class="o">=</span> <span class="n">PushCGW</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">CGW_hostname</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">CGW_username</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">CGW_password</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">CGW_filepath</span><span class="p">)</span>
+
+    <span class="c1"># Check if password is provided as an argument or through an environment variable</span>
+    <span class="n">cgw_password</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">CGW_password</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;CGW_PASSWORD&quot;</span><span class="p">)</span>
+
+    <span class="c1"># If neither is provided, raise an error</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cgw_password</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;CGW password must be provided as an argument or set as the &#39;CGW_PASSWORD&#39; environment variable.&quot;</span><span class="p">)</span>
+
+    <span class="n">push_cgw</span> <span class="o">=</span> <span class="n">PushCGW</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">CGW_hostname</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">CGW_username</span><span class="p">,</span> <span class="n">cgw_password</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">CGW_filepath</span><span class="p">)</span>
     <span class="n">push_cgw</span><span class="o">.</span><span class="n">cgw_operations</span><span class="p">()</span></div>
 </pre></div>
 
