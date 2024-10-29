@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 from .push_base import PushBase
 from .utils import yaml_parser, validate_data, sort_items, format_cgw_items
 
@@ -71,10 +72,24 @@ def main():
     parser.add_argument(
         "-u", "--CGW_username", required=True, metavar="CGW-username", help="Username of Content Gateway"
     )
-    parser.add_argument("-p", "--CGW_password", metavar="CGW-password", help="Password for Content Gateway")
+    parser.add_argument(
+        "-p",
+        "--CGW_password",
+        metavar="CGW-password",
+        help="Password for Content Gateway (optional if set as \
+        environment variable)",
+    )
     parser.add_argument(
         "-f", "--CGW_filepath", required=True, metavar="CGW-filepath", help="File path to read metadata"
     )
     args = parser.parse_args()
-    push_cgw = PushCGW(args.CGW_hostname, args.CGW_username, args.CGW_password, args.CGW_filepath)
+
+    # Check if password is provided as an argument or through an environment variable
+    cgw_password = args.CGW_password or os.getenv("CGW_PASSWORD")
+
+    # If neither is provided, raise an error
+    if not cgw_password:
+        parser.error("CGW password must be provided as an argument or set as the 'CGW_PASSWORD' environment variable.")
+
+    push_cgw = PushCGW(args.CGW_hostname, args.CGW_username, cgw_password, args.CGW_filepath)
     push_cgw.cgw_operations()
