@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+0.5.4 (2024-09-29)
+------------------
+* Allow password to be set via environment
+
 0.5.3 (2024-07-17)
 ------------------
 * fixed wrong init file
