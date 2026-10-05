@@ -9,6 +9,19 @@ def test_validate_data(fixture_sorted_files_json):
         assert validate_data(data) is True
 
 
+def test_validate_product_without_eloqua_code():
+    """Test that products without eloquaCode are valid."""
+    product_data = {
+        "type": "product",
+        "action": "create",
+        "metadata": {
+            "name": "Test Product Without Eloqua",
+            "productCode": "TestProductCode",
+        },
+    }
+    assert validate_data(product_data) is True
+
+
 def test_yaml_parser():
     yaml_file = os.path.join(test_data_dir, "test_cgw_push.yaml")
     yaml_parser(yaml_file)

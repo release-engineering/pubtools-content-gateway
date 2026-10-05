@@ -98,7 +98,7 @@ A typical linear YAML format for Product, version and file looks like this:
         homepage: "https://test.com/"                           # OPTIONAL
         downloadpage: "https://test.com/"                       # OPTIONAL
         thankYouPage: "https://test.com/"                       # OPTIONAL
-        eloquaCode: "NOT_SET"                                   # MANDATORY
+        eloquaCode: "NOT_SET"                                   # OPTIONAL
         featuredArtifactType: "Server"                          # OPTIONAL
         thankYouTimeout: 5                                      # OPTIONAL
 

@@ -23,7 +23,7 @@ PRODUCT_SCHEMA = {
                 "featuredArtifactType": {"type": "string"},
                 "thankYouTimeout": {"type": "integer"},
             },
-            "required": ["name", "productCode", "eloquaCode"],
+            "required": ["name", "productCode"],
         },
     },
     "required": ["type", "action", "metadata"],

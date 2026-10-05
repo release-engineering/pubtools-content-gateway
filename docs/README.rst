@@ -41,7 +41,8 @@ Steps to use
 1) Setup
 2) Create a YAML file with required entries for Products, Versions or Files (See :doc:`entrypoints_reference` for more details)
 3) Use *push-cgw-metadata* entrypoint to do the push operation
-3a) CGW password must be provided as an argument or set as the 'CGW_PASSWORD' environment variable.
+
+   a) CGW password must be provided as an argument or set as the 'CGW_PASSWORD' environment variable.
 
 
 Example
