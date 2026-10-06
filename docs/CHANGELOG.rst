@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.5.5 (2026-10-06)
+------------------
+* Make eloquaCode optional in product validation
+* Fix docs build configuration for modern Sphinx versions
+* Fix Codecov token configuration for protected branches
+
 0.5.4 (2024-09-29)
 ------------------
 * Allow password to be set via environment
