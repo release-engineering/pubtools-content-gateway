@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Push Staged CGW Module &mdash; pubtools-content-gateway 0.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -81,36 +79,76 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="push-staged-cgw-module">
-<h1>Push Staged CGW Module<a class="headerlink" href="#push-staged-cgw-module" title="Permalink to this heading"></a></h1>
+  <section id="push-staged-cgw-module">
+<h1>Push Staged CGW Module<a class="headerlink" href="#push-staged-cgw-module" title="Link to this heading"></a></h1>
 <p>The push-staged-cgw is a target entrypoint for Push Staged which will be invoked through Red Hat’s internal service called <cite>rcm-pub</cite>.</p>
 <p>All the user credentials will be received through the argument <code class="docutils literal notranslate"><span class="pre">target_settings</span></code> consisting of <cite>server_name</cite>, <cite>username</cite> and <cite>password</cite>.
 It shares the same YAML file structure except <cite>downloadURL</cite> user need to pass <cite>pushItemPath</cite>.</p>
-<div class="section" id="yaml-file-formats">
-<h2>YAML file formats<a class="headerlink" href="#yaml-file-formats" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_staged_cgw.</span></span><span class="sig-name descname"><span class="pre">PushStagedCGW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_urls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="_content_gateway.html#pubtools._content_gateway.push_base.PushBase" title="pubtools._content_gateway.push_base.PushBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PushBase</span></code></a></p>
+<p>Handle push staged CGW workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">pulp_item_push_finished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulp_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">push_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW.pulp_item_push_finished"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Invoked during task execution after successful completion of all Pulp
+publishes.</p>
+<p>This hook is invoked for every push item, to indicate that all Pulp
+content associated with the task is considered fully up-to-date. The
+intended usage is to flush Pulp-derived caches or to notify systems that
+Pulp content may have recently changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pulp_push_item</strong> (<em>Pulp object</em>) – push item from the pulp.</p></li>
+<li><p><strong>push_item</strong> (<em>list</em>) – push item.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">push_staged_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW.push_staged_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initiate the CGW operations for push staged.
+Operations such as create, update or delete
+on products, versions and files would be performed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_staged_cgw.</span></span><span class="sig-name descname"><span class="pre">entry_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_urls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#entry_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Entrypoint for CGW push stage.</p>
+</dd></dl>
+
+<section id="yaml-file-formats">
+<h2>YAML file formats<a class="headerlink" href="#yaml-file-formats" title="Link to this heading"></a></h2>
 <p>The user can pass a single or multiple records of product, version and files in a single YAML file.
 A typical YAML format for Product, version and file looks like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># YAML file formats for File</span>
 <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">file</span>                                                <span class="c1"># MANDATORY</span>
   <span class="n">state</span><span class="p">:</span> <span class="n">create</span>                                             <span class="c1"># MANDATORY</span>
   <span class="n">metadata</span><span class="p">:</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;FILE&quot;</span>                                            <span class="c1"># MANDATORY</span>
-    <span class="n">productName</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                             <span class="c1"># MANDATORY</span>
-    <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
-    <span class="n">productVersionName</span><span class="p">:</span> <span class="s2">&quot;TestProductVersion&quot;</span>                <span class="c1"># MANDATORY</span>
-    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Test description&quot;</span>                         <span class="c1"># OPTIONAL</span>
-    <span class="n">label</span><span class="p">:</span> <span class="s2">&quot;Release Info&quot;</span>                                   <span class="c1"># OPTIONAL</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="s2">"FILE"</span>                                            <span class="c1"># MANDATORY</span>
+    <span class="n">productName</span><span class="p">:</span> <span class="s2">"Test Product"</span>                             <span class="c1"># MANDATORY</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="s2">"TestProduct"</span>                              <span class="c1"># MANDATORY</span>
+    <span class="n">productVersionName</span><span class="p">:</span> <span class="s2">"TestProductVersion"</span>                <span class="c1"># MANDATORY</span>
+    <span class="n">description</span><span class="p">:</span> <span class="s2">"Test description"</span>                         <span class="c1"># OPTIONAL</span>
+    <span class="n">label</span><span class="p">:</span> <span class="s2">"Release Info"</span>                                   <span class="c1"># OPTIONAL</span>
     <span class="n">order</span><span class="p">:</span> <span class="mi">0</span>                                                <span class="c1"># OPTIONAL</span>
     <span class="n">hidden</span><span class="p">:</span> <span class="n">false</span>                                           <span class="c1"># OPTIONAL</span>
-    <span class="n">pushItemPath</span><span class="p">:</span> <span class="s2">&quot;/content/origin/files/TestProduct/&quot;</span>      <span class="c1"># MANDATORY</span>
-    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">&quot;/test-1/example-v4/testing/&quot;</span>                 <span class="c1"># OPTIONAL</span>
-    <span class="n">differentProductThankYouPage</span><span class="p">:</span> <span class="s2">&quot;Any Thank You Page&quot;</span>      <span class="c1"># OPTIONAL</span>
+    <span class="n">pushItemPath</span><span class="p">:</span> <span class="s2">"/content/origin/files/TestProduct/"</span>      <span class="c1"># MANDATORY</span>
+    <span class="n">shortURL</span><span class="p">:</span> <span class="s2">"/test-1/example-v4/testing/"</span>                 <span class="c1"># OPTIONAL</span>
+    <span class="n">differentProductThankYouPage</span><span class="p">:</span> <span class="s2">"Any Thank You Page"</span>      <span class="c1"># OPTIONAL</span>
 
 <span class="o">...</span> <span class="c1"># other records</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

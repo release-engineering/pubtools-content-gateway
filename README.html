@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Overview &mdash; pubtools-content-gateway 0.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -91,62 +89,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h1>
+  <section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
 <p>Set of scripts used for operating with the Content Gateway (CGW) service</p>
-<div class="section" id="details">
-<h2>Details<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
+<section id="details">
+<h2>Details<a class="headerlink" href="#details" title="Link to this heading"></a></h2>
 <p>content-gateway is a library used for performing various content workflows related work. The library is utilized by Red Hat’s internal tooling or release engineers for pushing and managing the contents of products, versions and files on the content gateway server.</p>
 <p>The internal service which utilizes this library is called <cite>rcm-pub</cite>.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Python 3.9+</p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h2>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt
 $ pip install .
 or
 $ python setup.py install
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="steps-to-use">
-<h2>Steps to use<a class="headerlink" href="#steps-to-use" title="Permalink to this heading"></a></h2>
+<section id="steps-to-use">
+<h2>Steps to use<a class="headerlink" href="#steps-to-use" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>Setup</p></li>
 <li><p>Create a YAML file with required entries for Products, Versions or Files (See <a class="reference internal" href="entrypoints_reference.html"><span class="doc">Entrypoints reference</span></a> for more details)</p></li>
+<li><p>Use <em>push-cgw-metadata</em> entrypoint to do the push operation</p>
+<ol class="loweralpha simple">
+<li><p>CGW password must be provided as an argument or set as the ‘CGW_PASSWORD’ environment variable.</p></li>
 </ol>
-<p>3) Use <em>push-cgw-metadata</em> entrypoint to do the push operation
-3a) CGW password must be provided as an argument or set as the ‘CGW_PASSWORD’ environment variable.</p>
-<div class="section" id="example">
-<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h3>
-<div class="section" id="example-yaml-file">
-<h4>Example YAML file<a class="headerlink" href="#example-yaml-file" title="Permalink to this heading"></a></h4>
+</li>
+</ol>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<section id="example-yaml-file">
+<h4>Example YAML file<a class="headerlink" href="#example-yaml-file" title="Link to this heading"></a></h4>
 <p>In this example we are creating one product.
 We have created this <cite>cgw_example.yaml</cite> file with the following content</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">product</span>                                             <span class="c1"># MANDATORY</span>
   <span class="n">state</span><span class="p">:</span> <span class="n">create</span>                                             <span class="c1"># MANDATORY</span>
   <span class="n">metadata</span><span class="p">:</span>
-    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;Test Product&quot;</span>                                    <span class="c1"># MANDATORY</span>
-    <span class="n">productCode</span><span class="p">:</span> <span class="s2">&quot;TestProduct&quot;</span>                              <span class="c1"># MANDATORY</span>
-    <span class="n">homepage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                           <span class="c1"># OPTIONAL</span>
-    <span class="n">downloadpage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                       <span class="c1"># OPTIONAL</span>
-    <span class="n">thankYouPage</span><span class="p">:</span> <span class="s2">&quot;https://test.com/&quot;</span>                       <span class="c1"># OPTIONAL</span>
-    <span class="n">eloquaCode</span><span class="p">:</span> <span class="s2">&quot;NOT_SET&quot;</span>                                   <span class="c1"># OPTIONAL</span>
-    <span class="n">featuredArtifactType</span><span class="p">:</span> <span class="s2">&quot;Server&quot;</span>                          <span class="c1"># OPTIONAL</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">"Test Product"</span>                                    <span class="c1"># MANDATORY</span>
+    <span class="n">productCode</span><span class="p">:</span> <span class="s2">"TestProduct"</span>                              <span class="c1"># MANDATORY</span>
+    <span class="n">homepage</span><span class="p">:</span> <span class="s2">"https://test.com/"</span>                           <span class="c1"># OPTIONAL</span>
+    <span class="n">downloadpage</span><span class="p">:</span> <span class="s2">"https://test.com/"</span>                       <span class="c1"># OPTIONAL</span>
+    <span class="n">thankYouPage</span><span class="p">:</span> <span class="s2">"https://test.com/"</span>                       <span class="c1"># OPTIONAL</span>
+    <span class="n">eloquaCode</span><span class="p">:</span> <span class="s2">"NOT_SET"</span>                                   <span class="c1"># OPTIONAL</span>
+    <span class="n">featuredArtifactType</span><span class="p">:</span> <span class="s2">"Server"</span>                          <span class="c1"># OPTIONAL</span>
     <span class="n">thankYouTimeout</span><span class="p">:</span> <span class="mi">5</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="use-of-entrypoint">
-<h4>Use of entrypoint<a class="headerlink" href="#use-of-entrypoint" title="Permalink to this heading"></a></h4>
+</section>
+<section id="use-of-entrypoint">
+<h4>Use of entrypoint<a class="headerlink" href="#use-of-entrypoint" title="Link to this heading"></a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">push-cgw-metadata</span></code> (<a class="reference internal" href="entrypoints_reference.html"><span class="doc">Entrypoints reference</span></a>) entrypoint needs to be invoked to do the pushes.
 The below is an example of its invocation</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>push-cgw-metadata -host https://content-gateway/example.com \
@@ -158,8 +159,8 @@ The below is an example of its invocation</p>
 2022-09-21 12:29:01,508 [DEBUG   ] Fetching for product_id of product_name:- Test Product and product_code:- TestProduct
 
 2022-09-21 12:29:01,515 [DEBUG   ] Starting new HTTPS connection (1): content-gateway/example.com:443
-2022-09-21 12:29:03,183 [DEBUG   ] https://content-gateway/example.com:443 &quot;GET /content-gateway/rest/admin/products HTTP/1.1&quot; 200 None
-2022-09-21 12:29:03,808 [DEBUG   ] https://content-gateway/example.com:443 &quot;PUT /content-gateway/rest/admin/products/ HTTP/1.1&quot; 201 7
+2022-09-21 12:29:03,183 [DEBUG   ] https://content-gateway/example.com:443 "GET /content-gateway/rest/admin/products HTTP/1.1" 200 None
+2022-09-21 12:29:03,808 [DEBUG   ] https://content-gateway/example.com:443 "PUT /content-gateway/rest/admin/products/ HTTP/1.1" 201 7
 2022-09-21 12:29:03,808 [INFO    ] Created a new product with product_id:- 4009801
 
 2022-09-21 12:29:03,808 [DEBUG   ] Updating the invisible attribute of the created records
@@ -170,10 +171,10 @@ All CGW operations are successfully completed...!
 </pre></div>
 </div>
 <p>We can see in the logs that the product is created with some ID.</p>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>

@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Gateway package &mdash; pubtools-content-gateway 0.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -76,7 +74,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#pubtools._content_gateway.push_cgw.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#push-staged-cgw-module"><code class="docutils literal notranslate"><span class="pre">push_staged_cgw</span> <span class="pre">module</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pubtools._content_gateway.push_staged_cgw"><code class="docutils literal notranslate"><span class="pre">push_staged_cgw</span> <span class="pre">module</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW"><code class="docutils literal notranslate"><span class="pre">PushStagedCGW</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW.pulp_item_push_finished"><code class="docutils literal notranslate"><span class="pre">PushStagedCGW.pulp_item_push_finished()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW.push_item_str"><code class="docutils literal notranslate"><span class="pre">PushStagedCGW.push_item_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW.push_staged_operations"><code class="docutils literal notranslate"><span class="pre">PushStagedCGW.push_staged_operations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pubtools._content_gateway.push_staged_cgw.entry_point"><code class="docutils literal notranslate"><span class="pre">entry_point()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">ChangeLog</a></li>
@@ -106,38 +113,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="content-gateway-package">
-<h1>Content Gateway package<a class="headerlink" href="#content-gateway-package" title="Permalink to this heading"></a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
-</div>
-<div class="section" id="module-pubtools._content_gateway.push_base">
-<span id="push-base-module"></span><h2><code class="docutils literal notranslate"><span class="pre">push_base</span> <span class="pre">module</span></code><a class="headerlink" href="#module-pubtools._content_gateway.push_base" title="Permalink to this heading"></a></h2>
+  <section id="content-gateway-package">
+<h1>Content Gateway package<a class="headerlink" href="#content-gateway-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-pubtools._content_gateway.push_base">
+<span id="push-base-module"></span><h2><code class="docutils literal notranslate"><span class="pre">push_base</span> <span class="pre">module</span></code><a class="headerlink" href="#module-pubtools._content_gateway.push_base" title="Link to this heading"></a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.CGWError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">CGWError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#CGWError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.CGWError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">CGWError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#CGWError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.CGWError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Custom exception class to handle Content Gateway errors.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.FetcherDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">FetcherDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_checker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#FetcherDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.FetcherDict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">FetcherDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetcher</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_checker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#FetcherDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.FetcherDict" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class to fetch the ids of the products, versions and file
 from their mapping object</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.FetcherDict.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#FetcherDict.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.FetcherDict.get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#FetcherDict.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.FetcherDict.get" title="Link to this definition"></a></dt>
 <dd><p>Returns the data value of the specified key</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>key</strong> (<em>tuple</em>) – Tuple key to return value</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Returns the value of specified key.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>key (value)</p>
 </dd>
 </dl>
@@ -147,14 +154,14 @@ from their mapping object</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.PushBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">PushBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_base.</span></span><span class="sig-name descname"><span class="pre">PushBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for all operations on content gateway via
 either through entry points or from staged input.</p>
 <p>Adds arguments and environment variables common to all operations.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.PushBase.make_visible">
-<span class="sig-name descname"><span class="pre">make_visible</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.make_visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.make_visible" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">make_visible</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.make_visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.make_visible" title="Link to this definition"></a></dt>
 <dd><ul>
 <li><p>Update the invisible attribute to False.
 once all the CGW operation completed successfully.</p></li>
@@ -173,7 +180,7 @@ or user doesn’t specify any value for this <cite>invisible</cite> attribute.</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.PushBase.process_file">
-<span class="sig-name descname"><span class="pre">process_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.process_file" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">process_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.process_file" title="Link to this definition"></a></dt>
 <dd><p>Responsible for file workflow operations such as Create,
 Update and delete the file based on the satisfied condition
 on content gateway (CGW).</p>
@@ -220,10 +227,10 @@ or id is not provided in metadata</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>file_item</strong> (<em>dict</em>) – Metadata of file record</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#pubtools._content_gateway.push_base.CGWError" title="pubtools._content_gateway.push_base.CGWError"><strong>CGWError</strong></a> – <ul class="simple">
 <li><p>When product record is not present
     - When version record is not present
@@ -231,10 +238,10 @@ or id is not provided in metadata</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the file ID</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>file_id (int|None)</p>
 </dd>
 </dl>
@@ -242,7 +249,7 @@ or id is not provided in metadata</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.PushBase.process_product">
-<span class="sig-name descname"><span class="pre">process_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.process_product" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">process_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.process_product" title="Link to this definition"></a></dt>
 <dd><p>Responsible for product workflow operations such as Create,
 Update and delete the product based on the satisfied condition.</p>
 <dl>
@@ -283,16 +290,16 @@ Update and delete the product based on the satisfied condition.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>item</strong> (<em>dict</em>) – Metadata of product record</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#pubtools._content_gateway.push_base.CGWError" title="pubtools._content_gateway.push_base.CGWError"><strong>CGWError</strong></a> – When product record is not present and tries to update/delete the same</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the product ID</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>product_id (int)</p>
 </dd>
 </dl>
@@ -300,7 +307,7 @@ Update and delete the product based on the satisfied condition.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.PushBase.process_version">
-<span class="sig-name descname"><span class="pre">process_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.process_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">process_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.process_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.process_version" title="Link to this definition"></a></dt>
 <dd><p>Responsible for version workflow operations such as Create,
 Update and delete the product version based on the satisfied condition
 on content gateway (CGW).</p>
@@ -346,20 +353,20 @@ on content gateway (CGW).</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>item</strong> (<em>dict</em>) – Metadata of version record</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#pubtools._content_gateway.push_base.CGWError" title="pubtools._content_gateway.push_base.CGWError"><strong>CGWError</strong></a> – <ul class="simple">
 <li><p>When product record is not present
     - When version record is not present and tries to update/delete the same</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the version ID</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>version_id (int|None)</p>
 </dd>
 </dl>
@@ -367,7 +374,7 @@ on content gateway (CGW).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_base.PushBase.rollback_cgw_operation">
-<span class="sig-name descname"><span class="pre">rollback_cgw_operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.rollback_cgw_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.rollback_cgw_operation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rollback_cgw_operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_base.html#PushBase.rollback_cgw_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_base.PushBase.rollback_cgw_operation" title="Link to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Undo the partial completed CGW operation.</dt><dd><ul class="simple">
 <li><p>For the create operations it will delete the created data from CGW</p></li>
@@ -379,17 +386,17 @@ on content gateway (CGW).</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-pubtools._content_gateway.push_cgw">
-<span id="push-cgw-module"></span><h2><code class="docutils literal notranslate"><span class="pre">push_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#module-pubtools._content_gateway.push_cgw" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-pubtools._content_gateway.push_cgw">
+<span id="push-cgw-module"></span><h2><code class="docutils literal notranslate"><span class="pre">push_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#module-pubtools._content_gateway.push_cgw" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_cgw.PushCGW">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">PushCGW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.PushCGW" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">PushCGW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cgw_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cgw_filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.PushCGW" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pubtools._content_gateway.push_base.PushBase" title="pubtools._content_gateway.push_base.PushBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PushBase</span></code></a></p>
 <p>Handle push CGW workflow.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_cgw.PushCGW.cgw_operations">
-<span class="sig-name descname"><span class="pre">cgw_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW.cgw_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.PushCGW.cgw_operations" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cgw_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#PushCGW.cgw_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.PushCGW.cgw_operations" title="Link to this definition"></a></dt>
 <dd><p>Initiate the CGW operations such as create, update or delete
 on products, versions and files.</p>
 </dd></dl>
@@ -398,15 +405,60 @@ on products, versions and files.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pubtools._content_gateway.push_cgw.main">
-<span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_cgw.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_cgw.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_cgw.main" title="Link to this definition"></a></dt>
 <dd><p>Entrypoint for CGW Push.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="push-staged-cgw-module">
-<h2><code class="docutils literal notranslate"><span class="pre">push_staged_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#push-staged-cgw-module" title="Permalink to this heading"></a></h2>
-</div>
-</div>
+</section>
+<section id="module-pubtools._content_gateway.push_staged_cgw">
+<span id="push-staged-cgw-module"></span><h2><code class="docutils literal notranslate"><span class="pre">push_staged_cgw</span> <span class="pre">module</span></code><a class="headerlink" href="#module-pubtools._content_gateway.push_staged_cgw" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_staged_cgw.PushStagedCGW">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_staged_cgw.</span></span><span class="sig-name descname"><span class="pre">PushStagedCGW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_urls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pubtools._content_gateway.push_base.PushBase" title="pubtools._content_gateway.push_base.PushBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PushBase</span></code></a></p>
+<p>Handle push staged CGW workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_staged_cgw.PushStagedCGW.pulp_item_push_finished">
+<span class="sig-name descname"><span class="pre">pulp_item_push_finished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulp_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">push_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW.pulp_item_push_finished"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW.pulp_item_push_finished" title="Link to this definition"></a></dt>
+<dd><p>Invoked during task execution after successful completion of all Pulp
+publishes.</p>
+<p>This hook is invoked for every push item, to indicate that all Pulp
+content associated with the task is considered fully up-to-date. The
+intended usage is to flush Pulp-derived caches or to notify systems that
+Pulp content may have recently changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pulp_push_item</strong> (<em>Pulp object</em>) – push item from the pulp.</p></li>
+<li><p><strong>push_item</strong> (<em>list</em>) – push item.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_staged_cgw.PushStagedCGW.push_item_str">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">push_item_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW.push_item_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW.push_item_str" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_staged_cgw.PushStagedCGW.push_staged_operations">
+<span class="sig-name descname"><span class="pre">push_staged_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#PushStagedCGW.push_staged_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_staged_cgw.PushStagedCGW.push_staged_operations" title="Link to this definition"></a></dt>
+<dd><p>Initiate the CGW operations for push staged.
+Operations such as create, update or delete
+on products, versions and files would be performed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pubtools._content_gateway.push_staged_cgw.entry_point">
+<span class="sig-prename descclassname"><span class="pre">pubtools._content_gateway.push_staged_cgw.</span></span><span class="sig-name descname"><span class="pre">entry_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_urls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pubtools/_content_gateway/push_staged_cgw.html#entry_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pubtools._content_gateway.push_staged_cgw.entry_point" title="Link to this definition"></a></dt>
+<dd><p>Entrypoint for CGW push stage.</p>
+</dd></dl>
+
+</section>
+</section>
 
 
            </div>
